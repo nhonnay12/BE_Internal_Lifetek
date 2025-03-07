@@ -10,7 +10,7 @@ const JobStatusChangeSchema = new mongoose.Schema({
     reason: { type: String },
     notes: { type: String },
     change_source: { type: String, default: 'manual', enum: ['manual', 'system', 'API'] }
-});
+},{timestamps: true});
 
 // Tạo Model từ Schema
 const JobStatusChange = mongoose.model('JobStatusChange', JobStatusChangeSchema);

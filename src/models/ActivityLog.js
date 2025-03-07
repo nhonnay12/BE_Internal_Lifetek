@@ -6,8 +6,7 @@ const ActivityLogSchema = new mongoose.Schema({
     task_id: { type: mongoose.Schema.Types.ObjectId, ref: 'Task' }, // Công việc liên quan (nếu có)
     action: { type: String, required: true }, // Hành động thực hiện (VD: "created task", "updated status")
     description: { type: String, required: true }, // Mô tả chi tiết về hoạt động
-    created_at: { type: Date, default: Date.now } // Thời điểm thực hiện hành động
-});
+},{timestamps: true});
 
 // Tạo Model từ Schema
 const ActivityLog = mongoose.model('ActivityLog', ActivityLogSchema);
