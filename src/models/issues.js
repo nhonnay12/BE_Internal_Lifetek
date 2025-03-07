@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 import { create } from "../controllers/categories";
 import e from "express";
 import { types } from "joi";
-const IssueSchema = new mongoose.Schema(
+const issueSchema = new mongoose.Schema(
   {
     project_id: {
       type: mongoose.Schema.Types.ObjectId,
@@ -32,8 +32,9 @@ const IssueSchema = new mongoose.Schema(
       ref: "User",
       required: true,
     },
-    image: {
-      type: String,
+    attachment: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Attachment",
     },
 
     Start_date: {
@@ -57,4 +58,4 @@ const IssueSchema = new mongoose.Schema(
   },
   { timestamps: true }
 );
-export default mongoose.model("Issue", IssueSchema);
+export default mongoose.model("Issue", issueSchema);
