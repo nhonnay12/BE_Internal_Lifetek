@@ -18,11 +18,6 @@ const commentSchema = new mongoose.Schema(
       ref: "User",
       required: true,
     },
-    issue_id: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Issue",
-      required: true,
-    },
 
     content: {
       type: String,
