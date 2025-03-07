@@ -6,6 +6,7 @@ import dotenv from "dotenv";
 dotenv.config();
 
 const { SECRET_CODE} =  process.env
+
 export const signUp = async(req, res) => {
     try {
         const { error } = signUpValidator.validate(req.body, { abortEarly: false})
