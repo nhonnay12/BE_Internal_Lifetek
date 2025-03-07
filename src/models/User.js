@@ -15,11 +15,11 @@ const userSchema = new mongoose.Schema(
       required: true,
     },
     role: {
-      type: String,
-      default: "",
-    },
-  },
-  { versionKey: false, timestamps: true }
-);
+
+        type: String,
+        enum: ["USER", "ADMIN"],
+        default: "USER"
+    }
+},  {timestamps: true});
 
 export default mongoose.model("User", userSchema);
