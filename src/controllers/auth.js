@@ -70,7 +70,10 @@ export const signIn = async (req, res) => {
     }
 
     const accessToken = jwt.sign({_id: user._id}, SECRET_CODE, { expiresIn: "1d"})
-    
+    const refreshToken = jwt.sign({ _id: user._id }, SECRET_CODE, { expiresIn: "7d" })
+
+    user.refreshToken = refreshToken;
+    await user.save();
     return res.status(200).json({
         message: "Dang nhap thanh cong",
         user,
@@ -80,5 +83,27 @@ export const signIn = async (req, res) => {
         return res.status(500).json({
             message: error.message
         })
+    }
+}
+export const refreshToken = async (req, res) => {
+    try {
+        const { refreshToken } = req.body
+        if (!refreshToken) {
+            return res.status(401).json({ message: "Không có refresh token" })
+        }
+        const decoded = jwt.verify(refreshToken, SECRET_CODE)
+        if (!decoded) {
+            return res.status(403).json({ message: "Refresh token không hợp lệ" })
+        }
+        const user = await User.findById(decoded._id)
+        if (!user || user.refreshToken !== refreshToken) {
+            return res.status(403).json({ message: "Refresh token không hợp lệ" })
+        }
+        const newAccessToken = jwt.sign({ _id: user._id }, SECRET_CODE, { expiresIn: "15m" })
+        return res.status(200).json({
+            accessToken: newAccessToken
+        })
+    } catch (error) {
+        return res.status(500).json({ message: error.message })
     }
 }
