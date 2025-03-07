@@ -17,6 +17,6 @@ const userSchema = new  mongoose.Schema({
         type: String,
         default: "member"
      }
-},  { versionKey: false, timestamps: true});
+},  {timestamps: true});
 
 export default mongoose.model('User', userSchema);
