@@ -1,5 +1,5 @@
-import User from '../models/User';
-import { signInValidator, signUpValidator } from '../validation/user';
+import User from '../models/User.js';
+import { signInValidator, signUpValidator } from '../validation/user.js';
 import bcryptjs from "bcryptjs"
 import  jwt  from 'jsonwebtoken';
 import dotenv from "dotenv";

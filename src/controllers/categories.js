@@ -1,5 +1,5 @@
-import Category from "../models/Category"
-import { categorytValidator } from "../validation/category"
+import Category from "../models/Category.js"
+import { categoryValidator } from "../validation/category.js"
 
 export const getAll = async (req, res) => {
     try {
@@ -44,7 +44,7 @@ export const getDetail = async (req, res) => {
 
 export const create = async (req, res) => {
     try {
-        const { error } = categorytValidator.validate(req.body, {abortEarly: false})
+        const { error } = categoryValidator.validate(req.body, {abortEarly: false})
         if (error) {
             const errors = error.details.map(err => err.message)
             return res.status(400).json({
@@ -72,7 +72,7 @@ export const create = async (req, res) => {
 
 export const update = async (req, res) => {
     try {
-        const { error } = categorytValidator.validate(req.body, {abortEarly: false})
+        const { error } = categoryValidator.validate(req.body, {abortEarly: false})
         if (error) {
             const errors = error.details.map(err => err.message)
             return res.status(400).json({
