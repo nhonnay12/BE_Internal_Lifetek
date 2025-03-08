@@ -3,29 +3,29 @@ import mongoose from "mongoose";
 
 const commentSchema = new mongoose.Schema(
   {
-    project_id: {
+    projectId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Project",
       required: true,
     },
-    task_id: {
+    taskId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Task",
       required: true,
     },
-    user_id: {
+    userId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
       required: true,
     },
-
+    issueId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Issue",
+      required: true,
+    },
     content: {
       type: String,
       required: true,
-    },
-    create_at: {
-      type: Date,
-      default: Date.now,
     },
   },
   { timestamps: true }

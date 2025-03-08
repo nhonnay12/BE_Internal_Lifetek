@@ -1,7 +1,5 @@
-
-import projectService from "../services/projectService";
-
-export const createProject = async (req, res) => {
+import * as projectService from "../services/projectService.js";
+export const addProject = async (req, res) => {
     try {
         const project = await projectService.createProject(req.body);
         res.status(201).json(project);

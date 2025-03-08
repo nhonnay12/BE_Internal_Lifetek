@@ -1,18 +1,18 @@
 import Joi from "joi"
 
 export const signUpValidator = Joi.object({
-     userName: Joi.string().required().min(6).max(255).message({
+     userName: Joi.string().required().min(6).max(255).messages({
         "string.empty": "userName không được để trống",
         "any.required": "userName là bắt buộc",
         "string.min": "userName phải có ít nhất {#limit} ký tự",
         "string.max": "userName phải có ít hơn {#limit + 1} ký tự",
      }),
-     email: Joi.string().required().email().message({
+     email: Joi.string().required().email().messages({
         "string.empty": "email không được để trống",
         "any.required": "email là bắt buộc",
         "string.email": "email không đúng định dạng",
      }),
-     password: Joi.string().required().min(6).max(255).message({
+     password: Joi.string().required().min(6).max(255).messages({
         "string.empty": "Password không được để trống",
         "any.required": "Password là bắt buộc",
         "string.min": "Password phải có ít nhất {#limit} ký tự",
@@ -30,12 +30,12 @@ export const signUpValidator = Joi.object({
 
 
 export const signInValidator = Joi.object({
-   email: Joi.string().required().email().message({
+   email: Joi.string().required().email().messages({
       "string.empty": "email không được để trống",
       "any.required": "email là bắt buộc",
       "string.email": "email không đúng định dạng",
    }),
-   password: Joi.string().required().min(6).max(255).message({
+   password: Joi.string().required().min(6).max(255).messages({
       "string.empty": "Password không được để trống",
       "any.required": "Password là bắt buộc",
       "string.min": "Password phải có ít nhất {#limit} ký tự",
