@@ -1,17 +1,17 @@
 import mongoose from "mongoose";
 
 const NotificationSchema = new mongoose.Schema({
-    user_id: {
+    userId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
         required: true,
     },
-    project_id: {
+    projectId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Project',
         required: true,
     },
-    task_id: {
+    taskId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Task',
         required: true,
@@ -24,7 +24,7 @@ const NotificationSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
-    is_read: {
+    isRead: {
         type: Boolean,
         default: false,
     },

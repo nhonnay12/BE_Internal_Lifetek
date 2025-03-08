@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 
 const TagSchema = new mongoose.Schema({
-    project_id: {
+    projectId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Project',
         required: true,

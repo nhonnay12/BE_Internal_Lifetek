@@ -1,15 +1,12 @@
 import mongoose from "mongoose";
-import { create } from "../controllers/categories";
-import e from "express";
-import { types } from "joi";
 const issueSchema = new mongoose.Schema(
   {
-    project_id: {
+    projectId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Project",
       required: true,
     },
-    task_id: {
+    taskId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Task",
       required: true,
@@ -27,7 +24,7 @@ const issueSchema = new mongoose.Schema(
     link: {
       type: String,
     },
-    user_id: {
+    userId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
       required: true,

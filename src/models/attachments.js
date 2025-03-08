@@ -6,31 +6,31 @@ const attachmentSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    project_id: {
+    projectId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Project",
       required: true,
     },
-    task_id: {
+    taskId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Task",
       required: true,
     },
-    user_id: {
+    userId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
       required: true,
     },
-    issue_id: {
+    issueId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Issue",
       required: true,
     },
-    file_name: {
+    fileName: {
       type: String,
       required: true,
     },
-    file_path: {
+    filePath: {
       type: String,
       required: true,
     },

@@ -1,12 +1,12 @@
 import mongoose from "mongoose";
 
 const TaskDependency = new mongoose.Schema({
-    task_id: {
+    taskId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Task',
         required: true,
     },
-    task_dependency_id: {
+    taskDependency_id: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Task',
         required: true,

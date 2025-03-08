@@ -29,8 +29,7 @@ const TaskSchema = new mongoose.Schema({
             type: String
         }
     ],
-    dueDate: { type: Date },// deadline 
+    deadlineDate: { type: Date },// deadline 
   }, { timestamps: true });
-export default mongoose.model('tasks', TaskSchema);
-  
+export default mongoose.model('Task', TaskSchema);
   

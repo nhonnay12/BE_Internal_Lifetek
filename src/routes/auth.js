@@ -1,12 +1,12 @@
 import { Router } from "express";
-import { signIn, signUp } from "../controllers/auth.js";
+import { getNewAccessToken, signIn, signOut, signUp } from "../controllers/auth.js";
+import authMiddleware from "../middlewares/auth.js";
 
 const routerAuth = Router();
 
-routerAuth.post("/signup", signUp);
-routerAuth.post("/signIn", signIn);
-routerAuth.get("/", (res, req) => {
-  req.send("Hello");
-});
+routerAuth.post("/sign-up", signUp);
+routerAuth.post("/sign-in", signIn);
+routerAuth.post("/sign-out", authMiddleware, signOut)
+routerAuth.post("/refresh-token", getNewAccessToken);
 
 export default routerAuth;
