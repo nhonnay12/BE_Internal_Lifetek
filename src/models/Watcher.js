@@ -6,6 +6,7 @@ const WatcherSchema = new mongoose.Schema({
     projectId: { type: mongoose.Schema.Types.ObjectId, ref: 'Project' }, // Dự án được theo dõi (có thể null nếu theo dõi task)
 }, { timestamps: true });
 
+
 // Tạo Model từ Schema
 const Watcher = mongoose.model('Watcher', WatcherSchema);
 

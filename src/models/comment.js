@@ -23,7 +23,6 @@ const commentSchema = new mongoose.Schema(
       ref: "Issue",
       required: true,
     },
-
     content: {
       type: String,
       required: true,

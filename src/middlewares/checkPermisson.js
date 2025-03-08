@@ -23,6 +23,7 @@ export const checkPermission = async (req, res, next) => {
     }
 
     if (user.role != "ADMIN") {
+
       return res.status(403).json({
         message: "Bạn không có quyền làm việc này",
       });

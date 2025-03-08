@@ -31,6 +31,7 @@ const attachmentSchema = new mongoose.Schema(
       required: true,
     },
     filePath: {
+
       type: String,
       required: true,
     },
