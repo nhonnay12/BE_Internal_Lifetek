@@ -1,6 +1,5 @@
 import Task from '../models/Task.js'
 import mongoose from 'mongoose';
-import User from "../models/User.js";
 export  const getAllTasks = async () => {
      return await Task.find();
 }
@@ -25,13 +24,13 @@ export const createTasks = async (data) => {
 export const  updateTaskStatusService = async (taskId,newStatus) => {
      // Kiểm tra xem taskId có hợp lệ không
      if (!mongoose.Types.ObjectId.isValid(taskId)) {
-          throw new Error("Invalid task ID");
+          throw new Error(" task ID không phù hợp");
      }
 
   // Kiểm tra trạng thái hợp lệ
      const validStatuses = ["pending", "in-progress", "completed"];
           if (!validStatuses.includes(newStatus)) {
-          throw new Error("Invalid status value");
+          throw new Error("Giá trị status không phù hợp");
      }
 
   // Cập nhật trạng thái task
@@ -50,32 +49,21 @@ export const  updateTaskStatusService = async (taskId,newStatus) => {
 
 /// thêm user vào task
 
-export const addUserToTaskService = async (taskId, userId) => {
-  // Kiểm tra ID hợp lệ
+
+ export const addUserToTask = async (taskId, userId)=> {
   if (!mongoose.Types.ObjectId.isValid(taskId) || !mongoose.Types.ObjectId.isValid(userId)) {
-    throw new Error("Invalid taskId or userId");
+    throw new Error(" TaskId hoặc userId không phù hợp");
   }
 
-  // Kiểm tra task có tồn tại không
-  const task = await Task.findById(taskId);
-  if (!task) {
-    throw new Error("Task not found");
+  const updatedTask = await Task.findByIdAndUpdate(
+    taskId,
+    { $addToSet: { assigneeIds: new mongoose.Types.ObjectId(userId) } }, // Dùng $addToSet để tránh trùng lặp
+    { new: true }
+  ).populate("assigneeIds"); // Populate để lấy chi tiết user nếu cần
+
+  if (!updatedTask) {
+    throw new Error("Task không tìm thấy");
   }
 
-  // Kiểm tra user có tồn tại không
-  const user = await User.findById(userId);
-  if (!user) {
-    throw new Error("User not found");
-  }
-
-  // Kiểm tra xem user đã có trong task chưa
-  if (task.assigneeId.includes(userId)) {
-    throw new Error("User is already assigned to this task");
-  }
-
-  // Thêm user vào danh sách assignees
-  task.assigneeId.push(userId);
-  await task.save();
-
-  return task;
-};
+  return updatedTask;
+}

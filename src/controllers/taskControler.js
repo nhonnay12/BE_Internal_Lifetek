@@ -1,4 +1,4 @@
-import { getAllTasks,createTasks,updateTaskStatusService,addUserToTaskService } from "../services/taskService.js"
+import { getAllTasks,createTasks,updateTaskStatusService,addUserToTask } from "../services/taskService.js"
 
 export const getAllTask = async (req,res) => {
    try {
@@ -22,8 +22,8 @@ export const createTask = async (req,res) => {
   try {
      
       const newTask = await createTasks(req.body);
-    res.status(201).json({ message: 'Task created successfully', task: newTask });
-      console.log("success")
+    res.status(201).json({ message: 'Tạo vấn đề thành công', task: newTask });
+      
      
   } catch (error) {
     res.status(400).json({ message: error.message });
@@ -36,10 +36,10 @@ export const updateTaskStatus = async (req, res) => {
     const { taskId } = req.params;
     const { status } = req.body;
 
-    const updatedTask = await updateTaskStatusService(taskId, status);
+    const updatedTask = await addUserToTask(taskId, status);
 
     res.status(200).json({
-      message: "Task status updated successfully",
+      message: "Thay đổi trạng thái vấn đề thành công",
       task: updatedTask,
     });
   } catch (error) {
@@ -47,16 +47,16 @@ export const updateTaskStatus = async (req, res) => {
   }
 };
 
-// thêm user vapf task
+// thêm user vào task
 
-export const addUserToTask = async (req, res) => {
+export const addUserToTaskController = async (req, res) => {
   try {
     const { taskId, userId } = req.body;
     
-    const updatedTask = await addUserToTaskService(taskId, userId);
+    const updatedTask = await addUserToTask(taskId, userId);
 
     res.status(200).json({
-      message: "User added to task successfully",
+      message: "Thêm người dùng vào vấn đề thành công",
       task: updatedTask,
     });
   } catch (error) {
