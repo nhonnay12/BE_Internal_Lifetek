@@ -187,7 +187,6 @@ export const getNewAccessToken = async (req, res) => {
         return res.status(200).json({
             message: "Tao token thanh cong",
             accessToken: newAccessToken,
-            user
         });
 
 
@@ -224,7 +223,6 @@ export const forgotPassword = async (req, res) => {
         const user = await User.findOne({ email });
 
         if (!user) res.status(404).json({ message: "Email chua dang ky" });
-
 
         const newPassword = generateRandomPassword(10);
         const hashedPassword = await bcryptjs.hash(newPassword, 10);
@@ -268,7 +266,6 @@ export const resetPassword = async (req, res) => {
 
         return res.status(200).json({
             message: "Cap nhat mat khau thanh cong",
-            user
         });
     } catch (error) {
         return res.status(500).json({
