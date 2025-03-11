@@ -9,7 +9,12 @@ const TaskSchema = new mongoose.Schema({
     projectId: { 
         type: mongoose.Schema.Types.ObjectId, 
         ref: 'Project', 
-        required: true },
+        required: true
+    },
+    link: {
+        type: String, 
+        required: true 
+    },
     assigneeId: { 
         type: mongoose.Schema.Types.ObjectId, 
         ref: 'User' 
@@ -19,11 +24,6 @@ const TaskSchema = new mongoose.Schema({
         enum: ['pending', 'in progress', 'completed'],
         default: 'pending' 
         },
-    priority: { 
-        type: String, 
-        enum: ['low', 'medium', 'high'], 
-        default: 'medium' 
-    },
     images:[
         { 
             type: String
