@@ -12,7 +12,7 @@ dotenv.config();
 const PORT = process.env.PORT;
 
 connectDB();
-connectRedis();
+// connectRedis();
 
 app.use(cors({
   origin: ["http://localhost:5173", "http://192.168.1.103:5173"],
