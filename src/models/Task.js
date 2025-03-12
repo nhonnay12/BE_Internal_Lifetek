@@ -21,6 +21,10 @@ const TaskSchema = new mongoose.Schema({
         ref: 'User' 
         }
     ],
+    reporter: {
+        type: mongoose.Schema.Types.ObjectId, 
+        ref: 'User' 
+    },
     status: { 
         type: String, 
         enum: ['pending', 'in progress', 'completed'],
