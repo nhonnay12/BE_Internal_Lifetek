@@ -67,3 +67,23 @@ export const  updateTaskStatusService = async (taskId,newStatus) => {
 
   return updatedTask;
 }
+////
+export const searchTaskService = async (data) => {
+    try {
+      const {  assigneeId, reporter, createAt, dueDate } = data;
+
+      // let filter = {};
+
+      // if (title) filter.title = new RegExp(title, "i"); // Tìm kiếm không phân biệt chữ hoa/thường
+      // if (assignee) filter.assignee = assignee;
+      // if (reporter) filter.reporter = reporter;
+      // if (createAt) filter.createAt = { $gte: new Date(createAt) };
+      // if (dueDate) filter.dueDate = { $lte: new Date(dueDate) };
+
+      // const task = await Task.find(filter);
+
+      console.log(assigneeId, reporter, createAt, dueDate)
+  } catch (error) {
+      console.log(error)
+  }
+}

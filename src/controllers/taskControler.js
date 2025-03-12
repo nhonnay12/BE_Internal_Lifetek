@@ -1,4 +1,4 @@
-import { getAllTasks,createTasks,updateTaskStatusService,addUserToTask } from "../services/taskService.js"
+import { getAllTasks,createTasks,updateTaskStatusService,addUserToTask,searchTaskService } from "../services/taskService.js"
 
 export const getAllTask = async (req,res) => {
    try {
@@ -36,7 +36,7 @@ export const updateTaskStatus = async (req, res) => {
     const { taskId } = req.params;
     const { status } = req.body;
 
-    const updatedTask = await addUserToTask(taskId, status);
+    const updatedTask = await updateTaskStatusService(taskId, status);
 
     res.status(200).json({
       message: "Thay đổi trạng thái vấn đề thành công",
@@ -63,3 +63,18 @@ export const addUserToTaskController = async (req, res) => {
     res.status(400).json({ message: error.message });
   }
 };
+
+// tìm kiếm vấn đề
+
+export const searchTaskController = async (req, res) => {
+  try {
+       
+    const searchResult = await searchTaskService(req.query)
+    // res.json(searchResult);
+
+  } catch (error) {
+
+    res.status(500).json({ error: "Lỗi server" });
+
+  }
+} 
