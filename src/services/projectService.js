@@ -1,21 +1,21 @@
 import Project from "../models/Project.js";
 
 export const createProject = async (data) => {
-    return await Project.create(data);
+  return await Project.create(data);
 };
 
 export const getAllProjects = async () => {
-    return await Project.find();
+  return await Project.find().populate("managerId", "userName email phone");
 };
 
 export const getProjectById = async (id) => {
-    return await Project.findById(id);
+  return await Project.findById(id);
 };
 
 export const updateProject = async (id, data) => {
-    return await Project.findByIdAndUpdate(id, data, { new: true });
+  return await Project.findByIdAndUpdate(id, data, { new: true });
 };
 
 export const deleteProject = async (id) => {
-    return await Project.findByIdAndDelete(id);
+  return await Project.findByIdAndDelete(id);
 };

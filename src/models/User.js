@@ -10,6 +10,12 @@ const userSchema = new mongoose.Schema(
       required: true,
       unique: true,
     },
+    phone: {
+      type: String,
+      required: true,
+      unique: true,
+      default: "",
+    },
     password: {
       type: String,
       required: true,
@@ -21,8 +27,10 @@ const userSchema = new mongoose.Schema(
     role: {
       type: String,
       enum: ["USER", "ADMIN"],
-      default: "USER"
+      default: "USER",
     },
-  }, { timestamps: true });
+  },
+  { timestamps: true }
+);
 
 export default mongoose.model("User", userSchema);

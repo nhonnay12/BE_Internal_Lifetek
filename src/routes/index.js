@@ -1,11 +1,11 @@
 import express from "express";
 import routerAuth from "./auth.js";
 import routerProject from "./projectRoute.js";
-import routeIssues from "./issuesRoute.js";
+import routerTask from "./taskRouter.js";
 const router = express.Router();
 
-router.use('/auth', routerAuth);
-router.use('/project', routerProject);
-router.use('/issue', routeIssues);
+router.use("/auth", routerAuth);
+router.use("/projects", routerProject);
+router.use("/tasks", routerTask);
 
 export default router;
