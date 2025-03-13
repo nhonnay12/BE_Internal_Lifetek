@@ -106,26 +106,62 @@ export const verifyEmail = async (req, res) => {
 };
 //đăng nhập
 export const signIn = async (req, res) => {
-  try {
-    //validate
-    const { error } = signInValidator.validate(req.body, { abortEarly: false });
-    if (error) {
-      const errors = error.details.map((err) => err.message);
-      return res.status(400).json({
-        message: errors,
-      });
-    }
+    try {
+        //validate
+        const { error } = signInValidator.validate(req.body, { abortEarly: false })
+        if (error) {
+            const errors = error.details.map(err => err.message)
+            return res.status(400).json({
+                message: errors
+            })
+        }
 
-    const { email, password } = req.body;
+        const { email, password } = req.body;
 
-    // truy van user
-    const user = await User.findOne({ email });
+        // truy van user
+        const user = await User.findOne({ email });
 
-    // kiem tra user
-    if (!user) {
-      return res.status(404).json({
-        message: "Emai nay chua dang ky ban co muon dang ky khong",
-      });
+        // kiem tra user
+        if (!user) {
+            return res.status(404).json({
+                message: "Emai nay chua dang ky ban co muon dang ky khong"
+            })
+        }
+
+        const isMatch = await bcryptjs.compare(password, user.password)
+        if (!isMatch) {
+            return res.status(404).json({
+                message: "Mat khau khong dung"
+            })
+        }
+
+        if (!user.verified) {
+            return res.status(401).json({
+                message: "Email chua duoc xac thuc"
+            })
+        }
+
+        // tao token
+        const accessToken = generateAccessToken(user)
+        const refreshToken = generateRefreshToken(user)
+
+        res.cookie("refreshToken", refreshToken, {
+            httpOnly: true,
+            secure: false, //local
+            sameSite: "strict",
+        });
+
+        return res.status(200).json({
+            message: "Dang nhap thanh cong",
+            accessToken,
+            user
+        });
+
+
+    } catch (error) {
+        return res.status(500).json({
+            message: error.message
+        })
     }
 
     const isMatch = await bcryptjs.compare(password, user.password);
@@ -180,46 +216,33 @@ export const getNewAccessToken = async (req, res) => {
         message: "Token khong hop le",
       });
     }
-
-    const user = await User.findById(decode.id);
-
-    if (!user) {
-      return res.status(404).json({
-        message: "User khong ton tai",
-      });
-    }
-
-    const newAccessToken = generateAccessToken(user);
-
-    return res.status(200).json({
-      message: "Tao token thanh cong",
-      accessToken: newAccessToken,
-    });
-  } catch (error) {
-    return res.status(500).json({
-      message: error.message,
-    });
-  }
-};
+}
 //đăng xuất
 export const signOut = async (req, res) => {
-  const id = req.user._id;
-  const user = await User.findById(id);
-  if (!user) {
-    return res.status(404).json({
-      message: "User khong ton tai",
-    });
-  }
+    try {
+        const id = req.user._id;
+        const user = await User.findById(id);
+        if (!user) {
+            return res.status(404).json({
+                message: "User khong ton tai"
+            });
+        };
 
-  res.clearCookie("refreshToken", {
-    httpOnly: true,
-    secure: false, // local
-    sameSite: "strict",
-  });
-  return res.status(200).json({
-    message: "Dang xuat thanh cong",
-  });
-};
+        res.clearCookie("refreshToken", {
+            httpOnly: true,
+            secure: false, // local 
+            sameSite: "strict",
+        });
+        return res.status(200).json({
+            message: "Dang xuat thanh cong"
+        });
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({
+            message: error.message
+        });
+    }
+}
 // quên mật khẩu
 export const forgotPassword = async (req, res) => {
   try {
