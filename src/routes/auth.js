@@ -7,7 +7,7 @@ const routerAuth = Router();
 routerAuth.post("/sign-up", signUp);
 routerAuth.get("/verify-email/:token", verifyEmail);
 routerAuth.post("/sign-in", signIn);
-routerAuth.post("/sign-out", authMiddleware, signOut)
+routerAuth.post("/sign-out", authMiddleware, signOut);
 routerAuth.post("/refresh-token", getNewAccessToken);
 routerAuth.post("/forget-password", forgotPassword);
 routerAuth.post("/reset-password", resetPassword);
