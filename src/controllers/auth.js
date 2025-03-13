@@ -13,6 +13,7 @@ import {
 } from "../services/templateService.js";
 import { emailQueue } from "../queues/index.js";
 import { generateRandomPassword } from "../utils/generatePassword.js";
+import sendMail from "../services/emailService.js";
 dotenv.config();
 
 //đăng ký
@@ -51,6 +52,14 @@ export const signUp = async (req, res) => {
 
     //send email
 
+    // use service send email
+    // sendMail({
+    //   to: user.email,
+    //   subject: "Xác thực email",
+    //   text: "Xác thực email",
+    //   html: emailContent,
+    // })
+
     // use worker send email
     await emailQueue.add("sendEmail", {
       email: user.email,
@@ -75,111 +84,70 @@ export const signUp = async (req, res) => {
 };
 //xác thực email
 export const verifyEmail = async (req, res) => {
-  try {
-    const { token } = req.params;
-    const decode = jwt.verify(token, process.env.JWT_SECRET);
-    if (!decode) {
-      return res.status(401).json({
-        message: "Token khong hop le",
-      });
-    }
 
-    const user = await User.findById(decode.id);
-    if (!user) {
-      return res.status(404).json({
-        message: "User khong ton tai",
-      });
-    }
-
-    user.verified = true;
-    await user.save();
-
-    return res.status(200).json({
-      message: "Xac thuc email thanh cong",
-      user,
-    });
-  } catch (error) {
-    return res.status(500).json({
-      message: `Token khong hop le hoac het han ${error.message}`,
+  const { token } = req.params;
+  const decode = jwt.verify(token, process.env.JWT_SECRET);
+  if (!decode) {
+    return res.status(401).json({
+      message: "Token khong hop le",
     });
   }
+
+  const user = await User.findById(decode.id);
+  if (!user) {
+    return res.status(404).json({
+      message: "User khong ton tai",
+    });
+  }
+
+  user.verified = true;
+  await user.save();
+
+  return res.status(200).json({
+    message: "Xac thuc email thanh cong",
+    user,
+  });
 };
 //đăng nhập
 export const signIn = async (req, res) => {
-    try {
-        //validate
-        const { error } = signInValidator.validate(req.body, { abortEarly: false })
-        if (error) {
-            const errors = error.details.map(err => err.message)
-            return res.status(400).json({
-                message: errors
-            })
-        }
-
-        const { email, password } = req.body;
-
-        // truy van user
-        const user = await User.findOne({ email });
-
-        // kiem tra user
-        if (!user) {
-            return res.status(404).json({
-                message: "Emai nay chua dang ky ban co muon dang ky khong"
-            })
-        }
-
-        const isMatch = await bcryptjs.compare(password, user.password)
-        if (!isMatch) {
-            return res.status(404).json({
-                message: "Mat khau khong dung"
-            })
-        }
-
-        if (!user.verified) {
-            return res.status(401).json({
-                message: "Email chua duoc xac thuc"
-            })
-        }
-
-        // tao token
-        const accessToken = generateAccessToken(user)
-        const refreshToken = generateRefreshToken(user)
-
-        res.cookie("refreshToken", refreshToken, {
-            httpOnly: true,
-            secure: false, //local
-            sameSite: "strict",
-        });
-
-        return res.status(200).json({
-            message: "Dang nhap thanh cong",
-            accessToken,
-            user
-        });
-
-
-    } catch (error) {
-        return res.status(500).json({
-            message: error.message
-        })
+  try {
+    //validate
+    const { error } = signInValidator.validate(req.body, { abortEarly: false })
+    if (error) {
+      const errors = error.details.map(err => err.message)
+      return res.status(400).json({
+        message: errors
+      })
     }
 
-    const isMatch = await bcryptjs.compare(password, user.password);
+    const { email, password } = req.body;
+
+    // truy van user
+    const user = await User.findOne({ email });
+
+    // kiem tra user
+    if (!user) {
+      return res.status(404).json({
+        message: "Emai nay chua dang ky ban co muon dang ky khong"
+      })
+    }
+
+    const isMatch = await bcryptjs.compare(password, user.password)
     if (!isMatch) {
       return res.status(404).json({
-        message: "Mat khau khong dung",
-      });
+        message: "Mat khau khong dung"
+      })
     }
 
     if (!user.verified) {
       return res.status(401).json({
-        message: "Email chua duoc xac thuc",
-      });
+        message: "Email chua duoc xac thuc"
+      })
     }
 
     // tao token
-    const accessToken = generateAccessToken(user);
-    const refreshToken = generateRefreshToken(user);
+    const accessToken = generateAccessToken(user)
+    const refreshToken = generateRefreshToken(user)
 
     res.cookie("refreshToken", refreshToken, {
       httpOnly: true,
@@ -190,14 +158,16 @@ export const signIn = async (req, res) => {
     return res.status(200).json({
       message: "Dang nhap thanh cong",
       accessToken,
-      user,
+      user
     });
+
+
   } catch (error) {
     return res.status(500).json({
-      message: error.message,
-    });
+      message: error.message
+    })
   }
-};
+}
 //làm mới token
 export const getNewAccessToken = async (req, res) => {
   const refreshToken = req.cookies.refreshToken;
@@ -216,32 +186,37 @@ export const getNewAccessToken = async (req, res) => {
         message: "Token khong hop le",
       });
     }
+  } catch (error) {
+    return res.status(500).json({
+      message: error.message
+    });
+  }
 }
 //đăng xuất
 export const signOut = async (req, res) => {
-    try {
-        const id = req.user._id;
-        const user = await User.findById(id);
-        if (!user) {
-            return res.status(404).json({
-                message: "User khong ton tai"
-            });
-        };
+  try {
+    const id = req.user._id;
+    const user = await User.findById(id);
+    if (!user) {
+      return res.status(404).json({
+        message: "User khong ton tai"
+      });
+    };
 
-        res.clearCookie("refreshToken", {
-            httpOnly: true,
-            secure: false, // local 
-            sameSite: "strict",
-        });
-        return res.status(200).json({
-            message: "Dang xuat thanh cong"
-        });
-    } catch (error) {
-        console.log(error);
-        return res.status(500).json({
-            message: error.message
-        });
-    }
+    res.clearCookie("refreshToken", {
+      httpOnly: true,
+      secure: false, // local 
+      sameSite: "strict",
+    });
+    return res.status(200).json({
+      message: "Dang xuat thanh cong"
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({
+      message: error.message
+    });
+  }
 }
 // gửi mail mat khau mới
 export const forgotPassword = async (req, res) => {
@@ -267,50 +242,50 @@ export const forgotPassword = async (req, res) => {
       html: contextMail,
     });
 
-        return res.status(200).json({
-            message: "Vui long kiem tra email de lay mat khau moi"
-        });
+    return res.status(200).json({
+      message: "Vui long kiem tra email de lay mat khau moi"
+    });
 
-    } catch (error) {
-        return res.status(500).json({
-            message: error.message
-        });
-    }
+  } catch (error) {
+    return res.status(500).json({
+      message: error.message
+    });
+  }
 }
 //  đặt lại mật khẩu bằng
 export const resetPassword = async (req, res) => {
-    try {
-        const { oldPassword, newPassword } = req.body;
-        const id = req.params.id;
+  try {
+    const { oldPassword, newPassword } = req.body;
+    const id = req.params.id;
 
-        const user = await User.findById(id);
+    const user = await User.findById(id);
 
-        if (!user) {
-            return res.status(404).json({
-                message: "User khong ton tai"
-            });
-        };
+    if (!user) {
+      return res.status(404).json({
+        message: "User khong ton tai"
+      });
+    };
 
-        const isMatch = await bcryptjs.compare(oldPassword, user.password);
+    const isMatch = await bcryptjs.compare(oldPassword, user.password);
 
-        if (!isMatch) {
-            return res.status(401).json({
-                message: "Mat khau cu khong dung"
-            });
-        };
+    if (!isMatch) {
+      return res.status(401).json({
+        message: "Mat khau cu khong dung"
+      });
+    };
 
-        const hashedPassword = await bcryptjs.hash(newPassword, 10);
-        user.password = hashedPassword;
+    const hashedPassword = await bcryptjs.hash(newPassword, 10);
+    user.password = hashedPassword;
 
-        await user.save();
+    await user.save();
 
-        return res.status(200).json({
-            message: "Cap nhat mat khau thanh cong"
-        });
+    return res.status(200).json({
+      message: "Cap nhat mat khau thanh cong"
+    });
 
-    } catch (error) {
-        return res.status(500).json({
-            message: error.message
-        });
-    }
+  } catch (error) {
+    return res.status(500).json({
+      message: error.message
+    });
+  }
 }
