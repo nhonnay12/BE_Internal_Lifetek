@@ -224,7 +224,7 @@ export const signOut = async (req, res) => {
         });
     }
 }
-// quên mật khẩu
+// gửi mail mat khau mới
 export const forgotPassword = async (req, res) => {
     try {
         const { email } = req.body;
@@ -258,24 +258,37 @@ export const forgotPassword = async (req, res) => {
         });
     }
 }
-// đặt lại mật khẩu
+//  đặt lại mật khẩu bằng
 export const resetPassword = async (req, res) => {
     try {
-        const { email, oldPassword, newPassword } = req.body;
+        const { oldPassword, newPassword } = req.body;
+        const id = req.params.id;
 
-        const user = await User.findOne({ email });
+        const user = await User.findById(id);
 
-        if (!user) res.status(404).json({ message: "Nguoi dung khong ton tai" });
+        if (!user) {
+            return res.status(404).json({
+                message: "User khong ton tai"
+            });
+        };
 
         const isMatch = await bcryptjs.compare(oldPassword, user.password);
-        if (!isMatch) res.status(400).json({ message: "Mat khau cu khong dung" });
 
-        user.password = await bcryptjs.hash(newPassword, 10);
+        if (!isMatch) {
+            return res.status(401).json({
+                message: "Mat khau cu khong dung"
+            });
+        };
+
+        const hashedPassword = await bcryptjs.hash(newPassword, 10);
+        user.password = hashedPassword;
+
         await user.save();
 
         return res.status(200).json({
-            message: "Cap nhat mat khau thanh cong",
+            message: "Cap nhat mat khau thanh cong"
         });
+
     } catch (error) {
         return res.status(500).json({
             message: error.message

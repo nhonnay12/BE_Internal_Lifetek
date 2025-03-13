@@ -1,5 +1,3 @@
-import { response } from "express";
-
 const authSwagger = {
   "/auth/sign-up": {
     post: {
@@ -677,7 +675,6 @@ const authSwagger = {
       }
     }
   }
-
 };
 
 export default authSwagger;
