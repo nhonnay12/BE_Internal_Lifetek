@@ -1,0 +1,59 @@
+openapi: 3.0.0
+info:
+  title: Api clone Jira
+  description: Tài liệu API cho ứng dụng clone Jira
+  version: 1.0.0
+servers:
+  - url: http://localhost:5000/api/v1
+    description: Development server
+paths:
+  /auth/sign-up:
+    post:
+      summary: Đăng ký tài khoản
+      description: API đăng ký người dùng mới
+      tags:
+        - Authentication
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  example: "user@example.com"
+                password:
+                  type: string
+                  example: "password123"
+      responses:
+        201:
+          description: Đăng ký thành công
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Đăng ký thành công!"
+        400:
+          description: Lỗi đầu vào
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Email đã tồn tại!"
+        500:
+          description: Lỗi server
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Lỗi không xác định"

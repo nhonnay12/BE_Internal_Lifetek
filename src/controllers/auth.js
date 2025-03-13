@@ -43,6 +43,8 @@ export const signUp = async (req, res) => {
 
         //send email
 
+
+        // use worker send email
         await emailQueue.add("sendEmail", {
             email: user.email,
             subject: "Xác thực email",
@@ -136,11 +138,11 @@ export const signIn = async (req, res) => {
         const accessToken = generateAccessToken(user)
         const refreshToken = generateRefreshToken(user)
 
-        res.cookie("refreshToken", refreshToken, {
-            httpOnly: true,
-            secure: false, //local
-            sameSite: "strict",
-        });
+            res.cookie("refreshToken", refreshToken, {
+                httpOnly: true,
+                secure: false, //local
+                sameSite: "strict",
+            });
 
         return res.status(200).json({
             message: "Dang nhap thanh cong",
