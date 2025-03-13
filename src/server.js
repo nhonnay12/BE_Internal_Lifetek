@@ -4,7 +4,7 @@ import router from "./routes/index.js";
 import connectDB from "./config/db.js";
 import cookieParser from "cookie-parser";
 import cors from "cors";
-import { connectRedis } from "./config/redisClient.js";
+// import { connectRedis } from "./config/redisClient.js";
 import setupSwagger from "./config/swaggerConfig.js";
 
 const app = express();
@@ -27,7 +27,6 @@ app.use(express.urlencoded({ extended: true }));
 app.use("/api/v1", router);
 
 setupSwagger(app);
-
 
 app.listen(PORT, () => {
   console.log(`Server is running on port http://localhost:${PORT}`);
