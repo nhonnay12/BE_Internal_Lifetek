@@ -138,11 +138,11 @@ export const signIn = async (req, res) => {
         const accessToken = generateAccessToken(user)
         const refreshToken = generateRefreshToken(user)
 
-            res.cookie("refreshToken", refreshToken, {
-                httpOnly: true,
-                secure: false, //local
-                sameSite: "strict",
-            });
+        res.cookie("refreshToken", refreshToken, {
+            httpOnly: true,
+            secure: false, //local
+            sameSite: "strict",
+        });
 
         return res.status(200).json({
             message: "Dang nhap thanh cong",
@@ -200,22 +200,29 @@ export const getNewAccessToken = async (req, res) => {
 }
 //đăng xuất
 export const signOut = async (req, res) => {
-    const id = req.user._id;
-    const user = await User.findById(id);
-    if (!user) {
-        return res.status(404).json({
-            message: "User khong ton tai"
-        });
-    };
+    try {
+        const id = req.user._id;
+        const user = await User.findById(id);
+        if (!user) {
+            return res.status(404).json({
+                message: "User khong ton tai"
+            });
+        };
 
-    res.clearCookie("refreshToken", {
-        httpOnly: true,
-        secure: false, // local 
-        sameSite: "strict",
-    });
-    return res.status(200).json({
-        message: "Dang xuat thanh cong"
-    });
+        res.clearCookie("refreshToken", {
+            httpOnly: true,
+            secure: false, // local 
+            sameSite: "strict",
+        });
+        return res.status(200).json({
+            message: "Dang xuat thanh cong"
+        });
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({
+            message: error.message
+        });
+    }
 }
 // quên mật khẩu
 export const forgotPassword = async (req, res) => {
