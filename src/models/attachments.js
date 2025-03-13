@@ -21,17 +21,12 @@ const attachmentSchema = new mongoose.Schema(
       ref: "User",
       required: true,
     },
-    issueId: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Issue",
-      required: true,
-    },
+
     fileName: {
       type: String,
       required: true,
     },
     filePath: {
-
       type: String,
       required: true,
     },
