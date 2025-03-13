@@ -18,14 +18,58 @@ dotenv.config();
 
 //đăng ký
 export const signUp = async (req, res) => {
-  try {
-    const { email, password } = req.body;
-    const { error } = signUpValidator.validate(req.body, { abortEarly: false });
-    if (error) {
-      const errors = error.details.map((err) => err.message);
-      return res.status(400).json({
-        message: errors,
-      });
+    try {
+        const { email, password } = req.body;
+        const { error } = signUpValidator.validate(req.body, { abortEarly: false })
+        if (error) {
+            const errors = error.details.map(err => err.message)
+            return res.status(400).json({
+                message: errors
+            })
+        }
+
+        const userExists = await User.findOne({ email: email })
+        if (userExists) {
+            return res.status(400).json({
+                message: "Email nay da duoc dang kt ban co muon dang nhap khong"
+            })
+        }
+
+        const hashedPassword = await bcryptjs.hash(password, 10)
+
+        const user = await User.create({
+            ...req.body,
+            password: hashedPassword
+        });
+
+        const verifyToken = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: "30m" });
+
+        //gui email
+        const verificationLink = `${process.env.BASE_URL}/api/v1/auth/verify-email/${verifyToken}`;
+        const emailContent = getVerificationEmailTemplate(verificationLink);
+
+        //send email
+
+
+        // use worker send email
+        await emailQueue.add("sendEmail", {
+            email: user.email,
+            subject: "Xác thực email",
+            text: "Xác thực emailabc",
+            html: emailContent
+        });
+
+        user.password = undefined;
+
+        return res.status(200).json({
+            message: "Dang ký account thanh cong! Vui long kiem tra email de xac thuc",
+            user,
+        })
+    } catch (error) {
+        return res.status(500).json({
+            name: error.message,
+            message: error.message
+        })
     }
 
     const userExists = await User.findOne({ email: email });
@@ -112,26 +156,62 @@ export const verifyEmail = async (req, res) => {
 };
 //đăng nhập
 export const signIn = async (req, res) => {
-  try {
-    //validate
-    const { error } = signInValidator.validate(req.body, { abortEarly: false });
-    if (error) {
-      const errors = error.details.map((err) => err.message);
-      return res.status(400).json({
-        message: errors,
-      });
-    }
+    try {
+        //validate
+        const { error } = signInValidator.validate(req.body, { abortEarly: false })
+        if (error) {
+            const errors = error.details.map(err => err.message)
+            return res.status(400).json({
+                message: errors
+            })
+        }
 
-    const { email, password } = req.body;
+        const { email, password } = req.body;
 
-    // truy van user
-    const user = await User.findOne({ email });
+        // truy van user
+        const user = await User.findOne({ email });
 
-    // kiem tra user
-    if (!user) {
-      return res.status(404).json({
-        message: "Emai nay chua dang ky ban co muon dang ky khong",
-      });
+        // kiem tra user
+        if (!user) {
+            return res.status(404).json({
+                message: "Emai nay chua dang ky ban co muon dang ky khong"
+            })
+        }
+
+        const isMatch = await bcryptjs.compare(password, user.password)
+        if (!isMatch) {
+            return res.status(404).json({
+                message: "Mat khau khong dung"
+            })
+        }
+
+        if (!user.verified) {
+            return res.status(401).json({
+                message: "Email chua duoc xac thuc"
+            })
+        }
+
+        // tao token
+        const accessToken = generateAccessToken(user)
+        const refreshToken = generateRefreshToken(user)
+
+            res.cookie("refreshToken", refreshToken, {
+                httpOnly: true,
+                secure: false, //local
+                sameSite: "strict",
+            });
+
+        return res.status(200).json({
+            message: "Dang nhap thanh cong",
+            accessToken,
+            user
+        });
+
+
+    } catch (error) {
+        return res.status(500).json({
+            message: error.message
+        })
     }
 
     const isMatch = await bcryptjs.compare(password, user.password);
