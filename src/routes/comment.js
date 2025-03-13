@@ -5,7 +5,7 @@ import { validateComment } from "../middlewares/validate.js";
 const router = express.Router();
 
 router.post(
-  "/projects/:id/tasks/:id/issues/:id/comments/:id",
+  "/projects/:projectId/tasks/:taskId/comments",
   validateComment,
   addComment
 );
