@@ -28,7 +28,6 @@ app.use("/api/v1", router);
 
 swaggerDocs (app);
 
-
 app.listen(PORT, () => {
   console.log(`Server is running on port http://localhost:${PORT}`);
 });

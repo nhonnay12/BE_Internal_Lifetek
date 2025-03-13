@@ -4,6 +4,7 @@ import { validateComment } from "../middlewares/validate.js";
 
 const router = express.Router();
 
+// add comment
 router.post(
   "/projects/:projectId/tasks/:taskId/comments",
   validateComment,
