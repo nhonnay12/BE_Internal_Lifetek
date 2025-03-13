@@ -1,23 +1,23 @@
-// import { createClient } from "redis";
+import { createClient } from "redis";
 
-// const redisClient = createClient({
-//     host: process.env.REDIS_HOST || "localhost",
-//     port: process.env.REDIS_PORT || 6379,
-// });
+const redisClient = createClient({
+    host: process.env.REDIS_HOST || "localhost",
+    port: process.env.REDIS_PORT || 6379,
+});
 
-// redisClient.on("error", (error) => {
-//     console.error("Redis error: ", error);
-// });
+redisClient.on("error", (error) => {
+    console.error("Redis error: ", error);
+});
 
-// const connectRedis = () => {
-//    try {
-//         redisClient.on("connect", () => {
-//              console.log("Redis connected");
-//         });
+const connectRedis = () => {
+   try {
+        redisClient.on("connect", () => {
+             console.log("Redis connected");
+        });
 
-//    } catch (error) {
-//         console.error("Connect redis error: ", error);
-//    }
-// }
+   } catch (error) {
+        console.error("Connect redis error: ", error);
+   }
+}
 
-// export { redisClient, connectRedis };
+export { redisClient, connectRedis };

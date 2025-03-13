@@ -12,7 +12,7 @@ dotenv.config();
 const PORT = process.env.PORT;
 
 connectDB();
-// connectRedis();
+connectRedis();
 
 app.use(
   cors({
