@@ -6,7 +6,7 @@ const ProjectSchema = new mongoose.Schema(
     description: { type: String },
     status: {
       type: String,
-      enum: ["inprogress", "done", "to do"],
+      enum: ["inprogress", "done", "todo"],
       default: "to do",
     },
 
@@ -16,7 +16,14 @@ const ProjectSchema = new mongoose.Schema(
       required: true,
     },
     members: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
+    priority: {
+      type: String,
+      enum: ['low', 'medium', 'high'],
+      default: 'medium'
   },
+  
+  },
+
   { timestamps: true }
 );
 
