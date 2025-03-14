@@ -29,15 +29,24 @@ const taskSchema = {
                 type: "string",
                 example: "pending"
             },
-            priority: {
-                type: "string",
-                example: "medium"
-            },
+            // priority: {
+            //     type: "string",
+            //     example: "medium"
+            // },
             images: {
                 type: "string",
                 example: "https://example.com/image.jpg"
             },
-            deadlineDate: {
+            startDate: {
+                type: "string",
+                example: "2021-06-25T00:00:00.000Z"
+            },
+            link: {
+                type: "string",
+                example: "https://example.com"
+            },
+
+            endDate: {   
                 type: "string",
                 example: "2021-06-25T00:00:00.000Z"
             }
