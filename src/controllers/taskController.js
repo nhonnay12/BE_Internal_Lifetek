@@ -1,10 +1,22 @@
 import * as taskService from "../services/taskService.js";
+import { createTaskValidator } from "../validation/taskValidation.js";
 
 export const addTask = async (req, res) => {
   try {
+
+    const dataBody = req.body;
+
+    const { error } = createTaskValidator.validate(dataBody, { abortEarly: false });
+    if (error) {
+      const errors = error.details.map((err) => err.message);
+      return res.status(400).json({
+        message: errors,
+      });
+    }
+
     const task = await taskService.addTask(req.body);
     res.status(201).json({
-      message: "Task created successfully",
+      message: "Nhiêm vụ tạo thành công",
       data: task,
     });
   } catch (error) {
@@ -35,9 +47,25 @@ export const getTaskById = async (req, res) => {
 export const updateTask = async (req, res) => {
   try {
     const id = req.params.id;
-    const task = await taskService.editTask(id, req.body);
-    if (!task) return res.status(404).json({ message: "Task not found" });
-    res.status(200).json(task);
+    const dataBody = req.body;
+    const { error } = createTaskValidator.validate(dataBody, { abortEarly: false });
+
+    if (error) {
+      const errors = error.details.map((err) => err.message);
+      return res.status(400).json({
+        message: errors,
+      });
+    }
+
+    const task = await taskService.editTask(id, dataBody);
+
+    if (!task) return res.status(404).json({ message: "Nhiệm vụ không tìm thấy" });
+
+   return res.status(200).json({
+      message: "Nhiệm vụ cập nhật thành công",
+      data: task,
+    });
+    
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
