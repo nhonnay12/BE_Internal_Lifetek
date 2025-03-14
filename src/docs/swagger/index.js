@@ -1,4 +1,8 @@
 import authSwagger from "./auth.js";
+import { authSchema } from "./components/authComponent.js";
+import { taskSchema } from "./components/taskComponent.js";
+import taskSwagger from "./task.js";
+
 
 const swaggerDocs = {
     openapi: "3.0.0",
@@ -15,7 +19,14 @@ const swaggerDocs = {
     ],
     paths: {
       ...authSwagger,
+      ...taskSwagger
     },
+    components: {
+      schemas: {
+        ...authSchema,
+        ...taskSchema,
+      },
+    }
   };
 
 export default swaggerDocs;
