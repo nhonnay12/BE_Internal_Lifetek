@@ -26,3 +26,9 @@ export const fetchProjectManager = async (id) => {
         select: "-password -refreshToken", 
     });;
 }
+export const fetchProjectMembers = async (projectId) => {
+  return await Project.findById(projectId).populate({
+    path: "members",
+    select: "-password -refreshToken",
+  });
+};

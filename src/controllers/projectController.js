@@ -60,4 +60,17 @@ export const getProjectManager = async (req, res) => {
         res.status(500).json({ message: error.message });
     }
 }
+export const getProjectMembers = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const project = await projectService.fetchProjectMembers(id);
 
+    if (!project) {
+      return res.status(404).json({ message: "Dự án không tồn tại" });
+    }
+    res.json({ members: project.members });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: error.message });
+  }
+};

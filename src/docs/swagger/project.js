@@ -347,6 +347,65 @@ const projectSwagger = {
                 }
             }
         }
+    },
+    "/projects/{id}/members": {
+        get: {
+            summary: "Lấy thông tin members tham gia dự án theo id  ",
+            description: "API lấy thông tin members tham gia dự án theo id ",
+            tags: ["Project"],
+            parameters: [
+                {
+                    in: "path",
+                    name: "id",
+                    required: true,
+                    description: "ID dự án",
+                    schema: {
+                        type: "string"
+                    }
+                }
+            ],
+            responses: {
+                200: {
+                    description: "Thông tin menbers tham gia dự án",
+                    content: {
+                        "application/json": {
+                            schema: {
+                                type: "object",
+                                properties: {
+                                    manager: {
+                                        type: "object",
+                                        properties: {
+                                            id: { type: "string" },
+                                            name: { type: "string" },
+                                            email: { type: "string" }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                404: {
+                    description: "Dự án không tìm thấy",
+                    content: {
+                        "application/json": {
+                            schema: {
+                                type: "object",
+                                properties: {
+                                    message: {
+                                        type: "string",
+                                        example: "Dự án không tìm thấy"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                500: {
+                    description: "Lỗi server"
+                }
+            }
+        }
     }
 };
 
