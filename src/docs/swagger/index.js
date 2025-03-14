@@ -1,8 +1,9 @@
 import authSwagger from "./auth.js";
 import { authSchema } from "./components/authComponent.js";
 import { taskSchema } from "./components/taskComponent.js";
+import { projectSchema } from "./components/projectComponent.js";
 import taskSwagger from "./task.js";
-
+import projectSwagger from "./project.js";
 
 const swaggerDocs = {
     openapi: "3.0.0",
@@ -19,12 +20,15 @@ const swaggerDocs = {
     ],
     paths: {
       ...authSwagger,
-      ...taskSwagger
+      ...taskSwagger,
+      ...projectSwagger,
     },
     components: {
       schemas: {
         ...authSchema,
         ...taskSchema,
+        ...projectSchema
+
       },
     }
   };
