@@ -5,7 +5,8 @@ import {
     getProjectById,
     updateProject,
     deleteProject,
-    getProjectManager
+    getProjectManager,
+    getProjectMembers
 } from "../controllers/projectController.js";
 import { authenticateToken, checkIsAdmin, checkIsProjectMember } from "../middlewares/checkPermisson.js";
 const routerProject = express.Router();
@@ -16,5 +17,6 @@ routerProject.get("/:id",/*authenticateToken,checkIsProjectMember,*/ getProjectB
 routerProject.put("/:id",/*authenticateToken,checkIsAdmin,*/ updateProject);
 routerProject.delete("/:id",/*authenticateToken,checkIsAdmin,*/ deleteProject);
 routerProject.get("/:id/manager",/*authenticateToken,*/ getProjectManager);
+routerProject.get("/:id/members", /*authenticateToken,*/ getProjectMembers);
 
 export default routerProject;
