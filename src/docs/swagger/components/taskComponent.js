@@ -15,6 +15,13 @@ const taskSchema = {
                 example: "60d4f6d3c2f2a00015f8a3d5"
             },
             assigneeId: {
+                type: "array",
+                items: {
+                    type: "string",
+                    example: "60d4f6d3c2f2a00015f8a3d5"
+                }
+            },
+            assignerId: {
                 type: "string",
                 example: "60d4f6d3c2f2a00015f8a3d5"
             },
@@ -27,11 +34,8 @@ const taskSchema = {
                 example: "medium"
             },
             images: {
-                type: "array",
-                items: {
-                    type: "string",
-                    example: "https://via.placeholder.com/150"
-                }
+                type: "string",
+                example: "https://example.com/image.jpg"
             },
             deadlineDate: {
                 type: "string",
