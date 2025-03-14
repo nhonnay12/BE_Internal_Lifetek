@@ -1,8 +1,10 @@
-import Task from '../models/Task.js'
+
+import Task from "../models/Task.js";
 import mongoose from 'mongoose';
-export  const getAllTasks = async () => {
-     return await Task.find();
-}
+
+// export  const getAllTasks = async () => {
+//      return await Task.find();
+// }
 export const createTasks = async (data) => {
      try {
           const task = new Task({
@@ -87,3 +89,19 @@ export const searchTaskService = async (data) => {
       console.log(error)
   }
 }
+export const getAllTasks = async () => {
+  return await Task.find().populate("projectId");
+};
+export const getTaskByProject = async (projectId) => {
+  return await Task.find({ projectId });
+};
+export const addTask = async (data) => {
+  return await Task.create(data);
+};
+export const editTask = async (id, data) => {
+  return await Task.findByIdAndUpdate(id, data, { new: true });
+};
+export const deleteTask = async (id) => {
+  return await Task.findByIdAndDelete(id);
+};
+

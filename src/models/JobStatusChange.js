@@ -1,15 +1,15 @@
 import mongoose from 'mongoose';
 
 const JobStatusChangeSchema = new mongoose.Schema({
-    task_id: { type: mongoose.Schema.Types.ObjectId, ref: 'Task', required: true },
-    project_id: { type: mongoose.Schema.Types.ObjectId, ref: 'Project', required: true },
-    old_status: { type: String, required: true, enum: ['To Do', 'In Progress', 'Completed', 'Blocked'] },
-    new_status: { type: String, required: true, enum: ['To Do', 'In Progress', 'Completed', 'Blocked'] },
-    changed_at: { type: Date, default: Date.now },
-    changed_by: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+    taskId: { type: mongoose.Schema.Types.ObjectId, ref: 'Task', required: true },
+    projectId: { type: mongoose.Schema.Types.ObjectId, ref: 'Project', required: true },
+    oldStatus: { type: String, required: true, enum: ['To Do', 'In Progress', 'Completed', 'Blocked'] },
+    newStatus: { type: String, required: true, enum: ['To Do', 'In Progress', 'Completed', 'Blocked'] },
+    changedAt: { type: Date, default: Date.now },
+    changedBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
     reason: { type: String },
     notes: { type: String },
-    change_source: { type: String, default: 'manual', enum: ['manual', 'system', 'API'] }
+    changeSource: { type: String, default: 'manual', enum: ['manual', 'system', 'API'] }
 },{timestamps: true});
 
 // Tạo Model từ Schema

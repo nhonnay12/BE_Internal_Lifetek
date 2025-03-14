@@ -1,27 +1,17 @@
 import mongoose from "mongoose";
 
-const TaskSchema = new mongoose.Schema({
-    title: { 
-        type: String, 
-        required: true 
+const TaskSchema = new mongoose.Schema(
+  {
+    title: {
+      type: String,
+      required: true,
     },
     description: { type: String },
     projectId: { 
         type: mongoose.Schema.Types.ObjectId, 
         ref: 'Project', 
-        required: true
-    },
-    link: {
-        type: String, 
-        required: true 
-    },
-    assigneeIds: [
-        { 
-        type: mongoose.Schema.Types.ObjectId, 
-        ref: 'User' 
-        }
-    ],
-    reporter: {
+        required: true },
+    assigneeId: { 
         type: mongoose.Schema.Types.ObjectId, 
         ref: 'User' 
     },
@@ -30,13 +20,18 @@ const TaskSchema = new mongoose.Schema({
         enum: ['pending', 'in progress', 'completed'],
         default: 'pending' 
         },
+    priority: { 
+        type: String, 
+        enum: ['low', 'medium', 'high'], 
+        default: 'medium' 
+    },
     images:[
         { 
             type: String
         }
     ],
-    dueDate: { type: Date },// deadline 
-  }, { timestamps: true });
-export default mongoose.model('tasks', TaskSchema);
-  
-  
+    deadlineDate: { type: Date }, // deadline
+  },
+  { timestamps: true }
+);
+export default mongoose.model("Task", TaskSchema);
