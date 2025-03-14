@@ -7,37 +7,38 @@ const TaskSchema = new mongoose.Schema(
       required: true,
     },
     description: { type: String },
-    projectId: { 
-        type: mongoose.Schema.Types.ObjectId, 
-        ref: 'Project', 
-        required: true },
-    assigneeId:[{ 
-        type: mongoose.Schema.Types.ObjectId, 
-        ref: 'User' 
+    projectId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Project",
+      required: true,
+    },
+    assigneeId: [{
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
     }],
-     assignerId:{ 
-        type: mongoose.Schema.Types.ObjectId, 
-        ref: 'User' 
+    assignerId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
     },
-    status: { 
-        type: String, 
-        enum: ['pending', 'in progress', 'completed','done'],
-        default: 'pending' 
-        },
-    priority: { 
-        type: String, 
-        enum: ['low', 'medium', 'high'], 
-        default: 'medium' 
+    status: {
+      type: String,
+      enum: ["pending", "in progress", "completed","done"],
+      default: "pending",
     },
+    priority: {
+      type: String,
+      enum: ["low", "medium", "high"],
+      default: "medium",
+    },
+    images: [
+      {
+        type: String,
+      },
+    ],
     startDate: {
       type: Date,
       default: Date.now
     },
-    images:[
-        { 
-            type: String
-        }
-    ],
     deadlineDate: { type: Date }, // deadline
   },
   { timestamps: true }

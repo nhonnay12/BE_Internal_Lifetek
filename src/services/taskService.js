@@ -71,7 +71,7 @@ export const searchTaskService = async (data) => {
   }
 }
 export const getAllTasks = async () => {
-  return await Task.find().populate("projectId" , "name");
+  return await Task.find();
 };
 export const getTaskByProject = async (projectId) => {
   return await Task.find({ projectId });
