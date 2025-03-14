@@ -12,26 +12,22 @@ const TaskSchema = new mongoose.Schema(
       ref: "Project",
       required: true,
     },
-    // người được giao nhiệm vụ
-    assigneeId: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "User",
-      },
-    ],
-    // người giao nhiệm vụ
+    assigneeId: [{
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+    }],
     assignerId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
-      required: true,
     },
     link: {
       type: String,
     },
     startDate: { type: Date, default: Date.now },
+
     status: {
       type: String,
-      enum: ["pending", "in progress", "completed", "done"],
+      enum: ["pending", "in progress", "completed","done"],
       default: "pending",
     },
     priority: {
@@ -39,11 +35,16 @@ const TaskSchema = new mongoose.Schema(
       enum: ["low", "medium", "high"],
       default: "medium",
     },
-    images: 
+    images: [
       {
         type: String,
       },
     endDate: { type: Date }, // deadline
+    ],
+    startDate: {
+      type: Date,
+      default: Date.now
+    },
   },
   { timestamps: true }
 );
