@@ -83,7 +83,7 @@ const authSwagger = {
       },
     },
   },
-  "auth/verify-email/{token}": {
+  "/auth/verify-email/{token}": {
     get: {
       summary: "Xác thực email",
       description: "API xác thực email người dùng",
@@ -212,7 +212,7 @@ const authSwagger = {
       },
     }
   },
-  "auth/sign-in": {
+  "/auth/sign-in": {
     post: {
       summary: "Đăng Nhập",
       description: "API đăng nhập tài khoản",
@@ -348,7 +348,7 @@ const authSwagger = {
       }
     }
   },
-  "auth/sign-out": {
+  "/auth/sign-out": {
     post: {
       summary: "Đăng xuất tài khoản",
       description: "API đăng xuất tài khoản",
@@ -409,7 +409,7 @@ const authSwagger = {
       }
     }
   },
-  "auth/refresh-token": {
+  "/auth/refresh-token": {
     post: {
       summary: "Lấy access token mới",
       description: "API lấy access token mới",
@@ -490,7 +490,7 @@ const authSwagger = {
       }
     },
   },
-  "auth/forgot-password": {
+  "/auth/forgot-password": {
     post: {
       summary: "Quên mật khẩu",
       description: "API quên mật khẩu",
@@ -567,7 +567,7 @@ const authSwagger = {
       }
     }
   },
-  "auth/reset-password/:id": {
+  "/auth/reset-password/:id": {
     post: {
       summary: "Đặt lại mật khẩu",
       description: "API đặt lại mật khẩu",

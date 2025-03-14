@@ -7,8 +7,9 @@ import {
     deleteProject,
     getProjectManager,
     getProjectMembers
+
 } from "../controllers/projectController.js";
-import { authenticateToken, checkIsAdmin, checkIsProjectMember } from "../middlewares/checkPermisson.js";
+
 const routerProject = express.Router();
 
 routerProject.post("/",/*authenticateToken,checkIsAdmin,*/ addProject);
