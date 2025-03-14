@@ -2,26 +2,7 @@
 import Task from "../models/Task.js";
 import mongoose from 'mongoose';
 
-// export  const getAllTasks = async () => {
-//      return await Task.find();
-// }
-export const createTasks = async (data) => {
-     try {
-          const task = new Task({
-               title:data.title,
-               description: data.description,
-               projectId: new mongoose.Types.ObjectId(data.projectId),
-               assigneeId: new mongoose.Types.ObjectId(data.assigneeId),
-               link: data.link,
-               status: data.status,
-               image: data.image ? data.image : "",
-               dueDate:data.dueDate
-          });
-          return await task.save();
-     } catch (error) {
-          console.log(error)
-  }
-}    
+ 
 
 export const  updateTaskStatusService = async (taskId,newStatus) => {
      // Kiểm tra xem taskId có hợp lệ không
@@ -90,7 +71,7 @@ export const searchTaskService = async (data) => {
   }
 }
 export const getAllTasks = async () => {
-  return await Task.find().populate("projectId");
+  return await Task.find().populate("projectId" , "name");
 };
 export const getTaskByProject = async (projectId) => {
   return await Task.find({ projectId });
