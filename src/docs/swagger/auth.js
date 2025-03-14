@@ -240,37 +240,60 @@ const authSwagger = {
       },
       responses: {
         200: {
-          message: {
-            type: "string",
-            example: "Đăng nhập thành công"
-          },
-          accessToken: {
-            type: "string",
-            example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3ZDIzNDgyN2NiZWIxMTA5ZTdlYzI1NiIsImlhdCI6MTc0MTgyOTQyOCwiZXhwIjoxNzQzMDM5MDI4fQ.J9qMQY1km5Zydyk9ZbmM2ykX2I6gLl-YYF_9LClJ3KI"
-          },
-          user: {
-            type: "object",
-            properties: {
-              _id: {
-                type: "string",
-                example: "67d234827cbeb1109e7ec256"
-              },
-              email: {
-                type: "string",
-                example: "example@gmail.com",
-              },
-              userName: {
-                type: "string",
-                example: "Nguyễn Văn A",
-              },
-              role: {
-                type: "string",
-                example: "USER"
-              },
-              verified: {
-                type: "boolean",
-                example: true
-              },
+          description: "Đăng nhập thành công",
+          content: {
+            "application/json": {
+              schema: {
+                type: "object",
+                properties: {
+                  message: {
+                    type: "string",
+                    example: "Đăng nhập thành công"
+                  },
+                  accessToken: {
+                    type: "string",
+                    example: "eyJhbGciOiJ9.eyJpZCI6IjY3ZDIzNDgyN2NiZWIxMTA5ZTdlYzI1NiIsImlhdCI6MTc0MTgyOTQyOCwiZXhwIjoxNzQzMDM5MDI4fQ.J9qMQY1km5Zydyk9ZbmM2ykX2I6gLl-YYF_9LClJ3KI"
+                  },
+                  data: {
+                    type: "object",
+                    properties: {
+                      _id: {
+                        type: "string",
+                        example: "65f0b8d0fbd3a6e9f8e2c9d5",
+                      },
+                      userName: {
+                        type: "string",
+                        example: "Nguyễn Văn A",
+                      },
+                      phone: {
+                        type: "string",
+                        example: "0123456789",
+                      },
+                      email: {
+                        type: "string",
+                        example: "example@gmail.com",
+                      },
+                      verified: {
+                        type: "boolean",
+                        example: true
+                      },
+                      role: {
+                        type: "string",
+                        example: "USER"
+                      },
+                      createdAt: {
+                        type: "string",
+                        example: "2021-09-08T06:40:48.000Z"
+                      },
+                      updatedAt: {
+                        type: "string",
+                        example: "2021-09-08T06:40:48.000Z"
+                      },
+
+                    }
+                  }
+                }
+              }
             }
           }
         },
@@ -316,19 +339,6 @@ const authSwagger = {
                   message: {
                     type: "string",
                     example: "Email chưa được xác thực",
-                  },
-                },
-              },
-            },
-          },
-          content: {
-            "application/json": {
-              schema: {
-                type: "object",
-                properties: {
-                  message: {
-                    type: "string",
-                    example: "Mật khẩu không đúng",
                   },
                 },
               },

@@ -157,8 +157,8 @@ export const signIn = async (req, res) => {
 
     return res.status(200).json({
       message: "Dang nhap thanh cong",
-      accessToken,
-      user
+      accessToken: accessToken,
+      data: user
     });
 
 
