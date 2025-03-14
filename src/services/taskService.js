@@ -34,15 +34,13 @@ export const  updateTaskStatusService = async (taskId,newStatus) => {
 
 
  export const addUserToTask = async (taskId, userId)=> {
-  if (!mongoose.Types.ObjectId.isValid(taskId) || !mongoose.Types.ObjectId.isValid(userId)) {
-    throw new Error(" TaskId hoặc userId không phù hợp");
-  }
 
-  const updatedTask = await Task.findByIdAndUpdate(
-    taskId,
-    { $addToSet: { assigneeIds: new mongoose.Types.ObjectId(userId) } }, // Dùng $addToSet để tránh trùng lặp
-    { new: true }
-  ).populate("assigneeIds"); // Populate để lấy chi tiết user nếu cần
+
+   const updatedTask = await Task.findByIdAndUpdate(
+     taskId,
+     { $addToSet: { assigneeId: { $each: userId.map(id => new mongoose.Types.ObjectId(id)) } } }, // Dùng $addToSet để tránh trùng lặp
+     { new: true }
+   ).populate("assigneeId");// Populate để lấy chi tiết user nếu cần
 
   if (!updatedTask) {
     throw new Error("Task không tìm thấy");

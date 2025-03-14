@@ -11,7 +11,7 @@ const routerTask = express.Router();
 
 routerTask.get("/", getAllTasks);
 routerTask.put("/:taskId/status", updateTaskStatus);
-routerTask.post("/add-user", addUserToTaskController);
+routerTask.post("/:taskId/add-user", addUserToTaskController);
 routerTask.post("/search", searchTaskController);
 routerTask.post("/create-task", addTask);
 routerTask.get("/", getAllTasks);

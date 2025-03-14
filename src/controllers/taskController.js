@@ -25,8 +25,9 @@ export const updateTaskStatus = async (req, res) => {
 
 export const addUserToTaskController = async (req, res) => {
   try {
-    const { taskId, userId } = req.body;
-    
+     const { taskId } = req.params;
+    const { userId }  = req.body;
+    console.log(userId,taskId)
     const updatedTask = await taskService.addUserToTask(taskId, userId);
 
     res.status(200).json({
