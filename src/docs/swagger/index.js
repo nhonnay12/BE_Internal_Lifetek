@@ -5,6 +5,8 @@ import { projectSchema } from "./components/projectComponent.js";
 import taskSwagger from "./task.js";
 import projectSwagger from "./project.js";
 
+
+
 const swaggerDocs = {
     openapi: "3.0.0",
     info: {
@@ -14,7 +16,7 @@ const swaggerDocs = {
     },
     servers: [
       {
-        url: "http://localhost:5000/api/v1",
+        url: `${process.env.DOMAIN_SWAGGER}/api/v1`,
         description: "Môi trường development",
       },
     ],

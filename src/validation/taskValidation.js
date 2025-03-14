@@ -16,6 +16,9 @@ export const createTaskValidator = Joi.object({
     assigneeId: Joi.array().items(Joi.string()).messages({
         "string.empty": "assigneeId không được để trống",
     }),
+    assignerId: Joi.string().messages({
+        "string.empty": "assigneeId không được để trống",
+    }),
 
     assignerId: Joi.string().required().messages({
         "string.empty": "assignerId không được để trống",
@@ -32,7 +35,13 @@ export const createTaskValidator = Joi.object({
     images: Joi.array().items(Joi.string()).messages({
         "string.empty": "Hình ảnh không được để trống",
     }),
-    deadlineDate: Joi.date().messages({
+    link: Joi.string().messages({
+        "string.empty": "Link không được để trống",
+    }),
+    startDate: Joi.date().messages({
+        "date.base": "Ngày bắt đầu không hợp lệ",
+    }),
+    endDate: Joi.date().messages({
         "date.base": "Ngày hết hạn không hợp lệ",
     }),
     startDate: Joi.date().messages({
@@ -63,6 +72,12 @@ export const updateTaskValidator = Joi.object({
     }),
     images: Joi.array().items(Joi.string()).messages({
         "string.empty": "Hình ảnh không được để trống",
+    }),
+    link: Joi.string().messages({
+        "string.empty": "Link không được để trống",
+    }),
+    startDate: Joi.date().messages({
+        "date.base": "Ngày bắt đầu không hợp lệ",
     }),
     deadlineDate: Joi.date().messages({
         "date.base": "Ngày hết hạn không hợp lệ",

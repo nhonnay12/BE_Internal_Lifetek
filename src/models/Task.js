@@ -20,6 +20,11 @@ const TaskSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
     },
+    link: {
+      type: String,
+    },
+    startDate: { type: Date, default: Date.now },
+
     status: {
       type: String,
       enum: ["pending", "in progress", "completed","done"],
@@ -34,12 +39,12 @@ const TaskSchema = new mongoose.Schema(
       {
         type: String,
       },
+    endDate: { type: Date }, // deadline
     ],
     startDate: {
       type: Date,
       default: Date.now
     },
-    deadlineDate: { type: Date }, // deadline
   },
   { timestamps: true }
 );

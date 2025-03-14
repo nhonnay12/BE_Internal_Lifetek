@@ -1,5 +1,5 @@
 const taskSwagger = {
-    "/task/create-task" : {
+    "/tasks/create-task" : {
         post: {
             summary: "Tạo nhiệm vụ mới",
             description: "API tạo nhiệm vụ mới",
@@ -60,7 +60,8 @@ const taskSwagger = {
             }
         }
     },
-    "/task/edit-task/{id}" : {
+    "/tasks/edit-task/{id}" : {
+
         put: {
             summary: "chỉnh sửa nhiệm vụ",
             description: "API chỉnh sửa nhiệm vụ",
