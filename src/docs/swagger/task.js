@@ -61,6 +61,7 @@ const taskSwagger = {
         }
     },
     "/tasks/edit-task/{id}" : {
+
         put: {
             summary: "chỉnh sửa nhiệm vụ",
             description: "API chỉnh sửa nhiệm vụ",
@@ -150,11 +151,12 @@ const taskSwagger = {
         }
     },
     
-    "/task": {
+    "/tasks": {
         get: {
             summary: 'Lấy danh sách tất cả công việc',
             description: 'Trả về danh sách các công việc trong hệ thống',
             tags: ['Task'],
+           
             responses: {
                 200: {
                     description: "Lấy danh sách vấn đề thành công",
@@ -166,12 +168,276 @@ const taskSwagger = {
                         },
                     },
                 },
+                500: {
+                    description: "Lỗi phía server",
+                    content: {
+                        "application/json": {
+                            schema: {
+                               type: "object",
+                                properties: {
+                                    message: {
+                                        type: "string",
+                                        example: "Internal server error",
+                                    },
+                                },
+                            },
+                        },
+                    },
+                }
              
                
             },
         }
         
-      }
+    },    
+    "/tasks/{taskId}/status": {
+        put: {
+            summary: 'Cập nhật trạng thái công việc',
+            description: 'Trả về  công việc đã thay đổi trạng thái trong hệ thống',
+            tags: ['Task'],
+             parameters: [
+                {
+                    in: "path",
+                    name: "taskId",
+                    required: true,
+                    description: "ID nhiệm vụ",
+                    schema: {
+                        type: "string",
+                        example: "67d3f68ec0587825d1b151bb",
+                    },
+                },
+            ],
+            requestBody: {
+                required: true,
+                content: {
+                    "application/json": {
+                        schema: {
+                             type: "string",
+                            example: {status: "completed" }
+                        },
+                    },
+                },
+            },
+            responses: {
+                200: {
+                    description: "Thay đổi trạng thái vấn đề thành công",
+                    content: {
+                        "application/json": {
+                            schema: {
+                                $ref: "#/components/schemas/Task",
+                            },
+                        },
+                    },
+                },
+                400: {
+                    description: "Lỗi phía server",
+                    content: {
+                        "application/json": {
+                            schema: {
+                                type: "object",
+                                properties: {
+                                    message: {
+                                        type: "string",
+                                        example: "task ID không phù hợp",
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+                404: {
+                    description: "Lỗi phía server",
+                    content: {
+                        "application/json": {
+                            schema: {
+                                type: "object",
+                                properties: {
+                                    message: {
+                                        type: "string",
+                                        example: "Không thấy task hợp lệ",
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+                500: {
+                    description: "Lỗi phía server",
+                    content: {
+                        "application/json": {
+                            schema: {
+                                type: "object",
+                                properties: {
+                                    message: {
+                                        type: "string",
+                                        example: "Internal server error",
+                                    },
+                                },
+                            },
+                        },
+                    },
+                }
+            }
+        }
+    },
+    "/tasks/{taskId}/add-user": {
+          post: {
+            summary: 'Thêm người dùng vào vấn đề',
+            description: 'Trả về công việc đã thêm người dùng trong hệ thống',
+            tags: ['Task'],
+             parameters: [
+                {
+                    in: "path",
+                    name: "taskId",
+                    required: true,
+                    description: "ID nhiệm vụ",
+                    schema: {
+                        type: "string",
+                        example: "67d3f68ec0587825d1b151bb",
+                    },
+                },
+            ],
+            requestBody: {
+                required: true,
+                content: {
+                    "application/json": {
+                        schema: {
+                             type: "string",
+                            example: {userId: ["60d4f6d3c2f2a00015f8a3d6"] }
+                        },
+                    },
+                },
+            },
+            responses: {
+                200: {
+                    description: "Thêm người dùng vào vấn đề thành công",
+                    content: {
+                        "application/json": {
+                            schema: {
+                                $ref: "#/components/schemas/Task",
+                            },
+                        },
+                    },
+                },
+                400: {
+                    description: "Lỗi phía server",
+                    content: {
+                        "application/json": {
+                            schema: {
+                                type: "object",
+                                properties: {
+                                    message: {
+                                        type: "string",
+                                        example: "Internal server error",
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+                // 404: {
+                //     description: "Lỗi phía server",
+                //     content: {
+                //         "application/json": {
+                //             schema: {
+                //                 type: "object",
+                //                 properties: {
+                //                     message: {
+                //                         type: "string",
+                //                         example: "Không thấy task hợp lệ",
+                //                     },
+                //                 },
+                //             },
+                //         },
+                //     },
+                // },
+                // 500: {
+                //     description: "Lỗi phía server",
+                //     content: {
+                //         "application/json": {
+                //             schema: {
+                //                 type: "object",
+                //                 properties: {
+                //                     message: {
+                //                         type: "string",
+                //                         example: "Internal server error",
+                //                     },
+                //                 },
+                //             },
+                //         },
+                //     },
+                // }
+            }
+        }
+    },
+    "/tasks/search": {
+          post: {
+            summary: 'Tìm kiếm công việc',
+            description: 'Trả về công việc có thông tin tìm kiếm tương thích',
+            tags: ['Task'],
+            requestBody: {
+                required: true,
+                content: {
+                    "application/json": {
+                        schema: {
+                             type: "string",
+                                example:{tiltle: "Fix login bug",
+                                        assigneeId: "65f123abc123abcd12345678",
+                                        assignerId: "65f456def456defg45678901",
+                                        startDate: "2024-03-10",
+                                        endDate: "2024-03-15",
+                                }
+                        },
+                    },
+                },
+            },
+            responses: {
+                200: {
+                    description: "Trả về vấn đề có thông tin tìm kiếm tương thích",
+                    content: {
+                        "application/json": {
+                            schema: {
+                                $ref: "#/components/schemas/Task",
+                            },
+                        },
+                    },
+                },
+                400: {
+                    description: "Lỗi phía server",
+                    content: {
+                        "application/json": {
+                            schema: {
+                                type: "object",
+                                properties: {
+                                    message: {
+                                        type: "string",
+                                        example: "Internal server error",
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+                
+                500: {
+                    description: "Lỗi phía server",
+                    content: {
+                        "application/json": {
+                            schema: {
+                                type: "object",
+                                properties: {
+                                    message: {
+                                        type: "string",
+                                        example: "Internal server error",
+                                    },
+                                },
+                            },
+                        },
+                    },
+                }
+            }
+        }
+    }
         
      
 }

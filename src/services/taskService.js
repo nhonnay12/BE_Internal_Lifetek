@@ -1,12 +1,9 @@
-
 import Task from "../models/Task.js";
 import mongoose from 'mongoose';
 
- 
-
 export const  updateTaskStatusService = async (taskId,newStatus) => {
      // Kiểm tra xem taskId có hợp lệ không
-     if (!mongoose.Types.ObjectId.isValid(taskId)) {
+  if (!mongoose.Types.ObjectId.isValid(taskId)) {
           throw new Error(" task ID không phù hợp");
      }
 
@@ -39,8 +36,8 @@ export const  updateTaskStatusService = async (taskId,newStatus) => {
    const updatedTask = await Task.findByIdAndUpdate(
      taskId,
      { $addToSet: { assigneeId: { $each: userId.map(id => new mongoose.Types.ObjectId(id)) } } }, // Dùng $addToSet để tránh trùng lặp
-     { new: true }
-   ).populate("assigneeId");// Populate để lấy chi tiết user nếu cần
+     { new: true },{assigneeId: 1}
+   );// Populate để lấy chi tiết user nếu cần
 
   if (!updatedTask) {
     throw new Error("Task không tìm thấy");
@@ -51,19 +48,8 @@ export const  updateTaskStatusService = async (taskId,newStatus) => {
 ////
 export const searchTaskService = async (data) => {
     try {
-      const {  assigneeId, reporter, createAt, dueDate } = data;
-
-      // let filter = {};
-
-      // if (title) filter.title = new RegExp(title, "i"); // Tìm kiếm không phân biệt chữ hoa/thường
-      // if (assignee) filter.assignee = assignee;
-      // if (reporter) filter.reporter = reporter;
-      // if (createAt) filter.createAt = { $gte: new Date(createAt) };
-      // if (dueDate) filter.dueDate = { $lte: new Date(dueDate) };
-
-      // const task = await Task.find(filter);
-
-      console.log(assigneeId, reporter, createAt, dueDate)
+      const task = await Task.find(data);
+       return task;
   } catch (error) {
       console.log(error)
   }

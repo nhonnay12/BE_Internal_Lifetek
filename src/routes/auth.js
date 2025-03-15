@@ -4,10 +4,12 @@ import authMiddleware from "../middlewares/auth.js";
 
 const routerAuth = Router();
 
-routerAuth.post("/signup", signUp);
-routerAuth.post("/signIn", signIn);
-routerAuth.get("/", (res, req) => {
-  req.send("Hello");
-});
+routerAuth.post("/sign-up", signUp);
+routerAuth.get("/verify-email/:token", verifyEmail);
+routerAuth.post("/sign-in", signIn);
+routerAuth.post("/sign-out", authMiddleware, signOut);
+routerAuth.post("refresh-token", getNewAccessToken);
+routerAuth.post("/forgot-password",forgotPassword);
+routerAuth.post("/reset-password/:id",resetPassword);
 
 export default routerAuth;
