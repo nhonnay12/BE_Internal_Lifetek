@@ -1,10 +1,8 @@
 
 import * as taskService from "../services/taskService.js";
 import * as projectService from "../services/projectService.js";
-import * as userService from "../services/userService.js";
+import * as userService from "../services/user.js";
 import { createTaskValidator } from "../validation/taskValidation.js";
-
-
 
 /// thay đổi trạng thái 
 export const updateTaskStatus = async (req, res) => {
