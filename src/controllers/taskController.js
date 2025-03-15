@@ -1,13 +1,15 @@
 
 import * as taskService from "../services/taskService.js";
-import * as projectService from "../services/projectService.js";
-import * as userService from "../services/user.js";
 import { createTaskValidator } from "../validation/taskValidation.js";
+import mongoose from 'mongoose';
+
 
 /// thay đổi trạng thái 
 export const updateTaskStatus = async (req, res) => {
   try {
+    console.log(req.params)
     const { taskId } = req.params;
+    
     const { status } = req.body;
 
     const updatedTask = await taskService.updateTaskStatusService(taskId, status);
@@ -43,12 +45,37 @@ export const addUserToTaskController = async (req, res) => {
 
 export const searchTaskController = async (req, res) => {
   try {
-       
-    const searchResult = await taskService.searchTaskService(req.query)
-    // res.json(searchResult);
+    const { assigneeId, assignerId, startDate, endDate, title } = req.body
+    console.log(assigneeId,assignerId )
+    let filter = {};
+     if (assigneeId && mongoose.isValidObjectId(assigneeId)) {
+      filter.assigneeId = new mongoose.Types.ObjectId(assigneeId);
+    }
+     else {
+       res.status(400).json({ error: "Giá trị người được giao không hợp lệ" });
+    }
+    if (assignerId && mongoose.isValidObjectId(assignerId)) {
+      filter.assignerId = new mongoose.Types.ObjectId(assignerId);
+       res.status(400).json({ error: "Giá trị người báo cáo không hợp lệ" });
+    }
+    if (startDate) filter.startDate = new Date(startDate);
+    if (endDate) filter.endDate = new Date(endDate);
+    if (title) filter.title = { $regex: title, $options: "i" }; // Tìm kiếm không phân biệt in hoa thường
+
+    const searchResult = await taskService.searchTaskService(filter)
+    if (searchResult.length === 0) {
+      res.status(201).json({ message: "Không tìm thấy kết quả phù hợp" });
+    }
+    else {
+      res.status(200).json({
+        message: "Kết quả tìm kiếm",
+        task: searchResult
+      });
+    }
+    console.log(searchResult)
 
   } catch (error) {
-
+    console.log(error)
     res.status(500).json({ error: "Lỗi server" });
 
   }
@@ -76,7 +103,6 @@ export const addTask = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
-/// lấy danh sách vấn đề
 export const getAllTasks = async (req, res) => {
   try {
     const tasks = await taskService.getAllTasks();
@@ -102,23 +128,8 @@ export const getTaskById = async (req, res) => {
 // cập nhật vấn đề
 export const updateTask = async (req, res) => {
   try {
-    const { id } = req.params;
-
+    const id = req.params.id;
     const dataBody = req.body;
-
-    const projectId = projectService.getProjectById(dataBody.projectId);
-    if (!projectId) return res.status(404).json({ message: "Dự án không hợp lệ" });
-
-    if (dataBody.assigneeId || dataBody.assignerId) {
-      dataBody.assigneeId.forEach((assigneeId) => {
-        const assignee = userService.geUserById(assigneeId);
-        if (!assignee) return res.status(404).json({ message: "Người dùng không hợp lệ" });
-      });
-
-      const assignerId = userService.geUserById(dataBody.assignerId);
-      if (!assignerId) return res.status(404).json({ message: "Người dùng không hợp lệ" });
-    }
-
     const { error } = createTaskValidator.validate(dataBody, { abortEarly: false });
 
     if (error) {
@@ -132,11 +143,11 @@ export const updateTask = async (req, res) => {
 
     if (!task) return res.status(404).json({ message: "Nhiệm vụ không tìm thấy" });
 
-    return res.status(200).json({
+   return res.status(200).json({
       message: "Nhiệm vụ cập nhật thành công",
       data: task,
     });
-
+    
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
