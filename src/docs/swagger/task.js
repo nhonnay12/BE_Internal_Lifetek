@@ -61,7 +61,6 @@ const taskSwagger = {
         }
     },
     "/tasks/edit-task/{id}" : {
-
         put: {
             summary: "chỉnh sửa nhiệm vụ",
             description: "API chỉnh sửa nhiệm vụ",

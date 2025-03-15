@@ -4,6 +4,9 @@ import { taskSchema } from "./components/taskComponent.js";
 import { projectSchema } from "./components/projectComponent.js";
 import taskSwagger from "./task.js";
 import projectSwagger from "./project.js";
+import dotenv from "dotenv";
+dotenv.config();
+
 
 
 
@@ -16,7 +19,8 @@ const swaggerDocs = {
     },
     servers: [
       {
-        url: `${process.env.DOMAIN_SWAGGER}/api/v1`,
+        url: `${process.env.DOMAIN_SWAGGER}:${process.env.PORT}/api/v1`,
+
         description: "Môi trường development",
       },
     ],
