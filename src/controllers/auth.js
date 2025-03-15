@@ -13,7 +13,6 @@ import {
 } from "../services/templateService.js";
 import { emailQueue } from "../queues/index.js";
 import { generateRandomPassword } from "../utils/generatePassword.js";
-import sendMail from "../services/emailService.js";
 dotenv.config();
 
 //đăng ký
@@ -85,28 +84,34 @@ export const signUp = async (req, res) => {
 //xác thực email
 export const verifyEmail = async (req, res) => {
 
-  const { token } = req.params;
-  const decode = jwt.verify(token, process.env.JWT_SECRET);
-  if (!decode) {
-    return res.status(401).json({
-      message: "Token khong hop le",
+  try {
+    const { token } = req.params;
+    const decode = jwt.verify(token, process.env.JWT_SECRET);
+    if (!decode) {
+      return res.status(401).json({
+        message: "Token khong hop le",
+      });
+    }
+
+    const user = await User.findById(decode.id);
+    if (!user) {
+      return res.status(404).json({
+        message: "User khong ton tai",
+      });
+    }
+
+    user.verified = true;
+    await user.save();
+
+    return res.status(200).json({
+      message: "Xac thuc email thanh cong",
+      user,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      message: error.message,
     });
   }
-
-  const user = await User.findById(decode.id);
-  if (!user) {
-    return res.status(404).json({
-      message: "User khong ton tai",
-    });
-  }
-
-  user.verified = true;
-  await user.save();
-
-  return res.status(200).json({
-    message: "Xac thuc email thanh cong",
-    user,
-  });
 };
 //đăng nhập
 export const signIn = async (req, res) => {

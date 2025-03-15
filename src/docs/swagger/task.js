@@ -148,7 +148,32 @@ const taskSwagger = {
                 },
             },
         }
-    }
+    },
+    
+    "/task": {
+        get: {
+            summary: 'Lấy danh sách tất cả công việc',
+            description: 'Trả về danh sách các công việc trong hệ thống',
+            tags: ['Task'],
+            responses: {
+                200: {
+                    description: "Lấy danh sách vấn đề thành công",
+                    content: {
+                        "application/json": {
+                            schema: {
+                                $ref: "#/components/schemas/Task",
+                            },
+                        },
+                    },
+                },
+             
+               
+            },
+        }
+        
+      }
+        
+     
 }
 
 export default taskSwagger;

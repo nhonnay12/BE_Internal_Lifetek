@@ -8,6 +8,8 @@ import dotenv from "dotenv";
 dotenv.config();
 
 
+
+
 const swaggerDocs = {
     openapi: "3.0.0",
     info: {
@@ -18,6 +20,7 @@ const swaggerDocs = {
     servers: [
       {
         url: `${process.env.DOMAIN_SWAGGER}:${process.env.PORT}/api/v1`,
+
         description: "Môi trường development",
       },
     ],
