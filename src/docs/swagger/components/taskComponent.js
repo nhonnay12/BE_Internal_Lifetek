@@ -37,7 +37,7 @@ const taskSchema = {
                 type: "string",
                 example: "https://example.com/image.jpg"
             },
-            deadlineDate: {
+            endDate: {
                 type: "string",
                 example: "2021-06-25T00:00:00.000Z"
             }

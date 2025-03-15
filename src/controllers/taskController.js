@@ -1,4 +1,6 @@
 import * as taskService from "../services/taskService.js";
+import * as projectService from "../services/projectService.js";
+import * as userService from "../services/userService.js";
 import { createTaskValidator } from "../validation/taskValidation.js";
 
 export const addTask = async (req, res) => {
@@ -46,8 +48,23 @@ export const getTaskById = async (req, res) => {
 };
 export const updateTask = async (req, res) => {
   try {
-    const id = req.params.id;
+    const { id } = req.params;
+
     const dataBody = req.body;
+
+    const projectId = projectService.getProjectById(dataBody.projectId);
+    if (!projectId) return res.status(404).json({ message: "Dự án không hợp lệ" });
+
+    if (dataBody.assigneeId || dataBody.assignerId) {
+      dataBody.assigneeId.forEach((assigneeId) => {
+        const assignee = userService.geUserById(assigneeId);
+        if (!assignee) return res.status(404).json({ message: "Người dùng không hợp lệ" });
+      });
+
+      const assignerId = userService.geUserById(dataBody.assignerId);
+      if (!assignerId) return res.status(404).json({ message: "Người dùng không hợp lệ" });
+    }
+
     const { error } = createTaskValidator.validate(dataBody, { abortEarly: false });
 
     if (error) {
@@ -61,11 +78,11 @@ export const updateTask = async (req, res) => {
 
     if (!task) return res.status(404).json({ message: "Nhiệm vụ không tìm thấy" });
 
-   return res.status(200).json({
+    return res.status(200).json({
       message: "Nhiệm vụ cập nhật thành công",
       data: task,
     });
-    
+
   } catch (error) {
     res.status(500).json({ message: error.message });
   }

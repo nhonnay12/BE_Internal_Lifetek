@@ -40,7 +40,7 @@ const TaskSchema = new mongoose.Schema(
       {
         type: String,
       },
-    deadlineDate: { type: Date }, // deadline
+    endDate: { type: Date }, // deadline
   },
   { timestamps: true }
 );
