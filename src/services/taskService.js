@@ -1,5 +1,5 @@
 import Task from "../models/Task.js";
-import mongoose from 'mongoose';
+import mongoose from "mongoose";
 
 export const updateTaskStatusService = async (taskId, newStatus) => {
   // Kiểm tra xem taskId có hợp lệ không
@@ -25,37 +25,41 @@ export const updateTaskStatusService = async (taskId, newStatus) => {
   }
 
   return updatedTask;
-}
+};
 
 /// thêm user vào task
 
-
 export const addUserToTask = async (taskId, userId) => {
-
-
   const updatedTask = await Task.findByIdAndUpdate(
     taskId,
-    { $addToSet: { assigneeId: { $each: userId.map(id => new mongoose.Types.ObjectId(id)) } } }, // Dùng $addToSet để tránh trùng lặp
-    { new: true }, { assigneeId: 1 }
-  );// Populate để lấy chi tiết user nếu cần
+    {
+      $addToSet: {
+        assigneeId: {
+          $each: userId.map((id) => new mongoose.Types.ObjectId(id)),
+        },
+      },
+    }, // Dùng $addToSet để tránh trùng lặp
+    { new: true },
+    { assigneeId: 1 }
+  ); // Populate để lấy chi tiết user nếu cần
 
   if (!updatedTask) {
     throw new Error("Task không tìm thấy");
   }
 
   return updatedTask;
-}
+};
 ////
 export const searchTaskService = async (data) => {
   try {
     const task = await Task.find(data);
     return task;
   } catch (error) {
-    console.log(error)
+    console.log(error);
   }
-}
+};
 export const getAllTasks = async () => {
-  return await Task.find().select("+assigneeId +assignerId");;
+  return await Task.find().select("+assigneeId +assignerId");
 };
 export const getTaskByProject = async (projectId) => {
   return await Task.find({ projectId });
@@ -79,5 +83,13 @@ export const getAlTaskByProject = async (projectId) => {
       path: "assignerId",
       select: "userName email",
     });
-}
-
+};
+export const FindTaskById = async (id) => {
+  return await Task.findById(id).populate({
+    path: "assigneeId",
+    select: "userName email", // Chỉ laý user name và email của user
+  });
+};
+export const FindTakByTitle = async (title) => {
+  return await Task.find({ title });
+};
