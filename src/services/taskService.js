@@ -8,7 +8,7 @@ export const updateTaskStatusService = async (taskId, newStatus) => {
   }
 
   // Kiểm tra trạng thái hợp lệ
-  const validStatuses = ["pending", "in progress", "completed", "done"];
+  const validStatuses = ["pending", "inProgress", "completed", "done"];
   if (!validStatuses.includes(newStatus)) {
     throw new Error("Giá trị status không phù hợp");
   }

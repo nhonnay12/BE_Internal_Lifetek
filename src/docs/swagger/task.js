@@ -1,5 +1,3 @@
-import { get } from "mongoose";
-
 const taskSwagger = {
   "/tasks/create-task": {
     post: {
@@ -503,7 +501,7 @@ const taskSwagger = {
   },
   "/tasks/project/{projectId}": {
     get: {
-      sunmary: "Lấy danh sách công việc theo dự án",
+      summary: "Lấy danh sách công việc theo dự án",
       description: "Trả về danh sách công việc theo dự án",
       tags: ["Task"],
       parameters: [

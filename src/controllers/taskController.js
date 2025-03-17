@@ -1,9 +1,9 @@
+import { uploadSingleFile } from "../services/cloudinaryService.js";
 import * as taskService from "../services/taskService.js";
 import {
   createTaskValidator,
   updateTaskValidator,
 } from "../validation/taskValidation.js";
-import mongoose from "mongoose";
 
 /// thay đổi trạng thái
 export const updateTaskStatus = async (req, res) => {
@@ -28,7 +28,6 @@ export const updateTaskStatus = async (req, res) => {
 };
 
 // thêm user vào task
-
 export const addUserToTaskController = async (req, res) => {
   try {
     const { taskId } = req.params;
@@ -51,7 +50,7 @@ export const getAlTaskByProject = async (req, res) => {
     const tasks = await taskService.getAlTaskByProject(projectId);
     res.status(200).json({
       message: "Tasks fetched successfully",
-      data: tasks,
+      data: tasks
     });
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -59,7 +58,6 @@ export const getAlTaskByProject = async (req, res) => {
 };
 
 // tìm kiếm task(lỗi)
-
 export const searchTaskByTitle = async (req, res) => {
   try {
     const { title } = req.params;
@@ -80,12 +78,19 @@ export const addTask = async (req, res) => {
     const { error } = createTaskValidator.validate(dataBody, {
       abortEarly: false,
     });
+
     if (error) {
       const errors = error.details.map((err) => err.message);
       return res.status(400).json({
         message: errors,
       });
     }
+
+    if (req.file) {
+      const filePath = req.file.buffer;
+      const imageUrl = await uploadSingleFile(filePath);
+      dataBody.image = imageUrl.secure_url;
+    };
 
     const task = await taskService.addTask(req.body);
     return res.status(201).json({

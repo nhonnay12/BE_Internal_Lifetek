@@ -10,6 +10,7 @@ import {
   getAlTaskByProject,
 } from "../controllers/taskController.js";
 import { FindTakByTitle } from "../services/taskService.js";
+import upload from "../config/multer.js";
 
 const routerTask = express.Router();
 
@@ -18,7 +19,7 @@ routerTask.get("/project/:projectId", getAlTaskByProject);
 routerTask.put("/:taskId/status", updateTaskStatus);
 routerTask.post("/:taskId/add-user", addUserToTaskController);
 routerTask.get("/search", FindTakByTitle);
-routerTask.post("/create-task", addTask);
+routerTask.post("/create-task", upload.single("image"), addTask);
 
 routerTask.get("/:id", getTaskById);
 routerTask.put("/edit-task/:id", updateTask);
