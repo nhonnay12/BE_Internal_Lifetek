@@ -432,75 +432,7 @@ const taskSwagger = {
       },
     },
   },
-  "/tasks/search": {
-    post: {
-      summary: "Tìm kiếm công việc",
-      description: "Trả về công việc có thông tin tìm kiếm tương thích",
-      tags: ["Task"],
-      requestBody: {
-        required: true,
-        content: {
-          "application/json": {
-            schema: {
-              type: "string",
-              example: {
-                tiltle: "Fix login bug",
-                assigneeId: "65f123abc123abcd12345678",
-                assignerId: "65f456def456defg45678901",
-                startDate: "2024-03-10",
-                endDate: "2024-03-15",
-              },
-            },
-          },
-        },
-      },
-      responses: {
-        200: {
-          description: "Trả về vấn đề có thông tin tìm kiếm tương thích",
-          content: {
-            "application/json": {
-              schema: {
-                $ref: "#/components/schemas/Task",
-              },
-            },
-          },
-        },
-        400: {
-          description: "Lỗi phía server",
-          content: {
-            "application/json": {
-              schema: {
-                type: "object",
-                properties: {
-                  message: {
-                    type: "string",
-                    example: "Internal server error",
-                  },
-                },
-              },
-            },
-          },
-        },
 
-        500: {
-          description: "Lỗi phía server",
-          content: {
-            "application/json": {
-              schema: {
-                type: "object",
-                properties: {
-                  message: {
-                    type: "string",
-                    example: "Internal server error",
-                  },
-                },
-              },
-            },
-          },
-        },
-      },
-    },
-  },
   "/tasks/project/{projectId}": {
     get: {
       sunmary: "Lấy danh sách công việc theo dự án",
@@ -521,6 +453,53 @@ const taskSwagger = {
       responses: {
         200: {
           description: "Lấy danh sách công việc theo dự án thành công",
+          content: {
+            "application/json": {
+              schema: {
+                $ref: "#/components/schemas/Task",
+              },
+            },
+          },
+        },
+        500: {
+          description: "Lỗi phía server",
+          content: {
+            "application/json": {
+              schema: {
+                type: "object",
+                properties: {
+                  message: {
+                    type: "string",
+                    example: "Internal server error",
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+  },
+  "/tasks/search": {
+    get: {
+      sunmary: "Tìm kiếm công việc theo Title , (người dùng nhập)",
+      description: "Trả về danh sách công việc theo Title",
+      tags: ["Task"],
+      parameters: [
+        {
+          in: "query",
+          name: "search",
+          required: true,
+          description: "Tìm kiếm công việc theo Title",
+          schema: {
+            type: "string",
+            example: "Tạo API cho hệ thống",
+          },
+        },
+      ],
+      responses: {
+        200: {
+          description: "Lấy danh sách công việc theo Title",
           content: {
             "application/json": {
               schema: {

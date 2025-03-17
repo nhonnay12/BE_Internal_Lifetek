@@ -60,10 +60,36 @@ export const getAlTaskByProject = async (req, res) => {
 
 // tìm kiếm task(lỗi)
 
+// export const searchTaskByTitle = async (req, res) => {
+//   try {
+//     const { title } = req.params;
+
+//     const tasks = await taskService.FindTaskByTitle(title);
+//     res.status(200).json({
+//       message: "Tasks fetched successfully",
+//       data: tasks,
+//     });
+//   } catch (error) {
+//     res.status(500).json({ message: error.message });
+//   }
+// };
+
 export const searchTaskByTitle = async (req, res) => {
   try {
-    const { title } = req.params;
-    const tasks = await taskService.FindTakByTitle(title);
+    console.log("🔍 Query nhận được:", req.query); // Log toàn bộ query
+    const title = req.query.search;
+
+    // const title = req.params.title || req.query.title;
+
+    if (!title) {
+      return res
+        .status(400)
+        .json({ message: "Vui lòng nhập tiêu đề để tìm kiếm" });
+    }
+
+    // const formattedTitle = convertToSlug(title); // Chuyển đổi tiêu đề thành không dấu
+    const tasks = await taskService.FindTaskByTitle(title);
+
     res.status(200).json({
       message: "Tasks fetched successfully",
       data: tasks,
@@ -72,6 +98,7 @@ export const searchTaskByTitle = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+
 /// thêm task
 export const addTask = async (req, res) => {
   try {
