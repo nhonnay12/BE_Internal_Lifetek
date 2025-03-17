@@ -432,7 +432,7 @@ const taskSwagger = {
       },
     },
   },
-  "/tasks/search": {
+  "/tasks/filter": {
     post: {
       summary: "Tìm kiếm công việc",
       description: "Trả về công việc có thông tin tìm kiếm tương thích",
@@ -444,11 +444,11 @@ const taskSwagger = {
             schema: {
               type: "string",
               example: {
-                tiltle: "Fix login bug",
-                assigneeId: "65f123abc123abcd12345678",
-                assignerId: "65f456def456defg45678901",
-                startDate: "2024-03-10",
-                endDate: "2024-03-15",
+                title: "abc",
+                assigneeId: "60d4f6d3c2f2a00015f8a3d5",
+                assignerId:  "60d4f6d3c2f2a00015f8a3d5",
+                startDate: "2021-06-25T00:00:00.000Z",
+                endDate: "2021-06-02T00:00:00.000Z",
               },
             },
           },

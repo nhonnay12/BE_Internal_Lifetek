@@ -73,7 +73,7 @@ export const addUserToTask = async (taskId, userId) => {
 }
   
 ////
-export const searchTaskService = async (data) => {
+export const filterTaskService = async (data) => {
   try {
     const task = await Task.find(data);
     return task;

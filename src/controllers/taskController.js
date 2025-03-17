@@ -1,7 +1,6 @@
 import * as taskService from "../services/taskService.js";
 import {
   createTaskValidator,
-  updateTaskValidator,
 } from "../validation/taskValidation.js";
 import mongoose from "mongoose";
 
@@ -57,7 +56,41 @@ export const getAlTaskByProject = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+// tìm kiếm vấn đề
 
+export const searchTaskController = async (req, res) => {
+  try {
+    const { assigneeId, assignerId, startDate, endDate, title } = req.body
+    console.log(assigneeId,assignerId )
+    let filter = {};
+     if (assigneeId && mongoose.isValidObjectId(assigneeId)) {
+      filter.assigneeId = new mongoose.Types.ObjectId(assigneeId);
+    }
+    if (assignerId && mongoose.isValidObjectId(assignerId)) {
+      filter.assignerId = new mongoose.Types.ObjectId(assignerId);
+    }
+    if (startDate) filter.startDate = new Date(startDate);
+    if (endDate) filter.endDate = new Date(endDate);
+    if (title) filter.title = { $regex: title, $options: "i" }; // Tìm kiếm không phân biệt in hoa thường
+
+    const searchResult = await taskService.filterTaskService(filter)
+    if (searchResult.length === 0) {
+      res.status(201).json({ message: "Không tìm thấy kết quả phù hợp" });
+    }
+    else {
+      res.status(200).json({
+        message: "Kết quả tìm kiếm",
+        task: searchResult
+      });
+    }
+    console.log(searchResult)
+
+  } catch (error) {
+    console.log(error)
+    res.status(500).json({ error: "Lỗi server" });
+
+  }
+} 
 // tìm kiếm task(lỗi)
 
 export const searchTaskByTitle = async (req, res) => {
