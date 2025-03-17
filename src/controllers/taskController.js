@@ -1,18 +1,22 @@
-
 import * as taskService from "../services/taskService.js";
-import { createTaskValidator, updateTaskValidator } from "../validation/taskValidation.js";
-import mongoose from 'mongoose';
+import {
+  createTaskValidator,
+  updateTaskValidator,
+} from "../validation/taskValidation.js";
+import mongoose from "mongoose";
 
-
-/// thay đổi trạng thái 
+/// thay đổi trạng thái
 export const updateTaskStatus = async (req, res) => {
   try {
-    console.log(req.params)
+    console.log(req.params);
     const { taskId } = req.params;
 
     const { status } = req.body;
 
-    const updatedTask = await taskService.updateTaskStatusService(taskId, status);
+    const updatedTask = await taskService.updateTaskStatusService(
+      taskId,
+      status
+    );
 
     res.status(200).json({
       message: "Thay đổi trạng thái task thành công",
@@ -56,50 +60,26 @@ export const getAlTaskByProject = async (req, res) => {
 
 // tìm kiếm task(lỗi)
 
-export const searchTaskController = async (req, res) => {
+export const searchTaskByTitle = async (req, res) => {
   try {
-    const { assigneeId, assignerId, startDate, endDate, title } = req.body
-    let filter = {};
-    //validate
-    if (assigneeId && mongoose.isValidObjectId(assigneeId)) {
-      filter.assigneeId = new mongoose.Types.ObjectId(assigneeId);
-    }
-    else {
-      res.status(400).json({ error: "Giá trị người được giao không hợp lệ" });
-    }
-
-    if (assignerId && mongoose.isValidObjectId(assignerId)) {
-      filter.assignerId = new mongoose.Types.ObjectId(assignerId);
-      res.status(400).json({ error: "Giá trị người báo cáo không hợp lệ" });
-    }
-
-    if (startDate) filter.startDate = new Date(startDate);
-    if (endDate) filter.endDate = new Date(endDate);
-    if (title) filter.title = { $regex: title, $options: "i" }; // Tìm kiếm không phân biệt in hoa thường
-
-    const searchResult = await taskService.searchTaskService(filter)
-    if (searchResult.length === 0) {
-      res.status(201).json({ message: "Không tìm thấy kết quả phù hợp" });
-    }
-
-    return res.status(200).json({
-      message: "Kết quả tìm kiếm",
-      task: searchResult
+    const { title } = req.params;
+    const tasks = await taskService.FindTakByTitle(title);
+    res.status(200).json({
+      message: "Tasks fetched successfully",
+      data: tasks,
     });
-
   } catch (error) {
-    console.log(error)
-    res.status(500).json({ error: "Lỗi server" });
-
+    res.status(500).json({ message: error.message });
   }
-}
+};
 /// thêm task
 export const addTask = async (req, res) => {
   try {
-
     const dataBody = req.body;
 
-    const { error } = createTaskValidator.validate(dataBody, { abortEarly: false });
+    const { error } = createTaskValidator.validate(dataBody, {
+      abortEarly: false,
+    });
     if (error) {
       const errors = error.details.map((err) => err.message);
       return res.status(400).json({
@@ -125,7 +105,6 @@ export const getAllTasks = async (req, res) => {
       message: "Tasks fetched successfully",
       data: tasks,
     });
-
   } catch (error) {
     return res.status(500).json({ message: error.message });
   }
@@ -134,9 +113,12 @@ export const getAllTasks = async (req, res) => {
 // lấy task bằng id
 export const getTaskById = async (req, res) => {
   try {
-    const task = await taskService.getTaskById(req.params.id);
+    const task = await taskService.FindTaskById(req.params.id);
     if (!task) return res.status(404).json({ message: "Task not found" });
-    res.status(200).json(task);
+    res.status(200).json({
+      message: "Task fetched successfully",
+      data: task,
+    });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
@@ -158,13 +140,13 @@ export const updateTask = async (req, res) => {
 
     const task = await taskService.editTask(id, dataBody);
 
-    if (!task) return res.status(404).json({ message: "Nhiệm vụ không tìm thấy" });
+    if (!task)
+      return res.status(404).json({ message: "Nhiệm vụ không tìm thấy" });
 
     return res.status(200).json({
       message: "Nhiệm vụ cập nhật thành công",
       data: task,
     });
-
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
