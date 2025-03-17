@@ -437,6 +437,53 @@ const taskSwagger = {
                 }
             }
         }
+    },
+    "/tasks/project/{projectId}" : {
+        get: {
+            sunmary: "Lấy danh sách công việc theo dự án",
+            description: "Trả về danh sách công việc theo dự án",
+            tags: ["Task"],
+            parameters: [
+                {
+                    in: "path",
+                    name: "projectId",
+                    required: true,
+                    description: "ID dự án",
+                    schema: {
+                        type: "string",
+                        example: "60d4f6d3c2f2a00015f8a3d5",
+                    },
+                },
+            ],
+            responses: {
+                200: {
+                    description: "Lấy danh sách công việc theo dự án thành công",
+                    content: {
+                        "application/json": {
+                            schema: {
+                                $ref: "#/components/schemas/Task",
+                            },
+                        },
+                    },
+                },
+                500: {
+                    description: "Lỗi phía server",
+                    content: {
+                        "application/json": {
+                            schema: {
+                                type: "object",
+                                properties: {
+                                    message: {
+                                        type: "string",
+                                        example: "Internal server error",
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+            }
+        }
     }
         
      

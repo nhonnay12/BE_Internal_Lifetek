@@ -36,7 +36,7 @@ export const createTaskValidator = Joi.object({
         "string.empty": "Mức độ ưu tiên không được để trống",
         "any.only": "Mức độ ưu tiên không hợp lệ",
     }),
-    images: Joi.array().items(Joi.string()).messages({
+    images: Joi.string().messages({
         "string.empty": "Hình ảnh không được để trống",
     }),
     link: Joi.string().messages({
