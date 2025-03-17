@@ -31,9 +31,34 @@ export const updateTaskStatusService = async (taskId, newStatus) => {
 
 
 export const addUserToTask = async (taskId, userId) => {
+  
+  if (userId.length === 1) {
+      const task = await Task.findById(taskId);
+      if (!task) {
+        throw new Error("Task không tìm thấy");
+    }
 
+    
+    // Lấy danh sách userId đã tồn tại trong assigneeId
+    const existingUsers = task.assigneeId.map(id => id.toString());
 
-  const updatedTask = await Task.findByIdAndUpdate(
+    // Kiểm tra xem có userId nào bị trùng không
+    const duplicateUsers = userId.filter(id => existingUsers.includes(id));
+    if (duplicateUsers.length > 0) {
+        throw new Error(`UserId bị trùng: ${duplicateUsers.join(", ")}. Vui lòng chọn user khác.`);
+    }
+   const newUsers = userId.map(id => new mongoose.Types.ObjectId(id));
+
+    const result = await Task.findByIdAndUpdate(
+        taskId,
+        { $addToSet: { assigneeId: { $each: newUsers } } },
+        { new: true }
+    );
+    return result
+  }
+
+  else if ((userId.length > 1)){
+      const updatedTask = await Task.findByIdAndUpdate(
     taskId,
     { $addToSet: { assigneeId: { $each: userId.map(id => new mongoose.Types.ObjectId(id)) } } }, // Dùng $addToSet để tránh trùng lặp
     { new: true }, { assigneeId: 1 }
@@ -43,7 +68,9 @@ export const addUserToTask = async (taskId, userId) => {
     throw new Error("Task không tìm thấy");
   }
 
-  return updatedTask;
+    return updatedTask;
+  }
+  
 }
 ////
 export const searchTaskService = async (data) => {
