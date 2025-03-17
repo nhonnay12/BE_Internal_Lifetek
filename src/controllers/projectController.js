@@ -26,7 +26,7 @@ export const getAllProjects = async (req, res) => {
 
 export const getProjectById = async (req, res) => {
     try {
-        if (!mongoose.Types.ObjectId.isValid(id)) {
+        if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
             return res.status(400).json({
                 message: "ID không hợp lệ",
                 data: null
@@ -64,7 +64,7 @@ export const updateProject = async (req, res) => {
 
 export const deleteProject = async (req, res) => {
     try {
-        if (!mongoose.Types.ObjectId.isValid(id)) {
+        if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
             return res.status(400).json({
                 message: "ID không hợp lệ",
                 data: null
@@ -77,6 +77,7 @@ export const deleteProject = async (req, res) => {
         res.status(500).json({ message: error.message });
     }
 };
+
 export const getProjectManager = async (req, res) => {
     try {
         const { id } = req.params;

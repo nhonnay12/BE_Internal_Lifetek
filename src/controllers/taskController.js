@@ -1,6 +1,6 @@
 
 import * as taskService from "../services/taskService.js";
-import { createTaskValidator } from "../validation/taskValidation.js";
+import { createTaskValidator, updateTaskValidator } from "../validation/taskValidation.js";
 import mongoose from 'mongoose';
 
 
@@ -9,13 +9,13 @@ export const updateTaskStatus = async (req, res) => {
   try {
     console.log(req.params)
     const { taskId } = req.params;
-    
+
     const { status } = req.body;
 
     const updatedTask = await taskService.updateTaskStatusService(taskId, status);
 
     res.status(200).json({
-      message: "Thay đổi trạng thái vấn đề thành công",
+      message: "Thay đổi trạng thái task thành công",
       task: updatedTask,
     });
   } catch (error) {
@@ -27,13 +27,12 @@ export const updateTaskStatus = async (req, res) => {
 
 export const addUserToTaskController = async (req, res) => {
   try {
-     const { taskId } = req.params;
-    const { userId }  = req.body;
-    console.log(userId,taskId)
+    const { taskId } = req.params;
+    const { userId } = req.body;
     const updatedTask = await taskService.addUserToTask(taskId, userId);
 
     res.status(200).json({
-      message: "Thêm người dùng vào vấn đề thành công",
+      message: "Thêm người dùng vào task thành công",
       task: updatedTask,
     });
   } catch (error) {
@@ -41,23 +40,39 @@ export const addUserToTaskController = async (req, res) => {
   }
 };
 
-// tìm kiếm vấn đề
+// lấy tất cả task theo project
+export const getAlTaskByProject = async (req, res) => {
+  try {
+    const { projectId } = req.params;
+    const tasks = await taskService.getAlTaskByProject(projectId);
+    res.status(200).json({
+      message: "Tasks fetched successfully",
+      data: tasks,
+    });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+// tìm kiếm task(lỗi)
 
 export const searchTaskController = async (req, res) => {
   try {
     const { assigneeId, assignerId, startDate, endDate, title } = req.body
-    console.log(assigneeId,assignerId )
     let filter = {};
-     if (assigneeId && mongoose.isValidObjectId(assigneeId)) {
+    //validate
+    if (assigneeId && mongoose.isValidObjectId(assigneeId)) {
       filter.assigneeId = new mongoose.Types.ObjectId(assigneeId);
     }
-     else {
-       res.status(400).json({ error: "Giá trị người được giao không hợp lệ" });
+    else {
+      res.status(400).json({ error: "Giá trị người được giao không hợp lệ" });
     }
+
     if (assignerId && mongoose.isValidObjectId(assignerId)) {
       filter.assignerId = new mongoose.Types.ObjectId(assignerId);
-       res.status(400).json({ error: "Giá trị người báo cáo không hợp lệ" });
+      res.status(400).json({ error: "Giá trị người báo cáo không hợp lệ" });
     }
+
     if (startDate) filter.startDate = new Date(startDate);
     if (endDate) filter.endDate = new Date(endDate);
     if (title) filter.title = { $regex: title, $options: "i" }; // Tìm kiếm không phân biệt in hoa thường
@@ -66,21 +81,19 @@ export const searchTaskController = async (req, res) => {
     if (searchResult.length === 0) {
       res.status(201).json({ message: "Không tìm thấy kết quả phù hợp" });
     }
-    else {
-      res.status(200).json({
-        message: "Kết quả tìm kiếm",
-        task: searchResult
-      });
-    }
-    console.log(searchResult)
+
+    return res.status(200).json({
+      message: "Kết quả tìm kiếm",
+      task: searchResult
+    });
 
   } catch (error) {
     console.log(error)
     res.status(500).json({ error: "Lỗi server" });
 
   }
-} 
-/// thêm vấn đề
+}
+/// thêm task
 export const addTask = async (req, res) => {
   try {
 
@@ -95,26 +108,30 @@ export const addTask = async (req, res) => {
     }
 
     const task = await taskService.addTask(req.body);
-    res.status(201).json({
+    return res.status(201).json({
       message: "Nhiêm vụ tạo thành công",
       data: task,
     });
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    return res.status(500).json({ message: error.message });
   }
 };
+
+// lấy tất cả task
 export const getAllTasks = async (req, res) => {
   try {
     const tasks = await taskService.getAllTasks();
-    res.status(200).json({
+    return res.status(200).json({
       message: "Tasks fetched successfully",
       data: tasks,
     });
+
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    return res.status(500).json({ message: error.message });
   }
 };
-// lấy tvaans đề bằng id
+
+// lấy task bằng id
 export const getTaskById = async (req, res) => {
   try {
     const task = await taskService.getTaskById(req.params.id);
@@ -125,35 +142,35 @@ export const getTaskById = async (req, res) => {
   }
 };
 
-// cập nhật vấn đề
+// cập nhật task
 export const updateTask = async (req, res) => {
   try {
     const id = req.params.id;
     const dataBody = req.body;
-    const { error } = createTaskValidator.validate(dataBody, { abortEarly: false });
+    // const { error } = updateTaskValidator.validate(dataBody, { abortEarly: false });
 
-    if (error) {
-      const errors = error.details.map((err) => err.message);
-      return res.status(400).json({
-        message: errors,
-      });
-    }
+    // if (error) {
+    //   const errors = error.details.map((err) => err.message);
+    //   return res.status(400).json({
+    //     message: errors,
+    //   });
+    // }
 
     const task = await taskService.editTask(id, dataBody);
 
     if (!task) return res.status(404).json({ message: "Nhiệm vụ không tìm thấy" });
 
-   return res.status(200).json({
+    return res.status(200).json({
       message: "Nhiệm vụ cập nhật thành công",
       data: task,
     });
-    
+
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
 };
 
-// xóa vấn đề
+// xóa task
 export const deleteTask = async (req, res) => {
   try {
     const task = await taskService.deleteTask(req.params.id);

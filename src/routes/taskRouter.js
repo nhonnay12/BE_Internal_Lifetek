@@ -5,11 +5,13 @@ import {
     getTaskById,
     updateTask,
     deleteTask,
+    getAlTaskByProject,
  } from "../controllers/taskController.js";
 
 const routerTask = express.Router();
 
 routerTask.get("/", getAllTasks);
+routerTask.get("/project/:projectId", getAlTaskByProject);
 routerTask.put("/:taskId/status", updateTaskStatus);
 routerTask.post("/:taskId/add-user", addUserToTaskController);
 routerTask.post("/search", searchTaskController);
