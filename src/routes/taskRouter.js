@@ -21,7 +21,6 @@ routerTask.put("/:taskId/status", updateTaskStatus);
 routerTask.post("/:taskId/add-user", addUserToTaskController);
 routerTask.post("/filter/:projectId", searchTaskController);
 routerTask.get("/search", searchTaskByTitle);
-routerTask.post("/create-task", addTask);
 // routerTask.get("/search", FindTakByTitle);
 routerTask.post("/create-task", upload.single("image"), addTask);
 

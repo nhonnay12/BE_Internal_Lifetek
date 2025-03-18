@@ -1,5 +1,3 @@
-import { response } from "express";
-
 const userSwagger = {
     "/user": {
         get: {
@@ -34,7 +32,7 @@ const userSwagger = {
             }
         }
     },
-    "user/getAll": {
+    "/user/getAll": {
         get: {
             tags: ["User"],
             summary: "Lấy thông tin tất cả người dùng",
@@ -97,10 +95,6 @@ const userSwagger = {
                                     type: "string",
                                     example: "0123456789"
                                 },
-                                email: {
-                                    type: "string",
-                                    example: "test@gmail.com"
-                                }
                             }
                         }
                     }

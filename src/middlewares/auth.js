@@ -3,6 +3,11 @@ import User from '../models/User.js';
 
 const authMiddleware = async (req, res, next) => {
     try {
+        if (!req.headers.authorization) {
+            return res.status(401).json({
+                message: "Ban chua dang nhap"
+            });
+        };
         const token = req.headers.authorization.split(" ")[1];
 
         if (!token) {
