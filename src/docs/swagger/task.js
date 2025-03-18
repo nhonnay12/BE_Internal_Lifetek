@@ -1,17 +1,63 @@
-import { get } from "mongoose";
-
 const taskSwagger = {
   "/tasks/create-task": {
     post: {
       summary: "Tạo nhiệm vụ mới",
+      security: [
+        {
+          $ref: "#/components/securitySchemes/BearerAuth",
+        },
+      ],
       description: "API tạo nhiệm vụ mới",
       tags: ["Task"],
       requestBody: {
         required: true,
         content: {
-          "application/json": {
+          "multipart/form-data": {
             schema: {
-              $ref: "#/components/schemas/Task",
+              type: "object",
+              properties: {
+                title: {
+                  type: "string",
+                  example: "Fix login bug",
+                },
+                description: {
+                  type: "string",
+                  example: "Fix login bug",
+                },
+                assigneeId: {
+                  type: "array",
+                  description: "ID người được giao nhiệm vụ",
+                  items: {
+                    type: "string",
+                    example: "65f123abc123abcd12345678",
+                  },
+                },
+                assignerId: {
+                  type: "string",
+                  example: "65f456def456defg45678901",
+                },
+                startDate: {
+                  type: "string",
+                  example: "2024-03-10",
+                },
+                endDate: {
+                  type: "string",
+                  example: "2024-03-15",
+                },
+                projectId: {
+                  type: "string",
+                  example: "60d4f6d3c2f2a00015f8a3d5",
+                },
+                status: {
+                  type: "string",
+                  example: "pending",
+                },
+                image: {
+                  type: "string",
+                  format: "binary",
+                  description: "Ảnh của task",
+                },
+              },
             },
           },
         },
@@ -67,6 +113,11 @@ const taskSwagger = {
       summary: "chỉnh sửa nhiệm vụ",
       description: "API chỉnh sửa nhiệm vụ",
       tags: ["Task"],
+      security: [
+        {
+          $ref: "#/components/securitySchemes/BearerAuth",
+        },
+      ],
       parameters: [
         {
           in: "path",
@@ -82,9 +133,52 @@ const taskSwagger = {
       requestBody: {
         required: true,
         content: {
-          "application/json": {
+          "multipart/form-data": {
             schema: {
-              $ref: "#/components/schemas/Task",
+              type: "object",
+              properties: {
+                title: {
+                  type: "string",
+                  example: "Fix login bug",
+                },
+                description: {
+                  type: "string",
+                  example: "Fix login bug",
+                },
+                assigneeId: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                    example: "65f123abc123abcd12345678",
+                  },
+                  description: "ID người được giao nhiệm vụ",
+                },
+                assignerId: {
+                  type: "string",
+                  example: "65f456def456defg45678901",
+                },
+                startDate: {
+                  type: "string",
+                  example: "2024-03-10",
+                },
+                endDate: {
+                  type: "string",
+                  example: "2024-03-15",
+                },
+                projectId: {
+                  type: "string",
+                  example: "60d4f6d3c2f2a00015f8a3d5",
+                },
+                status: {
+                  type: "string",
+                  example: "pending",
+                },
+                image: {
+                  type: "string",
+                  format: "binary",
+                  description: "Ảnh của task",
+                },
+              },
             },
           },
         },
@@ -435,7 +529,7 @@ const taskSwagger = {
 
   "/tasks/project/{projectId}": {
     get: {
-      sunmary: "Lấy danh sách công việc theo dự án",
+      summary: "Lấy danh sách công việc theo dự án",
       description: "Trả về danh sách công việc theo dự án",
       tags: ["Task"],
       parameters: [
@@ -504,6 +598,116 @@ const taskSwagger = {
             "application/json": {
               schema: {
                 $ref: "#/components/schemas/Task",
+              },
+            },
+          },
+        },
+        500: {
+          description: "Lỗi phía server",
+          content: {
+            "application/json": {
+              schema: {
+                type: "object",
+                properties: {
+                  message: {
+                    type: "string",
+                    example: "Internal server error",
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+  },
+  "/tasks/delete-task/{id}": {
+    delete: {
+      summary: "Xóa công việc",
+      description: "Xóa task theo id",
+      tags: ["Task"],
+      parameters: [
+        {
+          in: "path",
+          name: "id",
+          required: true,
+          description: "ID cong viec",
+        },
+      ],
+      responses: {
+        200: {
+          description: "Xóa công việc thành công",
+          content: {
+            "application/json": {
+              schema: {
+                type: "object",
+                properties: {
+                  message: {
+                    type: "string",
+                    example: "Task deleted successfully",
+                  },
+                },
+              },
+            },
+          },
+        },
+        500: {
+          description: "Lỗi phía server",
+          content: {
+            "application/json": {
+              schema: {
+                type: "object",
+                properties: {
+                  message: {
+                    type: "string",
+                    example: "Internal server error",
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+  },
+  "/tasks/delete-many-task": {
+    delete: {
+      summary: "Xóa nhiều task",
+      description: "Xóa nhiều task theo id",
+      tags: ["Task"],
+      requestBody: {
+        required: true,
+        content: {
+          "application/json": {
+            schema: {
+              type: "object",
+              properties: {
+                ids: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                    example:
+                      "67d8ebc88d93c6abba32d5a5,67d8ebc88d93c6abba32d5a6",
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+      responses: {
+        200: {
+          description: "Xóa task thành công",
+          content: {
+            "application/json": {
+              schema: {
+                type: "object",
+                properties: {
+                  message: {
+                    type: "string",
+                    example: "Task deleted successfully",
+                  },
+                },
               },
             },
           },

@@ -28,7 +28,7 @@ export const createTaskValidator = Joi.object({
         "string.empty": "assignerId không được để trống",
         "any.required": "assignerId là bắt buộc",
     }),
-    status: Joi.string().valid("pending", "in progress", "completed", "done").messages({
+    status: Joi.string().valid("pending", "inProgress", "completed", "done").messages({
         "string.empty": "Trạng thái không được để trống",
         "any.only": "Trạng thái không hợp lệ",
     }),
@@ -72,7 +72,7 @@ export const updateTaskValidator = Joi.object({
         "string.empty": "assignerId không được để trống",
         "any.required": "assignerId là bắt buộc",
     }),
-    status: Joi.string().valid("pending", "in progress", "completed", "done").default("pending").messages({
+    status: Joi.string().valid("pending", "inProgress", "completed", "done").default("pending").messages({
         "string.empty": "Trạng thái không được để trống",
         "any.only": "Trạng thái không hợp lệ",
     }),

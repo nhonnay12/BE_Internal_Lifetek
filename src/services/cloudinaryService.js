@@ -1,4 +1,5 @@
-import cloudinary from "../config/cloudinary";
+import cloudinary from "../config/cloudinary.js";
+import streamifier from "streamifier";
 import fs from "fs";
 
 /**
@@ -8,21 +9,18 @@ import fs from "fs";
  * @returns URL ảnh trên Cloudinary
  */
 
-const uploadSingleFile = async (filePath, folder = 'lifeTexIntern') => {
-    try {
-        const result = await cloudinary.uploader.upload(filePath, {
-            folder,
-            use_filename: true,
-          });
-
-       fs.unlinkSync(filePath);
-       
-        return result.secure_url;
-    } catch (error) {
-        console.error(error);
-        throw new Error("Upload file failed!");
-    }
-}
+const uploadSingleFile = (buffer) => {
+    return new Promise((resolve, reject) => {
+        let stream = cloudinary.uploader.upload_stream(
+            { folder: "uploads" },
+            (error, result) => {
+                if (error) reject(error);
+                else resolve(result);
+            }
+        );
+        streamifier.createReadStream(buffer).pipe(stream);
+    });
+};
 
 /**
  * Upload nhiều file lên Cloudinary
@@ -38,7 +36,7 @@ const uploadMultipleFiles = async (files, folder = 'lifeTexIntern') => {
             const result = await cloudinary.uploader.upload(file.path, {
                 folder,
                 use_filename: true,
-              });
+            });
             urls.push(result.secure_url);
             fs.unlinkSync(file.path);
         }
