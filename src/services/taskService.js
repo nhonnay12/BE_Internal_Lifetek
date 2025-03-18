@@ -1,5 +1,6 @@
 import Task from "../models/Task.js";
 import mongoose from "mongoose";
+import User from "../models/User.js";
 
 export const updateTaskStatusService = async (taskId, newStatus) => {
   // Kiểm tra xem taskId có hợp lệ không
@@ -8,7 +9,7 @@ export const updateTaskStatusService = async (taskId, newStatus) => {
   }
 
   // Kiểm tra trạng thái hợp lệ
-  const validStatuses = ["pending", "in progress", "completed", "done"];
+  const validStatuses = ["pending", "inProgress", "completed", "done"];
   if (!validStatuses.includes(newStatus)) {
     throw new Error("Giá trị status không phù hợp");
   }
@@ -115,3 +116,12 @@ export const FindTaskByTitle = async (data) => {
     ],
   });
 };
+// check assigneeID có trong bảng user không
+export const checkAssigneeId = async (assigneeId) => {
+  return await User.find({ _id: { $in: assigneeId } });
+}
+
+// check assignerId có trong bảng user không
+export const checkAssignerId = async (assignerId) => {
+  return await User.findById(assignerId);
+}
