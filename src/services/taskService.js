@@ -9,7 +9,7 @@ export const updateTaskStatusService = async (taskId, newStatus) => {
   }
 
   // Kiểm tra trạng thái hợp lệ
-  const validStatuses = ["pending", "in progress", "completed", "done"];
+  const validStatuses = ["pending", "inProgress", "completed", "done"];
   if (!validStatuses.includes(newStatus)) {
     throw new Error("Giá trị status không phù hợp");
   }
@@ -116,6 +116,37 @@ export const FindTaskById = async (id) => {
     select: "userName email", // Chỉ laý user name và email của user
   });
 };
-export const FindTakByTitle = async (title) => {
-  return await Task.find({ title });
+
+// export const FindTaskByTitle = async (data) => {
+//   return await Task.find({ title: { $regex: data, $options: "i" } });
+// };
+export const convertToSlug = (str) => {
+  return str
+    .normalize("NFD") // Chuẩn hóa Unicode
+    .replace(/[\u0300-\u036f]/g, "") // Xóa dấu tiếng Việt
+    .replace(/đ/g, "d")
+    .replace(/Đ/g, "D") // Chuyển đ -> d, Đ -> D
+    .replace(/[^a-zA-Z0-9\s]/g, "") // Xóa ký tự đặc biệt (chỉ giữ chữ & số)
+    .trim() // Xóa khoảng trắng đầu & cuối
+    .replace(/\s+/g, " "); // Chuyển nhiều khoảng trắng thành 1 khoảng trắng
 };
+
+export const FindTaskByTitle = async (data) => {
+  const slugTitle = convertToSlug(data); // Chuyển input thành không dấu
+
+  return await Task.find({
+    $or: [
+      { title: { $regex: new RegExp(`.*${data}*`, "i") } }, // Tìm kiếm một phần của chuỗi có dấu
+      { title: { $regex: new RegExp(`.*${slugTitle}*`, "i") } }, // Tìm kiếm một phần của chuỗi không dấu
+    ],
+  });
+};
+// check assigneeID có trong bảng user không
+export const checkAssigneeId = async (assigneeId) => {
+  return await User.find({ _id: { $in: assigneeId } });
+}
+
+// check assignerId có trong bảng user không
+export const checkAssignerId = async (assignerId) => {
+  return await User.findById(assignerId);
+}

@@ -1,4 +1,4 @@
-const authSchema = {
+const userSchema = {
     User: {
         type: 'object',
         properties: {
@@ -18,13 +18,9 @@ const authSchema = {
                 type: 'string',
                 example: '0123456789'
             },
-            password: {
-                type: 'string',
-                example: '123456'
-            },
             verified: {
                 type: 'boolean',
-                example: false
+                example: true
             },
             role: {
                 type: 'string',
@@ -35,4 +31,4 @@ const authSchema = {
     }
 }
 
-export { authSchema };
+export { userSchema };

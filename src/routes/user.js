@@ -1,7 +1,14 @@
 import express from "express";
-import { getAllUsers } from "../controllers/user.js";
-const route = express.Router();
+import { getAllUsers, getProfile, updateUser } from "../controllers/user.js";
+import authMiddleware from "../middlewares/auth.js";
+import upload from "../config/multer.js";
+const routeUser = express.Router();
 
-route.get("/", getAllUsers);
+routeUser.get("/getAll", getAllUsers);
 
-export default route;
+routeUser.use(authMiddleware);
+routeUser.get("/", getProfile);
+routeUser.put("/update-profile", upload.single("avatar"), updateUser);
+
+
+export default routeUser;
