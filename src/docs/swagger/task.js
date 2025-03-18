@@ -526,7 +526,7 @@ const taskSwagger = {
       },
     },
   },
-
+  
   "/tasks/project/{projectId}": {
     get: {
       summary: "Lấy danh sách công việc theo dự án",
@@ -574,6 +574,63 @@ const taskSwagger = {
       },
     },
   },
+
+  "/tasks/delete-task/{id}": {
+     delete: {
+            summary: "Xoá vấn đề theo ID",
+            description: "API xoá dự án",
+            tags: ["Task"],
+            parameters: [
+                {
+                    in: "path",
+                    name: "id",
+                    required: true,
+                    description: "ID task",
+                    schema: {
+                        type: "string"
+                    }
+                }
+            ],
+            responses: {
+                200: {
+                    description: "Xoá vấn đề thành công",
+                    content: {
+                        "application/json": {
+                            schema: {
+                                type: "object",
+                                properties: {
+                                    message: {
+                                        type: "string",
+                                        example: "Xoá vấn đề thành công"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                404: {
+                    description: "Không tìm thấy vấn đề",
+                    content: {
+                        "application/json": {
+                            schema: {
+                                type: "object",
+                                properties: {
+                                    message: {
+                                        type: "string",
+                                        example: "Không tìm thấy vấn đề"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                500: {
+                    description: "Lỗi server"
+                }
+            }
+        }
+  },
+
   "/tasks/search": {
     get: {
       sunmary: "Tìm kiếm công việc theo Title , (người dùng nhập)",
@@ -621,6 +678,71 @@ const taskSwagger = {
       },
     },
   },
+  "/tasks/filter/{projectId}": {
+    post: {
+      summary: "Tìm kiếm công việc",
+      description: "Trả về công việc có thông tin tìm kiếm tương thích",
+      tags: ["Task"],
+      parameters: [
+        {
+          in: "path",
+          name: "projectId",
+          required: true,
+          description: "ID project",
+          schema: {
+            type: "string",
+            example: "67d24709bf0422c295e3f5a7",
+          },
+        },
+      ],
+      requestBody: {
+        required: true,
+        content: {
+          "application/json": {
+            schema: {
+              type: "string",
+              example: {
+                assigneeId: "60d4f6d3c2f2a00015f8a3d5",
+                assignerId: "60d4f6d3c2f2a00015f8a3d5",
+                startDate: "2021-06-25T00:00:00.000Z",
+                endDate: "2021-06-02T00:00:00.000Z",
+              },
+            },
+          },
+        },
+      },
+      responses: {
+        200: {
+          description: "Trả về vấn đề có thông tin tìm kiếm tương thích",
+          content: {
+            "application/json": {
+              schema: {
+                $ref: "#/components/schemas/Task",
+              },
+            },
+          },
+        },
+        400: {
+          description: "Lỗi phía server",
+          content: {
+            "application/json": {
+              schema: {
+                type: "object",
+                properties: {
+                  message: {
+                    type: "string",
+                    example: "Internal server error",
+                  },
+                },
+              },
+            },
+          },
+        },
+      }
+    },
+  }
+
+
 };
 
 export default taskSwagger;
