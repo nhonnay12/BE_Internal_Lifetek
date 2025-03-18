@@ -1,13 +1,15 @@
+//import { number } from "joi";
 import mongoose from "mongoose";
 
 const ProjectSchema = new mongoose.Schema(
   {
     name: { type: String, required: true },
+    code: { type: Number, required: true },
     description: { type: String },
     status: {
       type: String,
       enum: ["inprogress", "done", "todo"],
-      default: "to do",
+      default: "todo",
     },
 
     managerId: {
