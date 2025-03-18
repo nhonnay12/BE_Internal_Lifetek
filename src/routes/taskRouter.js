@@ -4,6 +4,7 @@ import {
   updateTaskStatus,
   addUserToTaskController,
   addTask,
+  searchTaskController,
   getTaskById,
   updateTask,
   deleteTask,
@@ -19,6 +20,7 @@ routerTask.get("/", getAllTasks);
 routerTask.get("/project/:projectId", getAlTaskByProject);
 routerTask.put("/:taskId/status", updateTaskStatus);
 routerTask.post("/:taskId/add-user", addUserToTaskController);
+routerTask.post("/filter/:projectId", searchTaskController);
 routerTask.get("/search", searchTaskByTitle);
 routerTask.post("/create-task", upload.single("image"), addTask);
 routerTask.get("/:id", getTaskById);

@@ -1,10 +1,7 @@
 import mongoose from "mongoose";
 import { uploadSingleFile } from "../services/cloudinaryService.js";
 import * as taskService from "../services/taskService.js";
-import {
-  createTaskValidator,
-  updateTaskValidator,
-} from "../validation/taskValidation.js";
+import { createTaskValidator } from "../validation/taskValidation.js";
 
 /// thay đổi trạng thái
 export const updateTaskStatus = async (req, res) => {
@@ -57,8 +54,45 @@ export const getAlTaskByProject = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+// tìm kiếm vấn đề
+
+export const searchTaskController = async (req, res) => {
+  try {
+    const { assigneeId, assignerId, startDate, endDate } = req.body;
+    const { projectId } = req.params;
+    console.log(assigneeId, assignerId);
+    let filter = {};
+    if (projectId && mongoose.isValidObjectId(projectId)) {
+      filter.projectId = new mongoose.Types.ObjectId(projectId);
+    }
+    if (assigneeId && mongoose.isValidObjectId(assigneeId)) {
+      filter.assigneeId = new mongoose.Types.ObjectId(assigneeId);
+    }
+    if (assignerId && mongoose.isValidObjectId(assignerId)) {
+      filter.assignerId = new mongoose.Types.ObjectId(assignerId);
+    }
+    if (startDate) filter.startDate = new Date(startDate);
+    if (endDate) filter.endDate = new Date(endDate);
+
+    const searchResult = await taskService.filterTaskService(filter);
+    if (searchResult.length === 0) {
+      res.status(201).json({ message: "Không tìm thấy kết quả phù hợp" });
+    } else {
+      res.status(200).json({
+        message: "Kết quả tìm kiếm",
+        task: searchResult,
+      });
+    }
+    console.log(searchResult);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ error: "Lỗi server" });
+  }
+};
+// tìm kiếm task(lỗi)
 
 // tìm kiếm task
+
 export const searchTaskByTitle = async (req, res) => {
   try {
     console.log("🔍 Query nhận được:", req.query); // Log toàn bộ query
@@ -88,6 +122,20 @@ export const addTask = async (req, res) => {
     if (typeof dataBody.assigneeId === "string") {
       dataBody.assigneeId = dataBody.assigneeId.split(",");
     }
+    const { error } = createTaskValidator.validate(dataBody, {
+      abortEarly: false,
+    });
+
+    if (error) {
+      const errors = error.details.map((err) => err.message);
+      return res.status(400).json({
+        message: errors,
+      });
+    }
+
+    // return res.status(200).json({
+    //   test: dataBody.assigneeId
+    // })
 
     const invalidAssigneeId = dataBody.assigneeId.filter(
       (id) => !mongoose.Types.ObjectId.isValid(id)
@@ -119,17 +167,6 @@ export const addTask = async (req, res) => {
     if (!assignerIdFromDB) {
       return res.status(400).json({
         message: "Người giao việc không hợp lệ",
-      });
-    }
-
-    const { error } = createTaskValidator.validate(dataBody, {
-      abortEarly: false,
-    });
-
-    if (error) {
-      const errors = error.details.map((err) => err.message);
-      return res.status(400).json({
-        message: errors,
       });
     }
 
