@@ -1,6 +1,11 @@
 import Project from "../models/Project.js";
 
 export const createProject = async (data) => {
+  
+  const existingProject = await Project.findOne({ code:data.code });
+  if (existingProject) {
+    throw new Error(`Mã code ${data.code} đã tồn tại!`);
+  }
   return await Project.create(data);
 };
 
