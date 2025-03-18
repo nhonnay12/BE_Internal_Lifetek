@@ -73,6 +73,13 @@ export const editTask = async (id, data) => {
 export const deleteTask = async (id) => {
   return await Task.findByIdAndDelete(id);
 };
+export const deleteMoreTasks = async (filter) => {
+  if (!filter || Object.keys(filter).length === 0) {
+    throw new Error("Điều kiện xóa không hợp lệ");
+  }
+  return await Task.deleteMany(filter);
+};
+
 export const getAlTaskByProject = async (projectId) => {
   return await Task.find({ projectId })
     .populate({

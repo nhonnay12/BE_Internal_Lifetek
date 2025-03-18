@@ -78,18 +78,14 @@ export const searchTaskByTitle = async (req, res) => {
   try {
     console.log("🔍 Query nhận được:", req.query); // Log toàn bộ query
     const title = req.query.search;
-
     // const title = req.params.title || req.query.title;
-
     if (!title) {
       return res
         .status(400)
         .json({ message: "Vui lòng nhập tiêu đề để tìm kiếm" });
     }
-
     // const formattedTitle = convertToSlug(title); // Chuyển đổi tiêu đề thành không dấu
     const tasks = await taskService.FindTaskByTitle(title);
-
     res.status(200).json({
       message: "Tasks fetched successfully",
       data: tasks,
@@ -185,6 +181,23 @@ export const deleteTask = async (req, res) => {
     const task = await taskService.deleteTask(req.params.id);
     if (!task) return res.status(404).json({ message: "Task not found" });
     res.status(200).json({ message: "Task deleted successfully" });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+export const deleteManytask = async (req, res) => {
+  try {
+    const ids = req.body.id;
+
+    const result = await taskService.deleteManyTask(ids);
+    if (result.deleteCount === 0) {
+      return res.status(404).json({ message: "Task not found" });
+    }
+
+    res.status(200).json({
+      message: "Task deleted successfully",
+      deleteCount: result.deleteCount,
+    });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
