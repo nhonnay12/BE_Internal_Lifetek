@@ -60,10 +60,14 @@ export const getAlTaskByProject = async (req, res) => {
 
 export const searchTaskController = async (req, res) => {
   try {
-    const { assigneeId, assignerId, startDate, endDate, title } = req.body
+    const { assigneeId, assignerId, startDate, endDate } = req.body;
+    const { projectId } = req.params;
     console.log(assigneeId,assignerId )
     let filter = {};
-     if (assigneeId && mongoose.isValidObjectId(assigneeId)) {
+     if (projectId && mongoose.isValidObjectId(projectId)) {
+      filter.projectId = new mongoose.Types.ObjectId(projectId);
+    }
+    if (assigneeId && mongoose.isValidObjectId(assigneeId)) {
       filter.assigneeId = new mongoose.Types.ObjectId(assigneeId);
     }
     if (assignerId && mongoose.isValidObjectId(assignerId)) {
@@ -71,7 +75,6 @@ export const searchTaskController = async (req, res) => {
     }
     if (startDate) filter.startDate = new Date(startDate);
     if (endDate) filter.endDate = new Date(endDate);
-    if (title) filter.title = { $regex: title, $options: "i" }; // Tìm kiếm không phân biệt in hoa thường
 
     const searchResult = await taskService.filterTaskService(filter)
     if (searchResult.length === 0) {

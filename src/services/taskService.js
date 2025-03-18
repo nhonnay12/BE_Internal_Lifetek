@@ -59,7 +59,7 @@ export const addUserToTask = async (taskId, userId) => {
   else if ((userId.length > 1)){
       const updatedTask = await Task.findByIdAndUpdate(
     taskId,
-    { $addToSet: { assigneeId: { $each: userId.map(id => new mongoose.Types.ObjectId(id)) } } }, // Dùng $addToSet để tránh trùng lặp
+    { $set: { assigneeId: userId.map(id => new mongoose.Types.ObjectId(id))  } }, // Dùng $addToSet để tránh trùng lặp
     { new: true }, { assigneeId: 1 }
   );// Populate để lấy chi tiết user nếu cần
 
