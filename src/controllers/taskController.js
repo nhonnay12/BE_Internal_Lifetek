@@ -93,6 +93,21 @@ export const addTask = async (req, res) => {
       dataBody.assigneeId = dataBody.assigneeId.split(',');
     }
 
+    const { error } = createTaskValidator.validate(dataBody, {
+      abortEarly: false,
+    });
+
+    if (error) {
+      const errors = error.details.map((err) => err.message);
+      return res.status(400).json({
+        message: errors,
+      });
+    }
+
+    // return res.status(200).json({
+    //   test: dataBody.assigneeId
+    // })
+
     const invalidAssigneeId = dataBody.assigneeId.filter(id => !mongoose.Types.ObjectId.isValid(id));
     if (invalidAssigneeId.length > 0) {
       return res.status(400).json({
@@ -121,17 +136,6 @@ export const addTask = async (req, res) => {
     if (!assignerIdFromDB) {
       return res.status(400).json({
         message: "Người giao việc không hợp lệ",
-      });
-    }
-
-    const { error } = createTaskValidator.validate(dataBody, {
-      abortEarly: false,
-    });
-
-    if (error) {
-      const errors = error.details.map((err) => err.message);
-      return res.status(400).json({
-        message: errors,
       });
     }
 

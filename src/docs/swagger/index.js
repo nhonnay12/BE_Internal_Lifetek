@@ -34,13 +34,24 @@ const swaggerDocs = {
     ...userSwagger,
   },
   components: {
+    securitySchemes: {
+      BearerAuth: {
+        type: "http",
+        scheme: "bearer",
+        bearerFormat: "JWT",
+      },
+    },
     schemas: {
       ...authSchema,
       ...taskSchema,
       ...projectSchema,
-      ...securitySchemes,
     },
-  }
+  },
+  // security: [
+  //   {
+  //     BearerAuth: [], // Kích hoạt xác thực toàn bộ API
+  //   },
+  // ],
 };
 
 export default swaggerDocs;
