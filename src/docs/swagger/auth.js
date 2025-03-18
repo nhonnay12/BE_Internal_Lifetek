@@ -9,7 +9,26 @@ const authSwagger = {
         content: {
           "application/json": {
             schema: {
-              $ref: "#/components/schemas/User",
+              type: "object",
+              properties: {
+                userName: {
+                  type: "string",
+                  example: "Nguyễn Văn A",
+                },
+                email: {
+                  type: "string",
+                  example: "example@gmail.com",
+                },
+                password: {
+                  type: "string",
+                  example: "123456",
+                },
+                confirmPassword: {
+                  type: "string",
+                  example: "123456",
+                },
+              },
+              required: ["email", "password", "confirmPassword"],
             },
           },
         },
