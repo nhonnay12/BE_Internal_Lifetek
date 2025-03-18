@@ -72,7 +72,11 @@ export const signUp = async (req, res) => {
     return res.status(200).json({
       message:
         "Dang ký account thanh cong! Vui long kiem tra email de xac thuc",
-      user,
+      user: {
+        email: user.email,
+        verified: user.verified,
+        userName: user.userName,
+      }
     });
   } catch (error) {
     return res.status(500).json({
