@@ -7,7 +7,7 @@ const authMiddleware = async (req, res, next) => {
 
         if (!token) {
             return res.status(401).json({
-                message: "Ban chua dang nhap abc " + token
+                message: "Ban chua dang nhap" + token
             });
         };
 

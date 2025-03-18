@@ -5,6 +5,8 @@ import { projectSchema } from "./components/projectComponent.js";
 import taskSwagger from "./task.js";
 import projectSwagger from "./project.js";
 import dotenv from "dotenv";
+import { securitySchemes } from "./components/securitySchemes.js";
+import { userSwagger } from "./user.js";
 dotenv.config();
 
 const domainUrl = process.env.DOMAIN_SWAGGER
@@ -29,13 +31,14 @@ const swaggerDocs = {
     ...authSwagger,
     ...taskSwagger,
     ...projectSwagger,
+    ...userSwagger,
   },
   components: {
     schemas: {
       ...authSchema,
       ...taskSchema,
-      ...projectSchema
-
+      ...projectSchema,
+      ...securitySchemes,
     },
   }
 };
