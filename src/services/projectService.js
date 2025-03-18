@@ -1,8 +1,20 @@
 import Project from "../models/Project.js";
-
+import User from "../models/User.js";
 export const createProject = async (data) => {
   
   const existingProject = await Project.findOne({ code:data.code });
+  const managerExists = await isUserExist(data.managerId);
+  if (!managerExists) {
+    throw new Error(`Manager với id ${data.managerId} không tồn tại!`);
+  }
+  if (data.members && data.members.length > 0) {
+    for (let memberId of data.members) {
+      const isMemberValid = await isUserExist(memberId);
+      if (!isMemberValid) {
+        throw new Error(`Thành viên với id ${memberId} không tồn tại!`);
+      }
+    }
+  }
   if (existingProject) {
     throw new Error(`Mã code ${data.code} đã tồn tại!`);
   }
@@ -36,4 +48,8 @@ export const fetchProjectMembers = async (projectId) => {
     path: "members",
     select: "-password -refreshToken",
   });
+};
+const isUserExist = async (id) => {
+  const user = await User.findById(id);
+  return !!user; // true nếu tồn tại, false nếu không
 };
