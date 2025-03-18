@@ -1,9 +1,9 @@
+import mongoose from "mongoose";
+import { uploadSingleFile } from "../services/cloudinaryService.js";
 import * as taskService from "../services/taskService.js";
 import {
   createTaskValidator,
-  updateTaskValidator,
 } from "../validation/taskValidation.js";
-import mongoose from "mongoose";
 
 /// thay đổi trạng thái
 export const updateTaskStatus = async (req, res) => {
@@ -28,7 +28,6 @@ export const updateTaskStatus = async (req, res) => {
 };
 
 // thêm user vào task
-
 export const addUserToTaskController = async (req, res) => {
   try {
     const { taskId } = req.params;
@@ -51,28 +50,54 @@ export const getAlTaskByProject = async (req, res) => {
     const tasks = await taskService.getAlTaskByProject(projectId);
     res.status(200).json({
       message: "Tasks fetched successfully",
-      data: tasks,
+      data: tasks
     });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
 };
+// tìm kiếm vấn đề
 
+
+export const searchTaskController = async (req, res) => {
+  try {
+    const { assigneeId, assignerId, startDate, endDate } = req.body;
+    const { projectId } = req.params;
+    console.log(assigneeId,assignerId )
+    let filter = {};
+     if (projectId && mongoose.isValidObjectId(projectId)) {
+      filter.projectId = new mongoose.Types.ObjectId(projectId);
+    }
+    if (assigneeId && mongoose.isValidObjectId(assigneeId)) {
+      filter.assigneeId = new mongoose.Types.ObjectId(assigneeId);
+    }
+    if (assignerId && mongoose.isValidObjectId(assignerId)) {
+      filter.assignerId = new mongoose.Types.ObjectId(assignerId);
+    }
+    if (startDate) filter.startDate = new Date(startDate);
+    if (endDate) filter.endDate = new Date(endDate);
+
+    const searchResult = await taskService.filterTaskService(filter)
+    if (searchResult.length === 0) {
+      res.status(201).json({ message: "Không tìm thấy kết quả phù hợp" });
+    }
+    else {
+      res.status(200).json({
+        message: "Kết quả tìm kiếm",
+        task: searchResult
+      });
+    }
+    console.log(searchResult)
+
+  } catch (error) {
+    console.log(error)
+    res.status(500).json({ error: "Lỗi server" });
+
+  }
+} 
 // tìm kiếm task(lỗi)
 
-// export const searchTaskByTitle = async (req, res) => {
-//   try {
-//     const { title } = req.params;
-
-//     const tasks = await taskService.FindTaskByTitle(title);
-//     res.status(200).json({
-//       message: "Tasks fetched successfully",
-//       data: tasks,
-//     });
-//   } catch (error) {
-//     res.status(500).json({ message: error.message });
-//   }
-// };
+// tìm kiếm task
 
 export const searchTaskByTitle = async (req, res) => {
   try {
@@ -100,15 +125,61 @@ export const addTask = async (req, res) => {
   try {
     const dataBody = req.body;
 
+    if (typeof dataBody.assigneeId === 'string') {
+      dataBody.assigneeId = dataBody.assigneeId.split(',');
+    }
+
     const { error } = createTaskValidator.validate(dataBody, {
       abortEarly: false,
     });
+
     if (error) {
       const errors = error.details.map((err) => err.message);
       return res.status(400).json({
         message: errors,
       });
     }
+
+    // return res.status(200).json({
+    //   test: dataBody.assigneeId
+    // })
+
+    const invalidAssigneeId = dataBody.assigneeId.filter(id => !mongoose.Types.ObjectId.isValid(id));
+    if (invalidAssigneeId.length > 0) {
+      return res.status(400).json({
+        message: "Id của assignee không hợp lệ",
+      });
+    }
+
+    // kiểm tra id của assignee có id nào trong bẳng user không
+    const assigneeIds = dataBody.assigneeId;
+    const assigneeIdsFromDB = await taskService.checkAssigneeId(assigneeIds);
+    if (assigneeIdsFromDB.length !== assigneeIds.length) {
+      return res.status(400).json({
+        message: "Người nhận việc không hợp lệ",
+      });
+    }
+
+    if (!mongoose.Types.ObjectId.isValid(dataBody.assignerId)) {
+      return res.status(400).json({
+        message: "Id của assigner không hợp lệ",
+      });
+    }
+
+    //kiểm tra id của assigner có id nào trong bảng user không
+    const assignerId = dataBody.assignerId;
+    const assignerIdFromDB = await taskService.checkAssignerId(assignerId);
+    if (!assignerIdFromDB) {
+      return res.status(400).json({
+        message: "Người giao việc không hợp lệ",
+      });
+    }
+
+    if (req.file) {
+      const filePath = req.file.buffer;
+      const imageUrl = await uploadSingleFile(filePath);
+      dataBody.image = imageUrl.secure_url;
+    };
 
     const task = await taskService.addTask(req.body);
     return res.status(201).json({
@@ -152,6 +223,40 @@ export const updateTask = async (req, res) => {
   try {
     const id = req.params.id;
     const dataBody = req.body;
+    if (typeof dataBody.assigneeId === 'string') {
+      dataBody.assigneeId = dataBody.assigneeId.split(',');
+    }
+
+    const invalidAssigneeId = dataBody.assigneeId.filter(id => !mongoose.Types.ObjectId.isValid(id));
+    if (invalidAssigneeId.length > 0) {
+      return res.status(400).json({
+        message: "Id của assignee không hợp lệ",
+      });
+    }
+
+    // kiểm tra id của assignee có id nào trong bẳng user không
+    const assigneeIds = dataBody.assigneeId;
+    const assigneeIdsFromDB = await taskService.checkAssigneeId(assigneeIds);
+    if (assigneeIdsFromDB.length !== assigneeIds.length) {
+      return res.status(400).json({
+        message: "Người nhận việc không hợp lệ",
+      });
+    }
+
+    if (!mongoose.Types.ObjectId.isValid(dataBody.assignerId)) {
+      return res.status(400).json({
+        message: "Id của assigner không hợp lệ",
+      });
+    }
+
+    //kiểm tra id của assigner có id nào trong bảng user không
+    const assignerId = dataBody.assignerId;
+    const assignerIdFromDB = await taskService.checkAssignerId(assignerId);
+    if (!assignerIdFromDB) {
+      return res.status(400).json({
+        message: "Người giao việc không hợp lệ",
+      });
+    }
     // const { error } = updateTaskValidator.validate(dataBody, { abortEarly: false });
 
     // if (error) {
@@ -160,6 +265,12 @@ export const updateTask = async (req, res) => {
     //     message: errors,
     //   });
     // }
+
+    if (req.file) {
+      const filePath = req.file.buffer;
+      const imageUrl = await uploadSingleFile(filePath);
+      dataBody.image = imageUrl.secure_url;
+    }
 
     const task = await taskService.editTask(id, dataBody);
 
