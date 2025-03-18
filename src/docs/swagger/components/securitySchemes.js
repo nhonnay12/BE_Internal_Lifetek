@@ -1,9 +1,8 @@
 const securitySchemes = {
     BearerAuth: {
-        type: 'http',
-        scheme: 'bearer',
-        bearerFormat: 'JWT',
-        in: 'header'
+        type: "http",
+        scheme: "bearer",
+        bearerFormat: "JWT"
     }
 }
 export { securitySchemes };
