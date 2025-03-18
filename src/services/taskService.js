@@ -1,4 +1,5 @@
 import Task from "../models/Task.js";
+import User from "../models/User.js"
 import mongoose from "mongoose";
 
 export const updateTaskStatusService = async (taskId, newStatus) => {
@@ -30,23 +31,25 @@ export const updateTaskStatusService = async (taskId, newStatus) => {
 /// thêm user vào task
 
 export const addUserToTask = async (taskId, userId) => {
-  
-  if (userId.length === 1) {
+  const listUserId = await User.find({ _id: { $in: userId } }).distinct("_id");
+  console.log(listUserId)
+  if (listUserId.length === 0) {
+    throw new Error("Danh sách người dùng thêm vào không tồn tại trong bảng người dùng");
+  }
+  else if (listUserId.length === 1) {
       const task = await Task.findById(taskId);
       if (!task) {
         throw new Error("Task không tìm thấy");
-    }
-
-    
+    }  
     // Lấy danh sách userId đã tồn tại trong assigneeId
     const existingUsers = task.assigneeId.map(id => id.toString());
 
     // Kiểm tra xem có userId nào bị trùng không
-    const duplicateUsers = userId.filter(id => existingUsers.includes(id));
+    const duplicateUsers = listUserId.filter(id => existingUsers.includes(id));
     if (duplicateUsers.length > 0) {
         throw new Error(`UserId bị trùng: ${duplicateUsers.join(", ")}. Vui lòng chọn user khác.`);
     }
-   const newUsers = userId.map(id => new mongoose.Types.ObjectId(id));
+   const newUsers = listUserId.map(id => new mongoose.Types.ObjectId(id));
 
     const result = await Task.findByIdAndUpdate(
         taskId,
@@ -56,10 +59,10 @@ export const addUserToTask = async (taskId, userId) => {
     return result
   }
 
-  else if ((userId.length > 1)){
+  else if ((listUserId.length > 1)){
       const updatedTask = await Task.findByIdAndUpdate(
     taskId,
-    { $set: { assigneeId: userId.map(id => new mongoose.Types.ObjectId(id))  } }, // Dùng $addToSet để tránh trùng lặp
+    { $set: { assigneeId: listUserId.map(id => new mongoose.Types.ObjectId(id))  } }, // Dùng $addToSet để tránh trùng lặp
     { new: true }, { assigneeId: 1 }
   );// Populate để lấy chi tiết user nếu cần
 
@@ -82,7 +85,7 @@ export const filterTaskService = async (data) => {
   }
 };
 export const getAllTasks = async () => {
-  return await Task.find().select("+assigneeId +assignerId");
+  return await Task.find().select("+assigneeId +assignerId").populate("assigneeId", "userName email");
 };
 export const getTaskByProject = async (projectId) => {
   return await Task.find({ projectId });

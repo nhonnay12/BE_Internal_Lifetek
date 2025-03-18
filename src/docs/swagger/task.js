@@ -559,7 +559,7 @@ const taskSwagger = {
       },
     },
   },
-  "/delete-task/:id": {
+  "/tasks/delete-task/{id}": {
      delete: {
             summary: "Xoá vấn đề theo ID",
             description: "API xoá dự án",
