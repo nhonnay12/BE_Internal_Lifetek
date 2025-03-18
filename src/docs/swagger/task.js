@@ -2,16 +2,64 @@ const taskSwagger = {
   "/tasks/create-task": {
     post: {
       summary: "Tạo nhiệm vụ mới",
+      security: [
+        {
+          $ref: "#/components/securitySchemes/BearerAuth",
+        },
+      ],
       description: "API tạo nhiệm vụ mới",
       tags: ["Task"],
       requestBody: {
         required: true,
         content: {
-          "application/json": {
+          "multipart/form-data": {
             schema: {
-              $ref: "#/components/schemas/Task",
-            },
-          },
+              type: "object",
+              properties: {
+                title: {
+                  type: "string",
+                  example: "Fix login bug",
+                },
+                description: {
+                  type: "string",
+                  example: "Fix login bug",
+                },
+                assigneeId: {
+                  type: "array",
+                  description: "ID người được giao nhiệm vụ",
+                  items: {
+                    type: "string",
+                    example: "65f123abc123abcd12345678",
+                  },
+                },
+                assignerId: {
+                  type: "string",
+                  example: "65f456def456defg45678901",
+                },
+                startDate: {
+                  type: "string",
+                  example: "2024-03-10",
+                },
+                endDate: {
+                  type: "string",
+                  example: "2024-03-15",
+                },
+                projectId: {
+                  type: "string",
+                  example: "60d4f6d3c2f2a00015f8a3d5",
+                },
+                status: {
+                  type: "string",
+                  example: "pending",
+                },
+                image: {
+                  type: "string",
+                  format: "binary",
+                  description: "Ảnh của task"
+                },
+              },
+            }
+          }
         },
       },
       responses: {
@@ -65,6 +113,11 @@ const taskSwagger = {
       summary: "chỉnh sửa nhiệm vụ",
       description: "API chỉnh sửa nhiệm vụ",
       tags: ["Task"],
+      security: [
+        {
+          $ref: "#/components/securitySchemes/BearerAuth",
+        },
+      ],
       parameters: [
         {
           in: "path",
@@ -80,9 +133,52 @@ const taskSwagger = {
       requestBody: {
         required: true,
         content: {
-          "application/json": {
+          "multipart/form-data": {
             schema: {
-              $ref: "#/components/schemas/Task",
+              type: "object",
+              properties: {
+                title: {
+                  type: "string",
+                  example: "Fix login bug",
+                },
+                description: {
+                  type: "string",
+                  example: "Fix login bug",
+                },
+                assigneeId: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                    example: "65f123abc123abcd12345678",
+                  },
+                  description: "ID người được giao nhiệm vụ",
+                },
+                assignerId: {
+                  type: "string",
+                  example: "65f456def456defg45678901",
+                },
+                startDate: {
+                  type: "string",
+                  example: "2024-03-10",
+                },
+                endDate: {
+                  type: "string",
+                  example: "2024-03-15",
+                },
+                projectId: {
+                  type: "string",
+                  example: "60d4f6d3c2f2a00015f8a3d5",
+                },
+                status: {
+                  type: "string",
+                  example: "pending",
+                },
+                image: {
+                  type: "string",
+                  format: "binary",
+                  description: "Ảnh của task"
+                },
+              },
             },
           },
         },

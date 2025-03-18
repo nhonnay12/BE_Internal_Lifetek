@@ -22,7 +22,7 @@ routerTask.get("/search", FindTakByTitle);
 routerTask.post("/create-task", upload.single("image"), addTask);
 
 routerTask.get("/:id", getTaskById);
-routerTask.put("/edit-task/:id", updateTask);
+routerTask.put("/edit-task/:id", upload.single("image"), updateTask);
 routerTask.delete("/delete-task/:id", deleteTask);
 
 export default routerTask;

@@ -1,5 +1,6 @@
 import Task from "../models/Task.js";
 import mongoose from "mongoose";
+import User from "../models/User.js";
 
 export const updateTaskStatusService = async (taskId, newStatus) => {
   // Kiểm tra xem taskId có hợp lệ không
@@ -93,3 +94,12 @@ export const FindTaskById = async (id) => {
 export const FindTakByTitle = async (title) => {
   return await Task.find({ title });
 };
+// check assigneeID có trong bảng user không
+export const checkAssigneeId = async (assigneeId) => {
+  return await User.find({ _id: { $in: assigneeId } });
+}
+
+// check assignerId có trong bảng user không
+export const checkAssignerId = async (assignerId) => {
+  return await User.findById(assignerId);
+}

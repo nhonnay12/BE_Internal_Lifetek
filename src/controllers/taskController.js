@@ -1,3 +1,4 @@
+import mongoose from "mongoose";
 import { uploadSingleFile } from "../services/cloudinaryService.js";
 import * as taskService from "../services/taskService.js";
 import {
@@ -75,6 +76,41 @@ export const addTask = async (req, res) => {
   try {
     const dataBody = req.body;
 
+    if (typeof dataBody.assigneeId === 'string') {
+      dataBody.assigneeId = dataBody.assigneeId.split(',');
+    }
+
+    const invalidAssigneeId = dataBody.assigneeId.filter(id => !mongoose.Types.ObjectId.isValid(id));
+    if (invalidAssigneeId.length > 0) {
+      return res.status(400).json({
+        message: "Id của assignee không hợp lệ",
+      });
+    }
+
+    // kiểm tra id của assignee có id nào trong bẳng user không
+    const assigneeIds = dataBody.assigneeId;
+    const assigneeIdsFromDB = await taskService.checkAssigneeId(assigneeIds);
+    if (assigneeIdsFromDB.length !== assigneeIds.length) {
+      return res.status(400).json({
+        message: "Người nhận việc không hợp lệ",
+      });
+    }
+
+    if (!mongoose.Types.ObjectId.isValid(dataBody.assignerId)) {
+      return res.status(400).json({
+        message: "Id của assigner không hợp lệ",
+      });
+    }
+
+    //kiểm tra id của assigner có id nào trong bảng user không
+    const assignerId = dataBody.assignerId;
+    const assignerIdFromDB = await taskService.checkAssignerId(assignerId);
+    if (!assignerIdFromDB) {
+      return res.status(400).json({
+        message: "Người giao việc không hợp lệ",
+      });
+    }
+
     const { error } = createTaskValidator.validate(dataBody, {
       abortEarly: false,
     });
@@ -134,6 +170,40 @@ export const updateTask = async (req, res) => {
   try {
     const id = req.params.id;
     const dataBody = req.body;
+    if (typeof dataBody.assigneeId === 'string') {
+      dataBody.assigneeId = dataBody.assigneeId.split(',');
+    }
+
+    const invalidAssigneeId = dataBody.assigneeId.filter(id => !mongoose.Types.ObjectId.isValid(id));
+    if (invalidAssigneeId.length > 0) {
+      return res.status(400).json({
+        message: "Id của assignee không hợp lệ",
+      });
+    }
+
+    // kiểm tra id của assignee có id nào trong bẳng user không
+    const assigneeIds = dataBody.assigneeId;
+    const assigneeIdsFromDB = await taskService.checkAssigneeId(assigneeIds);
+    if (assigneeIdsFromDB.length !== assigneeIds.length) {
+      return res.status(400).json({
+        message: "Người nhận việc không hợp lệ",
+      });
+    }
+
+    if (!mongoose.Types.ObjectId.isValid(dataBody.assignerId)) {
+      return res.status(400).json({
+        message: "Id của assigner không hợp lệ",
+      });
+    }
+
+    //kiểm tra id của assigner có id nào trong bảng user không
+    const assignerId = dataBody.assignerId;
+    const assignerIdFromDB = await taskService.checkAssignerId(assignerId);
+    if (!assignerIdFromDB) {
+      return res.status(400).json({
+        message: "Người giao việc không hợp lệ",
+      });
+    }
     // const { error } = updateTaskValidator.validate(dataBody, { abortEarly: false });
 
     // if (error) {
@@ -142,6 +212,12 @@ export const updateTask = async (req, res) => {
     //     message: errors,
     //   });
     // }
+
+    if (req.file) {
+      const filePath = req.file.buffer;
+      const imageUrl = await uploadSingleFile(filePath);
+      dataBody.image = imageUrl.secure_url;
+    }
 
     const task = await taskService.editTask(id, dataBody);
 
