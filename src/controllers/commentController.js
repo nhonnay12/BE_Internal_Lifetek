@@ -2,6 +2,7 @@ import * as commentService from "../services/commentService.js";
 
 export const addComment = async (req, res) => {
   try {
+    // return res.status(200).json({ message: req.user });
     const { taskId } = req.params;
     const userId = req.user._id;
     const { content } = req.body; // Lấy content từ request body
