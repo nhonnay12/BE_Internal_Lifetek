@@ -55,11 +55,11 @@ const taskSwagger = {
                 image: {
                   type: "string",
                   format: "binary",
-                  description: "Ảnh của task"
+                  description: "Ảnh của task",
                 },
               },
-            }
-          }
+            },
+          },
         },
       },
       responses: {
@@ -176,7 +176,7 @@ const taskSwagger = {
                 image: {
                   type: "string",
                   format: "binary",
-                  description: "Ảnh của task"
+                  description: "Ảnh của task",
                 },
               },
             },
@@ -526,7 +526,7 @@ const taskSwagger = {
       },
     },
   },
-  
+
   "/tasks/project/{projectId}": {
     get: {
       summary: "Lấy danh sách công việc theo dự án",
@@ -576,59 +576,125 @@ const taskSwagger = {
   },
 
   "/tasks/delete-task/{id}": {
-     delete: {
-            summary: "Xoá vấn đề theo ID",
-            description: "API xoá dự án",
-            tags: ["Task"],
-            parameters: [
-                {
-                    in: "path",
-                    name: "id",
-                    required: true,
-                    description: "ID task",
-                    schema: {
-                        type: "string"
-                    }
-                }
-            ],
-            responses: {
-                200: {
-                    description: "Xoá vấn đề thành công",
-                    content: {
-                        "application/json": {
-                            schema: {
-                                type: "object",
-                                properties: {
-                                    message: {
-                                        type: "string",
-                                        example: "Xoá vấn đề thành công"
-                                    }
-                                }
-                            }
-                        }
-                    }
+    delete: {
+      summary: "Xoá vấn đề theo ID",
+      description: "API xoá dự án",
+      tags: ["Task"],
+      parameters: [
+        {
+          in: "path",
+          name: "id",
+          required: true,
+          description: "ID task",
+          schema: {
+            type: "string",
+          },
+        },
+      ],
+      responses: {
+        200: {
+          description: "Xoá vấn đề thành công",
+          content: {
+            "application/json": {
+              schema: {
+                type: "object",
+                properties: {
+                  message: {
+                    type: "string",
+                    example: "Xoá vấn đề thành công",
+                  },
                 },
-                404: {
-                    description: "Không tìm thấy vấn đề",
-                    content: {
-                        "application/json": {
-                            schema: {
-                                type: "object",
-                                properties: {
-                                    message: {
-                                        type: "string",
-                                        example: "Không tìm thấy vấn đề"
-                                    }
-                                }
-                            }
-                        }
-                    }
+              },
+            },
+          },
+        },
+        404: {
+          description: "Không tìm thấy vấn đề",
+          content: {
+            "application/json": {
+              schema: {
+                type: "object",
+                properties: {
+                  message: {
+                    type: "string",
+                    example: "Không tìm thấy vấn đề",
+                  },
                 },
-                500: {
-                    description: "Lỗi server"
-                }
-            }
-        }
+              },
+            },
+          },
+        },
+        500: {
+          description: "Lỗi server",
+        },
+      },
+    },
+  },
+  "tasks/delete-many-task": {
+    delete: {
+      summary: "Xoá nhiều vấn đề theo ID",
+      description: "API xoá dự án",
+      tags: ["Task"],
+      requestBody: {
+        required: true,
+        content: {
+          "application/json": {
+            schema: {
+              type: "object",
+              properties: {
+                ids: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                  },
+                  example: [
+                    "67d8ebc88d93c6abba32d5a5",
+                    "67d8f0df1dc8e20c175bffa8",
+                  ],
+                },
+              },
+            },
+          },
+        },
+      },
+      responses: {
+        200: {
+          description: "Xoá vấn đề thành công",
+          content: {
+            "application/json": {
+              schema: {
+                type: "object",
+                properties: {
+                  message: {
+                    type: "string",
+                    example: "Task deleted successfully",
+                  },
+                },
+              },
+            },
+          },
+        },
+        404: {
+          description: "Không tìm thấy vấn đề",
+          content: {
+            "application/json": {
+              schema: {
+                type: "object",
+                properties: {
+                  message: {
+                    type: "string",
+                    example: "Task not found",
+                  },
+                },
+              },
+            },
+          },
+        },
+        500: {
+          description: "Lỗi server",
+        },
+      },
+    },
   },
 
   "/tasks/search": {
@@ -738,11 +804,9 @@ const taskSwagger = {
             },
           },
         },
-      }
+      },
     },
-  }
-
-
+  },
 };
 
 export default taskSwagger;

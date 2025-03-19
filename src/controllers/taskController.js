@@ -1,9 +1,7 @@
 import mongoose from "mongoose";
 import { uploadSingleFile } from "../services/cloudinaryService.js";
 import * as taskService from "../services/taskService.js";
-import {
-  createTaskValidator,
-} from "../validation/taskValidation.js";
+import { createTaskValidator } from "../validation/taskValidation.js";
 
 /// thay đổi trạng thái
 export const updateTaskStatus = async (req, res) => {
@@ -50,7 +48,7 @@ export const getAlTaskByProject = async (req, res) => {
     const tasks = await taskService.getAlTaskByProject(projectId);
     res.status(200).json({
       message: "Tasks fetched successfully",
-      data: tasks
+      data: tasks,
     });
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -58,14 +56,13 @@ export const getAlTaskByProject = async (req, res) => {
 };
 // tìm kiếm vấn đề
 
-
 export const searchTaskController = async (req, res) => {
   try {
     const { assigneeId, assignerId, startDate, endDate } = req.body;
     const { projectId } = req.params;
-    console.log(assigneeId,assignerId )
+    console.log(assigneeId, assignerId);
     let filter = {};
-     if (projectId && mongoose.isValidObjectId(projectId)) {
+    if (projectId && mongoose.isValidObjectId(projectId)) {
       filter.projectId = new mongoose.Types.ObjectId(projectId);
     }
     if (assigneeId && mongoose.isValidObjectId(assigneeId)) {
@@ -77,24 +74,21 @@ export const searchTaskController = async (req, res) => {
     if (startDate) filter.startDate = new Date(startDate);
     if (endDate) filter.endDate = new Date(endDate);
 
-    const searchResult = await taskService.filterTaskService(filter)
+    const searchResult = await taskService.filterTaskService(filter);
     if (searchResult.length === 0) {
       res.status(201).json({ message: "Không tìm thấy kết quả phù hợp" });
-    }
-    else {
+    } else {
       res.status(200).json({
         message: "Kết quả tìm kiếm",
-        task: searchResult
+        task: searchResult,
       });
     }
-    console.log(searchResult)
-
+    console.log(searchResult);
   } catch (error) {
-    console.log(error)
+    console.log(error);
     res.status(500).json({ error: "Lỗi server" });
-
   }
-} 
+};
 // tìm kiếm task(lỗi)
 
 // tìm kiếm task
@@ -125,10 +119,9 @@ export const addTask = async (req, res) => {
   try {
     const dataBody = req.body;
 
-    if (typeof dataBody.assigneeId === 'string') {
-      dataBody.assigneeId = dataBody.assigneeId.split(',');
+    if (typeof dataBody.assigneeId === "string") {
+      dataBody.assigneeId = dataBody.assigneeId.split(",");
     }
-
     const { error } = createTaskValidator.validate(dataBody, {
       abortEarly: false,
     });
@@ -144,7 +137,9 @@ export const addTask = async (req, res) => {
     //   test: dataBody.assigneeId
     // })
 
-    const invalidAssigneeId = dataBody.assigneeId.filter(id => !mongoose.Types.ObjectId.isValid(id));
+    const invalidAssigneeId = dataBody.assigneeId.filter(
+      (id) => !mongoose.Types.ObjectId.isValid(id)
+    );
     if (invalidAssigneeId.length > 0) {
       return res.status(400).json({
         message: "Id của assignee không hợp lệ",
@@ -179,7 +174,7 @@ export const addTask = async (req, res) => {
       const filePath = req.file.buffer;
       const imageUrl = await uploadSingleFile(filePath);
       dataBody.image = imageUrl.secure_url;
-    };
+    }
 
     const task = await taskService.addTask(req.body);
     return res.status(201).json({
@@ -223,11 +218,13 @@ export const updateTask = async (req, res) => {
   try {
     const id = req.params.id;
     const dataBody = req.body;
-    if (typeof dataBody.assigneeId === 'string') {
-      dataBody.assigneeId = dataBody.assigneeId.split(',');
+    if (typeof dataBody.assigneeId === "string") {
+      dataBody.assigneeId = dataBody.assigneeId.split(",");
     }
 
-    const invalidAssigneeId = dataBody.assigneeId.filter(id => !mongoose.Types.ObjectId.isValid(id));
+    const invalidAssigneeId = dataBody.assigneeId.filter(
+      (id) => !mongoose.Types.ObjectId.isValid(id)
+    );
     if (invalidAssigneeId.length > 0) {
       return res.status(400).json({
         message: "Id của assignee không hợp lệ",
@@ -296,18 +293,45 @@ export const deleteTask = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
-export const deleteManytask = async (req, res) => {
-  try {
-    const ids = req.body.id;
+// export const deleteManytask = async (req, res) => {
+//   try {
+//     console.log("Received IDs:", req.body.ids); // Thêm dòng này để debug
+//     const ids = req.body.ids;
 
-    const result = await taskService.deleteManyTask(ids);
-    if (result.deleteCount === 0) {
-      return res.status(404).json({ message: "Task not found" });
+//     const result = await taskService.deleteMoreTasks(ids);
+//     if (result.deleteCount === 0) {
+//       return res.status(404).json({ message: "Task not found" });
+//     }
+
+//     res.status(200).json({
+//       message: "Task deleted successfully",
+//       deleteCount: result.deleteCount,
+//     });
+//   } catch (error) {
+//     res.status(500).json({ message: error.message });
+//   }
+// };
+export const deleteManyTask = async (req, res) => {
+  try {
+    console.log("Received IDs:", req.body.ids); // Debug dữ liệu đầu vào
+
+    const ids = req.body.ids;
+
+    if (!ids || !Array.isArray(ids) || ids.length === 0) {
+      return res.status(400).json({ message: "Danh sách ID không hợp lệ" });
+    }
+
+    const result = await taskService.deleteMoreTasks(ids);
+
+    if (result.deletedCount === 0) {
+      return res
+        .status(404)
+        .json({ message: "Không tìm thấy task nào để xóa" });
     }
 
     res.status(200).json({
-      message: "Task deleted successfully",
-      deleteCount: result.deleteCount,
+      message: "Xóa task thành công",
+      deletedCount: result.deletedCount,
     });
   } catch (error) {
     res.status(500).json({ message: error.message });

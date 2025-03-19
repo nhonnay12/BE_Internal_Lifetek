@@ -99,11 +99,21 @@ export const editTask = async (id, data) => {
 export const deleteTask = async (id) => {
   return await Task.findByIdAndDelete(id);
 };
-export const deleteMoreTasks = async (filter) => {
-  if (!filter || Object.keys(filter).length === 0) {
-    throw new Error("Điều kiện xóa không hợp lệ");
+// export const deleteMoreTasks = async (filter) => {
+//   if (!filter || Object.keys(filter).length === 0) {
+//     throw new Error("Điều kiện xóa không hợp lệ");
+//   }
+//   return await Task.deleteMany(filter);
+// };
+export const deleteMoreTasks = async (ids) => {
+  if (!ids || !Array.isArray(ids) || ids.length === 0) {
+    throw new Error("Danh sách ID không hợp lệ");
   }
-  return await Task.deleteMany(filter);
+
+  // Chuyển đổi mỗi id thành ObjectId
+  const objectIds = ids.map((id) => new mongoose.Types.ObjectId(id));
+
+  return await Task.deleteMany({ _id: { $in: objectIds } });
 };
 
 export const getAlTaskByProject = async (projectId) => {
@@ -151,9 +161,9 @@ export const FindTaskByTitle = async (data) => {
 // check assigneeID có trong bảng user không
 export const checkAssigneeId = async (assigneeId) => {
   return await User.find({ _id: { $in: assigneeId } });
-}
+};
 
 // check assignerId có trong bảng user không
 export const checkAssignerId = async (assignerId) => {
   return await User.findById(assignerId);
-}
+};
