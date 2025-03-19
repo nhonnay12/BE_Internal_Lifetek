@@ -9,7 +9,7 @@ export const createComment = async (data) => {
     return comment;
   } catch (error) {
     console.error("Lỗi khi tạo bình luận:", error.message);
-    throw new Error("Không thể tạo bình luận. Vui lòng thử lại.");
+    throw new Error("Không thể tạo bình luận. Vui lòng thử lại." + data.taskId);
   }
 };
 export const getAllcmt = async (taskId) => {

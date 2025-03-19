@@ -7,6 +7,7 @@ import projectSwagger from "./project.js";
 import dotenv from "dotenv";
 import { securitySchemes } from "./components/securitySchemes.js";
 import { userSwagger } from "./user.js";
+import CmtSwagger from "./comment.js";
 dotenv.config();
 
 const domainUrl = process.env.DOMAIN_SWAGGER
@@ -32,6 +33,7 @@ const swaggerDocs = {
     ...taskSwagger,
     ...projectSwagger,
     ...userSwagger,
+    ...CmtSwagger,
   },
   components: {
     securitySchemes: {
