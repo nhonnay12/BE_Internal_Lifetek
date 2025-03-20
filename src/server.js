@@ -5,11 +5,13 @@ import router from "./routes/index.js";
 import connectDB from "./config/db.js";
 import cookieParser from "cookie-parser";
 import swaggerDocs from "./config/swaggerConfig.js";
+import { connectRedis } from "./config/redisClient.js";
 const app = express();
 dotenv.config();
 const PORT = process.env.PORT;
 
 connectDB();
+connectRedis();
 
 app.use(
   cors({
@@ -29,5 +31,5 @@ swaggerDocs(app);
 // });
 
 app.listen(PORT, "0.0.0.0", () => {
-  console.log(`Server đang chạy tại http://192.168.1.103:${PORT}`);
+  console.log(`Server đang chạy tại ${process.env.BASE_URL}`);  
 });

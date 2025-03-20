@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import { PRIORITY, STATUS } from "../constants/index.js";
 
 const TaskSchema = new mongoose.Schema(
   {
@@ -27,12 +28,12 @@ const TaskSchema = new mongoose.Schema(
 
     status: {
       type: String,
-      enum: ["pending", "inProgress", "completed", "done"],
+      enum: Object.values(STATUS),
       default: "pending",
     },
     priority: {
       type: String,
-      enum: ["low", "medium", "high"],
+      enum: Object.values(PRIORITY),
       default: "medium",
     },
     image:

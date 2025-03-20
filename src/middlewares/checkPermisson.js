@@ -1,42 +1,42 @@
-// import jwt from "jsonwebtoken";
-// import dotenv from "dotenv";
-// import User from "../models/User.js";
-// dotenv.config();
+import jwt from "jsonwebtoken";
+import dotenv from "dotenv";
+import User from "../models/User.js";
+dotenv.config();
 
-// export const checkPermission = async (req, res, next) => {
-//   try {
+export const checkPermission = async (req, res, next) => {
+  try {
 
-//     const token = req.headers.authorization.split(" ")(1);
+    const token = req.headers.authorization.split(" ")(1);
 
-//     if (token)
-//       return res.status(403).json({
-//         message: "Bạn chưa đăng nhập",
-//       });
+    if (token)
+      return res.status(403).json({
+        message: "Bạn chưa đăng nhập",
+      });
 
 
-//     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-//     const user = await User.findById(decoded._id);
-//     if (!user) {
-//       return res.status(403).json({
-//         message: "Token không hợp lệ",
-//       });
-//     }
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const user = await User.findById(decoded._id);
+    if (!user) {
+      return res.status(403).json({
+        message: "Token không hợp lệ",
+      });
+    }
 
-//     if (user.role != "ADMIN") {
+    if (user.role != "ADMIN") {
 
-//       return res.status(403).json({
-//         message: "Bạn không có quyền làm việc này",
-//       });
-//     }
+      return res.status(403).json({
+        message: "Bạn không có quyền làm việc này",
+      });
+    }
 
-//     next();
-//   } catch (error) {
-//     return res.json({
-//       name: error.name,
-//       message: error.message,
-//     });
-//   }
-// };
+    next();
+  } catch (error) {
+    return res.json({
+      name: error.name,
+      message: error.message,
+    });
+  }
+};
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
 import User from "../models/User.js";
@@ -45,30 +45,6 @@ import Project from "../models/Project.js";
 dotenv.config();
 const { SECRET_CODE } = process.env;
 
-/**
- * Middleware xác thực token và lấy thông tin user
- */
-const authenticateToken = async (req, res, next) => {
-    try {
-        const authHeader = req.headers.authorization;
-        if (!authHeader || !authHeader.startsWith("Bearer ")) {
-            return res.status(403).json({ message: "Bạn chưa đăng nhập" });
-        }
-
-        const token = authHeader.split(" ")[1];
-        const decoded = jwt.verify(token, SECRET_CODE);
-        const user = await User.findById(decoded._id);
-
-        if (!user) {
-            return res.status(403).json({ message: "Token không hợp lệ" });
-        }
-
-        req.user = user; // Lưu user vào request để dùng ở các middleware khác
-        next();
-    } catch (error) {
-        return res.status(401).json({ message: "Unauthorized", error: error.message });
-    }
-};
 
 /**
  * Middleware kiểm tra quyền admin
