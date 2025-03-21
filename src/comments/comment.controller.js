@@ -2,10 +2,8 @@ import * as commentService from "./comment.service.js";
 
 export const addComment = async (req, res) => {
   try {
-    // return res.status(200).json({ message: req.user });
-    const { taskId } = req.params;
     const userId = req.user._id;
-    const { content } = req.body; // Lấy content từ request body
+    const { content, taskId } = req.body; // Lấy content từ request body
 
     const comment = await commentService.createComment({
       taskId,

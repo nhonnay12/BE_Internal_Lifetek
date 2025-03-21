@@ -1,6 +1,5 @@
 import mongoose from "mongoose";
-import { PRIORITY, STATUS } from "../constants/index.js";
-
+import { STATUS, PRIORITY } from "../constants/statusConstants.js";
 const TaskSchema = new mongoose.Schema(
   {
     title: {

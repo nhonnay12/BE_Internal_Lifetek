@@ -5,13 +5,6 @@ export const ROLES = {
     BA: 3,
     USER: 4,
 };
-export const STATUS = {
-    PENDING: "PENDING",
-    IN_PROGRESS: "IN_PROGRESS",
-    COMPLETED: "COMPLETED",
-    DONE: "DONE",
-    REJECTED: "REJECTED",
-};
 export const PRIORITY = {
     LOW: "LOW",
     MEDIUM: "MEDIUM",
@@ -38,59 +31,19 @@ export const STATUS_CODE = {
 };
 
 export const PERMISSIONS = {
-    PM: [
-        "create_project",
-        "update_project",
-        "delete_project",
-        "view_project",
-        "create_task",
-        "update_task",
-        "delete_task",
-        "view_task",
-        "create_comment",
-        "update_comment",
-        "delete_comment",
-        "view_comment",
-        "assign_task",
-        "change_status_task",
-        "change_priority_task",
-        "view_member",
-        "add_member_project",
-        "remove_member_project",
-        "manage_role_project",
-        "view_report",
-    ],
-    DEV: [
-        "view_project",
-        "view_task",
-        "view_comment",
-        "update_task",
-        "create_comment",
-        "change_status_task",
-        "view_user",
-    ],
-    TEST: [
-        "view_project",
-        "view_task",
-        "view_comment",
-        "update_task",
-        "create_comment",
-        "change_status_task",
-        "view_user",
-    ],
-    BA: [
-        "view_project",
-        "view_task",
-        "view_comment",
-        "update_task",
-        "create_comment",
-        "change_status_task",
-        "view_user",
-    ],
-    USER: [
-        "view_project",
-        "view_task",
-        "view_comment",
-        "view_user",
-    ],
+    ASSIGN_TASK: [ROLES.PM],
+    
+    CREATE_TASK: [ROLES.PM, ROLES.DEV, ROLES.TEST, ROLES.BA],
+    UPDATE_TASK: [ROLES.PM, ROLES.DEV, ROLES.TEST, ROLES.BA],
+
+    CREATE_COMMENT: [ROLES.PM, ROLES.DEV, ROLES.TEST, ROLES.BA],
+    UPDATE_COMMENT: [ROLES.PM, ROLES.DEV, ROLES.TEST, ROLES.BA],
+
+    ADD_USER_TO_PROJECT: [ROLES.PM],
+    REMOVE_USER_FROM_PROJECT: [ROLES.PM],
+
+    CREATE_PROJECT: [ROLES.PM],
+    UPDATE_PROJECT: [ROLES.PM],
+    DELETE_PROJECT: [ROLES.PM],
+
 };

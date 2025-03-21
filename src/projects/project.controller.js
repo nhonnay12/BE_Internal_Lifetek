@@ -111,27 +111,42 @@ export const getProjectManager = async (req, res) => {
     }
 }
 export const getProjectMembers = async (req, res) => {
-  try {
-    const { id } = req.params;
-    if (!mongoose.Types.ObjectId.isValid(id)) {
-        return res.status(400).json({
-            message: "ID không hợp lệ",
-            data: null
-        });
-    }
-    const project = await projectService.fetchProjectMembers(id);
-
-    if (!project) {
-      return res.status(404).json({ message: "Dự án không tồn tại" });
-    }
-    res.json({
-        message: "Lấy thông tin members dự án thành công!",
-        data: {
-            members: project.members
+    try {
+        const { id } = req.params;
+        if (!mongoose.Types.ObjectId.isValid(id)) {
+            return res.status(400).json({
+                message: "ID không hợp lệ",
+                data: null
+            });
         }
-    });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: error.message });
-  }
+        const project = await projectService.fetchProjectMembers(id);
+
+        if (!project) {
+            return res.status(404).json({ message: "Dự án không tồn tại" });
+        }
+        res.json({
+            message: "Lấy thông tin members dự án thành công!",
+            data: {
+                members: project.members
+            }
+        });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: error.message });
+    }
 };
+export const load = async (req, res, next, id) => {
+    try {
+        if (!mongoose.Types.ObjectId.isValid(id)) {
+            next(new Error("ID không hợp lệ"));
+        }
+        const project = await projectService.getProjectById(id);
+        if (!project) {
+            next(new Error("Project không tồn tại"));
+        }
+        req.project = project;
+        next();
+    } catch (error) {
+        next(error);
+    }
+}

@@ -31,7 +31,7 @@ const userSchema = new mongoose.Schema(
     role: {
       type: Number,
       enum: Object.values(ROLES),
-      default: 5,
+      default: 4,
     },
   },
   { timestamps: true }

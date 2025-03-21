@@ -7,6 +7,7 @@ import cookieParser from "cookie-parser";
 import swaggerDocs from "./config/swaggerConfig.js";
 import { connectRedis } from "./config/redisClient.js";
 import ErrorMiddleware from "./middlewares/error.middleware.js";
+import listEndpoints from "express-list-endpoints";
 const app = express();
 const PORT = env.PORT;
 
@@ -30,9 +31,8 @@ swaggerDocs(app);
 app.use(ErrorMiddleware.notFound); // xử lý lỗi 404
 app.use(ErrorMiddleware.errorHandle); // xử lý lỗi chung
 
-// app.listen(PORT, () => {
-//   console.log(`Server is running on port http://localhost:${PORT}`);
-// });
+// console.log(listEndpoints(app)); 
+
 
 app.listen(PORT, "0.0.0.0", () => {
   console.log(`Server đang chạy tại ${process.env.BASE_URL}`);  

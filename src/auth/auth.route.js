@@ -4,10 +4,10 @@ import * as authController from "./auth.controller.js";
 
 const routerAuth = Router();
 
-routerAuth.post("/sign-up", authController.signUp);
+routerAuth.post("/register", authController.signUp);
 routerAuth.get("/verify-email/:token", authController.verifyEmail);
-routerAuth.post("/sign-in", authController.signIn);
-routerAuth.post("/sign-out", authMiddleware, authController.signOut);
+routerAuth.post("/login", authController.signIn);
+routerAuth.post("/logout", authMiddleware, authController.signOut);
 routerAuth.post("/refresh-token", authController.getNewAccessToken);
 routerAuth.post("/forgot-password", authController.forgotPassword);
 routerAuth.post("/reset-password/:id", authController.resetPassword);

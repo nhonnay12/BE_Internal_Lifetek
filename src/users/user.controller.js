@@ -2,7 +2,7 @@ import { uploadSingleFile } from "../services/cloudinaryService.js";
 import SuccessResponse from "../utils/SuccessResponse.js";
 import * as userService from "./user.service.js";
 
-export const getProfile = async (req, res) => {
+export const getUserById = async (req, res) => {
     const id = req.user._id;
     try {
         const user = await userService.getUserById(id);
@@ -49,5 +49,18 @@ export const updateUser = async (req, res) => {
         });
     } catch (error) {
         return res.status(500).json({ message: error.message });
+    }
+}
+
+export const load = async (req, res, next, id) => {
+    try {
+        const user = await userService.getUserById(id);
+        if (!user) {
+            next(new Error("Không tìm thấy người dùng"));
+        }
+        req.user = user;
+        next();
+    } catch (error) {
+        next(error);
     }
 }

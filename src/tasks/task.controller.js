@@ -89,7 +89,6 @@ export const searchTaskController = async (req, res) => {
     res.status(500).json({ error: "Lỗi server" });
   }
 };
-// tìm kiếm task(lỗi)
 
 // tìm kiếm task
 
@@ -337,3 +336,14 @@ export const deleteManyTask = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+
+export const load = async (req, res, next, id) => {
+  try {
+    const task = await taskService.FindTaskById(id);
+    if (!task) return res.status(404).json({ message: "Task not found" });
+    req.task = task;
+    next();
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+}

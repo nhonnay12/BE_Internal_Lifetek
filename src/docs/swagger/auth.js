@@ -1,5 +1,5 @@
 const authSwagger = {
-  "/auth/sign-up": {
+  "/auth/register": {
     post: {
       summary: "Đăng ký tài khoản",
       description: "API đăng ký tài khoản mới",
@@ -231,7 +231,7 @@ const authSwagger = {
       },
     }
   },
-  "/auth/sign-in": {
+  "/auth/login": {
     post: {
       summary: "Đăng Nhập",
       description: "API đăng nhập tài khoản",
@@ -367,7 +367,7 @@ const authSwagger = {
       }
     }
   },
-  "/auth/sign-out": {
+  "/auth/logout": {
     post: {
       summary: "Đăng xuất tài khoản",
       description: "API đăng xuất tài khoản",
@@ -586,7 +586,7 @@ const authSwagger = {
       }
     }
   },
-  "/auth/reset-password/:id": {
+  "/auth/reset-password/{id}": {
     post: {
       summary: "Đặt lại mật khẩu",
       description: "API đặt lại mật khẩu",
