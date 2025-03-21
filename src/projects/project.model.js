@@ -1,4 +1,3 @@
-//import { number } from "joi";
 import mongoose from "mongoose";
 
 const ProjectSchema = new mongoose.Schema(
@@ -20,8 +19,8 @@ const ProjectSchema = new mongoose.Schema(
     members: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
     priority: {
       type: String,
-      enum: ['low', 'medium', 'high'],
-      default: 'medium'
+      enum: ["low", "medium", "high"],
+      default: "medium"
   },
   
   },

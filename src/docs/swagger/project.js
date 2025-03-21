@@ -63,6 +63,12 @@ const projectSwagger = {
             summary: "Lấy tất cả dự án",
             description: "API lấy danh sách tất cả dự án",
             tags: ["Project"],
+            security:
+                [
+                    {
+                        BearerAuth: []
+                    }
+                ],
             responses: {
                 200: {
                     description: "Danh sách dự án",

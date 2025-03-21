@@ -28,7 +28,7 @@ const uploadSingleFile = (buffer, folder = "LifeTex_TTS") => {
  * @returns Danh sách URL ảnh đã upload
  */
 
-const uploadMultipleFiles = async (buffer, folder = 'lLifeTex_TTS') => {
+const uploadMultipleFiles = async (buffer, folder = "LifeTex_TTS") => {
     let urls = [];
     for (let i = 0; i < buffer.length; i++) {
         let result = await uploadSingleFile(buffer[i], folder);

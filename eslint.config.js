@@ -13,7 +13,11 @@ export default [
     rules: {
       "operator-linebreak": ["error", "before"], // Cho phép xuống dòng trước `? :`
       "quotes": ["error", "double"], // Ép dùng dấu " thay vì '
-      "no-process-env": "off" // Cho phép sử dụng process.env
+      "no-process-env": "off,", // Cho phép sử dụng process.env
+      "no-unused-vars": "error",  // ❌ Báo lỗi nếu có biến không dùng
+      "no-undef": "error",         // ❌ Báo lỗi nếu dùng biến chưa khai báo
+      "no-unsafe-optional-chaining": "error",
+      "no-console": "error"
     }
   }
 ];

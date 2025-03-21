@@ -1,8 +1,9 @@
 export const ROLES = {
-    PM: "PM",
-    DEV: "DEV",
-    TEST: "TEST",
-    BA: "BA",
+    PM: 0,
+    DEV: 1,
+    TEST: 2,
+    BA: 3,
+    USER: 4,
 };
 export const STATUS = {
     PENDING: "PENDING",

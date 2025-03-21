@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import * as projectService from "../services/projectService.js";
+import * as projectService from "./project.service.js";
 export const addProject = async (req, res) => {
     try {
         const project = await projectService.createProject(req.body);
@@ -14,7 +14,9 @@ export const addProject = async (req, res) => {
 
 export const getAllProjects = async (req, res) => {
     try {
-        const projects = await projectService.getAllProjects();
+        const idUser = req.user._id;
+
+        const projects = await projectService.getAllProjects(idUser);
         res.status(200).json({
             message: "get all project!",
             data: projects

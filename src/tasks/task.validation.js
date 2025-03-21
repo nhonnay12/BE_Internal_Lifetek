@@ -1,6 +1,5 @@
-import Joi from "joi";
 import joiObjectId from "joi-objectid";
-
+import Joi from "joi";
 
 Joi.objectId = joiObjectId(Joi);
 

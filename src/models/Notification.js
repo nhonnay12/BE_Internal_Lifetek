@@ -3,17 +3,17 @@ import mongoose from "mongoose";
 const NotificationSchema = new mongoose.Schema({
     userId: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'User',
+        ref: "User",
         required: true,
     },
     projectId: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Project',
+        ref: "Project",
         required: true,
     },
     taskId: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Task',
+        ref: "Task",
         required: true,
     },
     type: {
@@ -31,4 +31,4 @@ const NotificationSchema = new mongoose.Schema({
 
 }, { timestamps: true });
 
-export default mongoose.model('Notification', NotificationSchema);
+export default mongoose.model("Notification", NotificationSchema);

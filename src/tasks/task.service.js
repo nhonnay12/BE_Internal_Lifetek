@@ -1,5 +1,5 @@
-import Task from "../models/Task.js";
-import User from "../models/User.js"
+import Task from "./task.model.js";
+import User from "../users/user.model.js";
 import mongoose from "mongoose";
 
 export const updateTaskStatusService = async (taskId, newStatus) => {
@@ -29,7 +29,6 @@ export const updateTaskStatusService = async (taskId, newStatus) => {
 };
 
 /// thêm user vào task
-
 export const addUserToTask = async (taskId, userId) => {
   const listUserId = await User.find({ _id: { $in: userId } }).distinct("_id");
   console.log(listUserId)
@@ -74,8 +73,6 @@ export const addUserToTask = async (taskId, userId) => {
   }
   
 }
-  
-////
 export const filterTaskService = async (data) => {
   try {
     const task = await Task.find(data);
@@ -99,12 +96,6 @@ export const editTask = async (id, data) => {
 export const deleteTask = async (id) => {
   return await Task.findByIdAndDelete(id);
 };
-// export const deleteMoreTasks = async (filter) => {
-//   if (!filter || Object.keys(filter).length === 0) {
-//     throw new Error("Điều kiện xóa không hợp lệ");
-//   }
-//   return await Task.deleteMany(filter);
-// };
 export const deleteMoreTasks = async (ids) => {
   if (!ids || !Array.isArray(ids) || ids.length === 0) {
     throw new Error("Danh sách ID không hợp lệ");
@@ -134,9 +125,6 @@ export const FindTaskById = async (id) => {
   });
 };
 
-// export const FindTaskByTitle = async (data) => {
-//   return await Task.find({ title: { $regex: data, $options: "i" } });
-// };
 export const convertToSlug = (str) => {
   return str
     .normalize("NFD") // Chuẩn hóa Unicode

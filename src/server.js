@@ -1,14 +1,14 @@
 import express from "express";
-import dotenv from "dotenv";
+import env from "./config/env.js";
 import cors from "cors";
 import router from "./routes/index.js";
 import connectDB from "./config/db.js";
 import cookieParser from "cookie-parser";
 import swaggerDocs from "./config/swaggerConfig.js";
 import { connectRedis } from "./config/redisClient.js";
+import ErrorMiddleware from "./middlewares/error.middleware.js";
 const app = express();
-dotenv.config();
-const PORT = process.env.PORT;
+const PORT = env.PORT;
 
 connectDB();
 connectRedis();
@@ -24,8 +24,12 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.use("/api/v1", router);
-
 swaggerDocs(app);
+
+//middleware xử lý lỗi
+app.use(ErrorMiddleware.notFound); // xử lý lỗi 404
+app.use(ErrorMiddleware.errorHandle); // xử lý lỗi chung
+
 // app.listen(PORT, () => {
 //   console.log(`Server is running on port http://localhost:${PORT}`);
 // });

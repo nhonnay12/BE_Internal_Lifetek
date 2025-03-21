@@ -1,4 +1,4 @@
-import Comment from "../models/comment.js";
+import Comment from "./comment.model.js";
 
 export const createComment = async (data) => {
   try {

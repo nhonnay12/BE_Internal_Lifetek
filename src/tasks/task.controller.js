@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 import { uploadSingleFile } from "../services/cloudinaryService.js";
-import * as taskService from "../services/taskService.js";
-import { createTaskValidator } from "../validation/taskValidation.js";
+import * as taskService from "./task.service.js";
+import * as taskValidator from "./task.validation.js";
 
 /// thay đổi trạng thái
 export const updateTaskStatus = async (req, res) => {
@@ -122,7 +122,7 @@ export const addTask = async (req, res) => {
     if (typeof dataBody.assigneeId === "string") {
       dataBody.assigneeId = dataBody.assigneeId.split(",");
     }
-    const { error } = createTaskValidator.validate(dataBody, {
+    const { error } = taskValidator.createTaskValidator.validate(dataBody, {
       abortEarly: false,
     });
 

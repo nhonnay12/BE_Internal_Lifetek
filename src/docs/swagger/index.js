@@ -5,7 +5,6 @@ import { projectSchema } from "./components/projectComponent.js";
 import taskSwagger from "./task.js";
 import projectSwagger from "./project.js";
 import dotenv from "dotenv";
-import { securitySchemes } from "./components/securitySchemes.js";
 import { userSwagger } from "./user.js";
 import CmtSwagger from "./comment.js";
 dotenv.config();
