@@ -1,5 +1,3 @@
-import { Schema } from "mongoose";
-
 const CmtSwagger = {
   "/comments/add-comment/{taskId}": {
     post: {

@@ -1,5 +1,5 @@
-import Project from "../models/Project.js";
-import User from "../models/User.js";
+import Project from "./project.model.js";
+import User from "../users/user.model.js";
 export const createProject = async (data) => {
   
   const existingProject = await Project.findOne({ code:data.code });
@@ -21,8 +21,9 @@ export const createProject = async (data) => {
   return await Project.create(data);
 };
 
-export const getAllProjects = async () => {
-  return await Project.find().populate("managerId", "userName email phone");
+export const getAllProjects = async (userId) => {
+
+  return await Project.find({ members: { $in: [userId] } }).populate("managerId", "userName email phone");
 };
 
 export const getProjectById = async (id) => {

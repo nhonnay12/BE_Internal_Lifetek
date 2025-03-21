@@ -251,7 +251,11 @@ const taskSwagger = {
       summary: "Lấy danh sách tất cả công việc",
       description: "Trả về danh sách các công việc trong hệ thống",
       tags: ["Task"],
-
+      security: [
+        {
+          BearerAuth: []
+        }
+      ],
       responses: {
         200: {
           description: "Lấy danh sách vấn đề thành công",

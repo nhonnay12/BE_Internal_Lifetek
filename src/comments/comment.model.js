@@ -1,4 +1,3 @@
-// import { ref, types } from "joi";
 import mongoose from "mongoose";
 
 const commentSchema = new mongoose.Schema(

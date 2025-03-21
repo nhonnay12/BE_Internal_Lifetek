@@ -3,12 +3,12 @@ import mongoose from "mongoose";
 const TaskDependency = new mongoose.Schema({
     taskId: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Task',
+        ref: "Task",
         required: true,
     },
     taskDependency_id: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Task',
+        ref: "Task",
         required: true,
     },
     type: {
@@ -19,4 +19,4 @@ const TaskDependency = new mongoose.Schema({
 }, { timestamps: true});
 
 
-export default mongoose.model('Task_dependency', TaskDependency);
+export default mongoose.model("Task_dependency", TaskDependency);
