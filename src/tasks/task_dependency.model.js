@@ -12,8 +12,9 @@ const TaskDependency = new mongoose.Schema({
         required: true,
     },
     type: {
-        type: String,
-        enum: ["blocks", "is_blocked_by", "related_to"],
+        type: Number,
+        enum: [0, 1, 2],
+        default: 1,
         required: true,
     },
 }, { timestamps: true});

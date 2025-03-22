@@ -27,8 +27,8 @@ const authSchema = {
                 example: false
             },
             role: {
-                type: 'string',
-                example: 'USER'
+                type: "number",
+                example: 4
             }
         }
 

@@ -6,9 +6,9 @@ const ProjectSchema = new mongoose.Schema(
     code: { type: Number, required: true },
     description: { type: String },
     status: {
-      type: String,
-      enum: ["inprogress", "done", "todo"],
-      default: "todo",
+      type: Number,
+      enum: [0, 1, 2], 
+      default: 0,
     },
 
     managerId: {
@@ -18,13 +18,11 @@ const ProjectSchema = new mongoose.Schema(
     },
     members: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
     priority: {
-      type: String,
-      enum: ["low", "medium", "high"],
-      default: "medium"
+      type: Number,
+      enum: [0, 1, 2],
+      default: 0,
+    },
   },
-  
-  },
-
   { timestamps: true }
 );
 

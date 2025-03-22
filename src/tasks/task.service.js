@@ -125,6 +125,10 @@ export const FindTaskById = async (id) => {
   });
 };
 
+export const getTaskById = async (id) => {
+  return await Task.findById(id);
+}
+
 export const convertToSlug = (str) => {
   return str
     .normalize("NFD") // Chuẩn hóa Unicode

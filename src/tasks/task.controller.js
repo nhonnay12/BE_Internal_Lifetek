@@ -344,6 +344,6 @@ export const load = async (req, res, next, id) => {
     req.task = task;
     next();
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    next(error);
   }
 }

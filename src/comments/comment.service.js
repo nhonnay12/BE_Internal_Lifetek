@@ -12,12 +12,21 @@ export const createComment = async (data) => {
     throw new Error("Không thể tạo bình luận. Vui lòng thử lại." + data.taskId);
   }
 };
-export const getAllcmt = async (taskId) => {
+export const getAllcmt = async (taskId, skip, limit) => {
   try {
-    const comments = await Comment.find({ taskId: taskId });
+    const comments = await Comment.find({ taskId: taskId }).skip(skip).limit(limit);
     return comments;
   } catch (error) {
     console.error("Lỗi khi lấy bình luận:", error.message);
     throw new Error("Không thể lấy bình luận. Vui lòng thử lại.");
+  }
+};
+export const countComment = async (taskId) => {
+  try {
+    const total = await Comment.countDocuments({ taskId: taskId });
+    return total;
+  }
+  catch (error) {
+    throw new Error("Không thể đếm bình luận. Vui lòng thử lại.");
   }
 };

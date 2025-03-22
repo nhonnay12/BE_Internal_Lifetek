@@ -1,5 +1,5 @@
 const CmtSwagger = {
-  "/comments/add-comment/{taskId}": {
+  "/comments": {
     post: {
       summary: "Tạo bình luận",
       description: "API tạo bình luận trong 1 tasktask",
@@ -9,18 +9,6 @@ const CmtSwagger = {
         },
       ],
       tags: ["Comment"],
-      parameters: [
-        {
-          in: "path",
-          name: "taskId",
-          required: true,
-          description: "ID task",
-          schema: {
-            type: "string",
-            example: "67d8e3f6835b109d2e16bd8b",
-          },
-        },
-      ],
       requestBody: {
         required: true,
         content: {
@@ -28,6 +16,10 @@ const CmtSwagger = {
             schema: {
               type: "object",
               properties: {
+                taskId: {
+                  type: "string",
+                  example: "67d8e3f6835b109d2e16bd8b",
+                },
                 content: {
                   type: "string",
                   example: "Noi dung binh luan",
@@ -73,7 +65,7 @@ const CmtSwagger = {
       },
     },
   },
-  "/comments/get-comments/{taskId}": {
+  "/comments/{taskId}": {
     get: {
       summary: "Lấy danh sách bình luận",
       description: "API lấy danh sách bình luận",

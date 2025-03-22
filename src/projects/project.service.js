@@ -1,8 +1,8 @@
 import Project from "./project.model.js";
 import User from "../users/user.model.js";
 export const createProject = async (data) => {
-  
-  const existingProject = await Project.findOne({ code:data.code });
+
+  const existingProject = await Project.findOne({ code: data.code });
   const managerExists = await isUserExist(data.managerId);
   if (!managerExists) {
     throw new Error(`Manager với id ${data.managerId} không tồn tại!`);
@@ -21,9 +21,11 @@ export const createProject = async (data) => {
   return await Project.create(data);
 };
 
-export const getAllProjects = async (userId) => {
+export const getAllProjects = async (userId, skip, limit) => {
 
-  return await Project.find({ members: { $in: [userId] } }).populate("managerId", "userName email phone");
+  return await Project.find({ members: { $in: [userId] } })
+    .skip(skip).limit(limit)
+    .populate("managerId", "userName email phone");
 };
 
 export const getProjectById = async (id) => {
@@ -38,10 +40,10 @@ export const deleteProject = async (id) => {
   return await Project.findByIdAndDelete(id);
 };
 export const fetchProjectManager = async (id) => {
-    return await Project.findById(id)
+  return await Project.findById(id)
     .populate({
-        path: "managerId",
-        select: "-password -refreshToken", 
+      path: "managerId",
+      select: "-password -refreshToken",
     });;
 }
 export const fetchProjectMembers = async (projectId) => {
@@ -54,3 +56,7 @@ const isUserExist = async (id) => {
   const user = await User.findById(id);
   return !!user; // true nếu tồn tại, false nếu không
 };
+
+export const countProjects = async (userId) => {
+  return await Project.countDocuments({ members: { $in: [userId] } });
+}

@@ -1,6 +1,9 @@
 import * as commentService from "./comment.service.js";
+import * as taskService from "../tasks/task.service.js";
+import SuccessResponse from "../utils/SuccessResponse.js";
+import PAGINATE from "../constants/paginate.js";
 
-export const addComment = async (req, res) => {
+export const addComment = async (req, res, next) => {
   try {
     const userId = req.user._id;
     const { content, taskId } = req.body; // Lấy content từ request body
@@ -10,23 +13,34 @@ export const addComment = async (req, res) => {
       userId,
       content,
     });
-    res
-      .status(201)
-      .json({ message: "Thêm bình luận thành công", comment: comment });
+    return new SuccessResponse(comment);
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    next(error);
   }
 };
-export const getAllComments = async (req, res) => {
+export const getAllComments = async (req, res, next) => {
   try {
-    const taskId = req.params.taskId;
-    const comments = await commentService.getAllcmt(taskId);
-    res
-      .status(200)
-      .json({ message: "Lấy danh sách bình luận thành công", comments });
+    const page = parseInt(req.query.page) || PAGINATE.PAGE;
+    const limit = parseInt(req.query.limit) || PAGINATE.LIMIT;
+    const skip = (page - 1) * limit;
+    const taskId = req.task._id;
+    const comments = await commentService.getAllcmt(taskId, skip, limit);
+    const total = await commentService.countComment(taskId);
+
+    return new SuccessResponse(comments, 200, "success", total, page, limit).sends(res);
   } catch (error) {
-    res
-      .status(500)
-      .json({ message: "Lấy danh sách bình luận thất bại" + error.message });
+    next(error);
+  }
+};
+export const load = async (req, res, next, id) => {
+  try {
+    const task = await taskService.getTaskById(id);
+    if (!task) {
+      throw new Error("Task not found");
+    }
+    req.task = task;
+    next();
+  } catch (error) {
+    next(error);
   }
 };
