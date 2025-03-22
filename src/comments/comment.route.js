@@ -6,6 +6,7 @@ const routerCmt = express.Router();
 // add comment
 routerCmt.route("/")
     .post(commentController.addComment);
-routerCmt.route("/:id")
+routerCmt.route("/:taskId")
     .get(commentController.getAllComments);
+routerCmt.param("taskId", commentController.load);
 export default routerCmt;

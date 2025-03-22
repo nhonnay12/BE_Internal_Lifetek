@@ -5,16 +5,33 @@ export const ROLES = {
     BA: 3,
     USER: 4,
 };
+export const STATUS_PROJECT = {
+    PROGRESSING: 0,
+    DONE: 1,
+    ARCHIVED: 2,
+};
 export const PRIORITY = {
-    LOW: "LOW",
-    MEDIUM: "MEDIUM",
-    HIGH: "HIGH",
+    LOW: 0,
+    MEDIUM: 1,
+    HIGH: 2,
 };
-export const TYPE = {
-    TASK: "TASK",
-    BUG: "BUG",
-    STORY: "STORY",
+export const STATUS_TASK = {
+    TO_DO: 0,
+    IN_PROGRESS: 1,
+    COMPLETED: 2,
+    BLOCKED: 3,
 };
+export const STATUS_TASK_CHANGE = {
+    TO_DO: 0,
+    IN_PROGRESS: 1,
+    COMPLETED: 2,
+    BLOCKED: 3,
+};
+export const CHANGE_SOURCE = {
+    MANUAL: 0,
+    SYSTEM: 1,
+    API: 2,
+}
 export const COMMENT = {
     TASK: "TASK",
     BUG: "BUG",
