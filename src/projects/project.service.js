@@ -21,16 +21,23 @@ export const createProject = async (data) => {
 };
 
 export const getAllProjects = async (userId, skip, limit) => {
-  return await Project.find({
-    $or: [
-      { members: { $in: [userId] } }, // userId nằm trong members
-      { managerId: userId }, // userId là managerId
-    ],
-  })
-    .skip(skip)
-    .limit(limit)
-    .populate("managerId", "userName email phone avatar")
-    .populate("members", "userName email phone avatar");
+  return await Project.find(
+    {
+      $or: [
+        { managerId: userId },
+        { members: { $in: [userId] } },
+      ],
+    }
+  )
+    .skip(skip).limit(limit)
+    .populate({
+      path: "managerId",
+      select: "userName email phone avatar -_id",
+    })
+    .populate({
+      path: "members",
+      select: "userName email phone avatar -_id",
+    });
 };
 export const getProjectById = async (id) => {
   return await Project.findById(id);
@@ -61,5 +68,10 @@ const isUserExist = async (id) => {
 };
 
 export const countProjects = async (userId) => {
-  return await Project.countDocuments({ members: { $in: [userId] } });
-};
+  return await Project.countDocuments({
+    $or: [
+      { managerId: userId },
+      { members: { $in: [userId] } },
+    ],
+  });
+}
