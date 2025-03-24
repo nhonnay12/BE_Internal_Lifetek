@@ -107,8 +107,10 @@ export const deleteMoreTasks = async (ids) => {
   return await Task.deleteMany({ _id: { $in: objectIds } });
 };
 
-export const getAlTaskByProject = async (projectId) => {
+export const getAlTaskByProject = async (projectId, skip, limit) => {
   return await Task.find({ projectId })
+    .skip(skip)
+    .limit(limit)
     .populate({
       path: "assigneeId",
       select: "userName email", // Chỉ lấy userName và email của user
@@ -118,6 +120,10 @@ export const getAlTaskByProject = async (projectId) => {
       select: "userName email",
     });
 };
+
+export const countTaskByProject = async (projectId) => {
+  return await Task.countDocuments({ projectId });
+}
 export const FindTaskById = async (id) => {
   return await Task.findById(id).populate({
     path: "assigneeId",

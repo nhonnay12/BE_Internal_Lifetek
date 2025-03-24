@@ -36,7 +36,7 @@ export const load = async (req, res, next, id) => {
   try {
     const task = await taskService.getTaskById(id);
     if (!task) {
-      throw new Error("Task not found");
+      next(new Error("Task not found"));
     }
     req.task = task;
     next();

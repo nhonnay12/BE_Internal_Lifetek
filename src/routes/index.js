@@ -17,8 +17,7 @@ const routes = {
 };
 
 Object.entries(routes).forEach(([path, rou]) => {    
-    router.use(authMiddleware);
-    router.use(path, rou);
+    router.use(path, authMiddleware, rou);
 });
 
 export default router;

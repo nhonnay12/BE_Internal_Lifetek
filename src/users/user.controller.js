@@ -9,7 +9,7 @@ export const getUserById = async (req, res, next) => {
         user.password = undefined;
         return new SuccessResponse(user).send(res);
     } catch (error) {
-        next(error);
+        return next(error);
     }
 }
 
@@ -23,7 +23,7 @@ export const getAllUsers = async (req, res, next) => {
 
         return new SuccessResponse(users, 200, 'success', total, page, limit).sends(res);
     } catch (error) {
-        next(error);
+        return next(error);
     }
 }
 export const updateUser = async (req, res, next) => {
@@ -46,7 +46,7 @@ export const updateUser = async (req, res, next) => {
         }
         return new SuccessResponse(data).send(res);
     } catch (error) {
-        next(error);
+        return next(error);
     }
 }
 
@@ -59,6 +59,6 @@ export const load = async (req, res, next, id) => {
         req.user = user;
         next();
     } catch (error) {
-        next(error);
+        return next(error);
     }
 }

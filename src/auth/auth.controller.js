@@ -59,7 +59,7 @@ export const register = async (req, res, next) => {
 
         new SuccessResponse(user).send(res);
     } catch (error) {
-        next(error);
+        return next(error);
     }
 };
 //xác thực email
@@ -68,10 +68,10 @@ export const verifyEmail = async (req, res, next) => {
     try {
         const { token } = req.params;
         const decode = jwt.verify(token, env.JWT_SECRET);
-        if (!decode) next(new Error("Token không hợp lệ"));
+        if (!decode) return next(new Error("Token không hợp lệ"));
 
         const user = await User.findById(decode.id);
-        if (!user) next(new Error("User không tồn tại"));
+        if (!user) return next(new Error("User không tồn tại"));
 
         user.verified = true;
         await user.save();
@@ -79,7 +79,7 @@ export const verifyEmail = async (req, res, next) => {
         return new SuccessResponse(user).send(res);
 
     } catch (error) {
-        next(error);
+        return next(error);
     }
 };
 //đăng nhập
@@ -98,12 +98,12 @@ export const login = async (req, res, next) => {
         const user = await User.findOne({ email });
 
         // kiem tra user
-        if (!user) next(new Error("Email chưa đăng ký"));
+        if (!user) return next(new Error("Email chưa đăng ký"));
 
         const isMatch = await bcryptjs.compare(password, user.password)
-        if (!isMatch) next(new Error("Mật khẩu không đúng"));
+        if (!isMatch) return next(new Error("Mật khẩu không đúng"));
 
-        if (!user.verified) next(new Error("Email chưa được xác thực"));
+        if (!user.verified) return next(new Error("Email chưa được xác thực"));
 
         // tao token
         const accessToken = tokenUtils.generateAccessToken(user)
@@ -124,22 +124,22 @@ export const login = async (req, res, next) => {
         }).send(res);
 
     } catch (error) {
-        next(error);
+        return next(error);
     }
 }
 //làm mới token
 export const getNewAccessToken = async (req, res, next) => {
     const refreshToken = req.cookies.refreshToken;
 
-    if (!refreshToken) next(new Error("Token không hợp lệ"));
+    if (!refreshToken) return next(new Error("Token không hợp lệ"));
 
     try {
         const decode = jwt.verify(refreshToken, env.JWT_REFRESH_SECRET);
 
-        if (!decode) next(new Error("Token không hợp lệ"));
+        if (!decode) return next(new Error("Token không hợp lệ"));
 
     } catch (error) {
-        next(error);
+        return next(error);
     }
 }
 //đăng xuất
@@ -147,7 +147,7 @@ export const logout = async (req, res, next) => {
     try {
         const id = req.user._id;
         const user = await User.findById(id);
-        if (!user) next(new Error("User không tồn tại"));
+        if (!user) return next(new Error("User không tồn tại"));
 
         res.clearCookie("refreshToken", {
             httpOnly: true,
@@ -156,7 +156,7 @@ export const logout = async (req, res, next) => {
         });
         return new SuccessResponse("Đăng xuất thành công").send(res);
     } catch (error) {
-        next(error);
+        return next(error);
     }
 }
 // gửi mail mat khau mới
@@ -166,7 +166,7 @@ export const forgotPassword = async (req, res, next) => {
 
         const user = await User.findOne({ email });
 
-        if (!user) next(new Error("Email chưa đăng ký"));
+        if (!user) return next(new Error("Email chưa đăng ký"));
 
         const newPassword = passwordUtils.generateRandomPassword(10);
         const hashedPassword = await bcryptjs.hash(newPassword, 10);
@@ -186,7 +186,7 @@ export const forgotPassword = async (req, res, next) => {
         return new SuccessResponse("Mật khẩu mới đã được gửi").send(res);
 
     } catch (error) {
-        next(error);
+        return next(error);
     }
 }
 //  đặt lại mật khẩu bằng
@@ -197,11 +197,11 @@ export const resetPassword = async (req, res, next) => {
 
         const user = await User.findById(id);
 
-        if (!user) next(new Error("User không tồn tại"));
+        if (!user) return next(new Error("User không tồn tại"));
 
         const isMatch = await bcryptjs.compare(oldPassword, user.password);
 
-        if (!isMatch) next(new Error("Mật khẩu cũ không đúng"));
+        if (!isMatch) return next(new Error("Mật khẩu cũ không đúng"));
 
         const hashedPassword = await bcryptjs.hash(newPassword, 10);
         user.password = hashedPassword;
@@ -211,6 +211,6 @@ export const resetPassword = async (req, res, next) => {
         return new SuccessResponse("Đổi mật khẩu thành công").send(res);
 
     } catch (error) {
-        next(error);
+        return next(error);
     }
 }
