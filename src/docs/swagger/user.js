@@ -1,14 +1,36 @@
 const userSwagger = {
-    "/user": {
+    "/users": {
         get: {
             tags: ["User"],
-            summary: "Lấy thông tin người dùng",
+            summary: "Lấy tất cả thông tin người dùng",
             security:
                 [
                     {
                         BearerAuth: []
                     }
                 ],
+            parameters: [
+                {
+                    in: "query",
+                    name: "page",
+                    required: false,
+                    description: "Trang hiện tại (mặc định là 1)",
+                    schema: {
+                        type: "integer",
+                        default: 1
+                    }
+                },
+                {
+                    in: "query",
+                    name: "limit",
+                    required: false,
+                    description: "Số lượng bản ghi trên mỗi trang (mặc định là 10)",
+                    schema: {
+                        type: "integer",
+                        default: 10
+                    }
+                }
+            ],
             responses: {
                 200: {
                     description: "Thành công",
@@ -30,39 +52,6 @@ const userSwagger = {
                     description: "Lỗi server"
                 }
             }
-        }
-    },
-    "/user/getAll": {
-        get: {
-            tags: ["User"],
-            summary: "Lấy thông tin tất cả người dùng",
-            security:
-                [
-                    {
-                        BearerAuth: []
-                    }
-                ],
-            responses: {
-                200: {
-                    description: "Thành công",
-                    content: {
-                        "application/json": {
-                            schema: {
-                                type: "array",
-                                items: {
-                                    $ref: "#/components/schemas/User"
-                                }
-                            }
-                        }
-                    }
-                },
-                403: {
-                    description: "Không có quyền truy cập"
-                },
-                500: {
-                    description: "Lỗi server"
-                }
-            },
         }
     },
     "/user/update-profile": {

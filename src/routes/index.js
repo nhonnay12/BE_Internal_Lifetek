@@ -13,7 +13,7 @@ const routes = {
     "/projects": routerProject,
     "/tasks": routerTask,
     "/comments": routerCmt,
-    "/user": routeUser,
+    "/users": routeUser,
 };
 
 Object.entries(routes).forEach(([path, rou]) => {    

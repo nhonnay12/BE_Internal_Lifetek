@@ -63,6 +63,28 @@ const projectSwagger = {
             summary: "Lấy tất cả dự án",
             description: "API lấy danh sách tất cả dự án",
             tags: ["Project"],
+            parameters: [
+                {
+                    in: "query",
+                    name: "page",
+                    description: "Trang hiện tại (mặc định là 1)",
+                    required: false,
+                    schema: {
+                        type: "integer",
+                        example: 1
+                    }
+                },
+                {
+                    in: "query",
+                    name: "limit",
+                    description: "Số lượng dự án trên mỗi trang (mặc định là 10)",
+                    required: false,
+                    schema: {
+                        type: "integer",
+                        example: 10
+                    }
+                }
+            ],
             security:
                 [
                     {
@@ -75,9 +97,20 @@ const projectSwagger = {
                     content: {
                         "application/json": {
                             schema: {
-                                type: "array",
-                                items: {
-                                    $ref: "#/components/schemas/Project"
+                                type: "object",
+                                properties: {
+                                    success: { type: "boolean", example: true },
+                                    message: { type: "string", example: "success" },
+                                    total: { type: "number", example: 1 },
+                                    page: { type: "number", example: 1 },
+                                    limit: { type: "number", example: 10 },
+                                    totalPages: { type: "number", example: 1 },
+                                    projects: {
+                                        type: "array",
+                                        items: {
+                                            $ref: "#/components/schemas/Project"
+                                        }
+                                    }
                                 }
                             }
                         }

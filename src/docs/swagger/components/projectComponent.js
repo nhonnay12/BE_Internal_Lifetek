@@ -14,17 +14,30 @@ const projectSchema = {
                 type: "string",
                 example: "Dự án phát triển hệ thống CRM hỗ trợ quản lý khách hàng"
             },
-            // startDate: {
-            //     type: "string",
-            //     example: "2024-03-01T00:00:00.000Z"
-            // },
-            // endDate: {
-            //     type: "string",
-            //     example: "2024-06-30T00:00:00.000Z"
-            // },
             managerId: {
-                type: "string",
-                example: "60d4f6d3c2f2a00015f8a3d5"
+                type: "object",
+                properties: {
+                    _id: {
+                        type: "string",
+                        example: "60d4f6d3c2f2a00015f8a3d5"
+                    },
+                    userName: {
+                        type: "string",
+                        example: "Nguyễn Văn A"
+                    },
+                    email: {
+                        type: "string",
+                        example: "example@gmail.com",
+                    },
+                    phone: {
+                        type: "string",
+                        example: "0123456789"
+                    },
+                    avatar: {
+                        type: "string",
+                        example: "https://res.cloudinary.com/dxl1gsy3h/image/upload/v1742280198/uploads/ux92oetku5b4lugmnq20.jpg"
+                    }
+                }
             },
             status: {
                 type: "string",
@@ -37,8 +50,29 @@ const projectSchema = {
             members: {
                 type: "array",
                 items: {
-                    type: "string",
-                    example: "60d4f6d3c2f2a00015f8a3d5"
+                    type: "object",
+                    properties: {
+                        _id: {
+                            type: "string",
+                            example: "60d4f6d3c2f2a00015f8a3d5"
+                        },
+                        userName: {
+                            type: "string",
+                            example: "Nguyễn Văn A"
+                        },
+                        email: {
+                            type: "string",
+                            example: "example@gmail.com",
+                        },
+                        phone: {
+                            type: "string",
+                            example: "0123456789"
+                        },
+                        avatar: {
+                            type: "string",
+                            example: "https://res.cloudinary.com/dxl1gsy3h/image/upload/v1742280198/uploads/ux92oetku5b4lugmnq20.jpg"
+                        }
+                    }
                 }
             }
         }
