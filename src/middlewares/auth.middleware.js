@@ -3,33 +3,20 @@ import User from "../users/user.model.js";
 
 const authMiddleware = async (req, res, next) => {
   try {
-    if (!req.headers.authorization) {
-      return res.status(401).json({
-        message: "Ban chua dang nhap",
-      });
-    }
+    if (!req.headers.authorization) return next(new Error("Không tìm thấy token"));
+
     const token = req.headers.authorization.split(" ")[1];
 
-    if (!token) {
-      return res.status(401).json({
-        message: "Token không hợp lệ" + token,
-      });
-    }
+    if (!token) return next(new Error("Không tìm thấy token"));
 
     const decode = jwt.verify(token, process.env.JWT_SECRET);
     req.user = await User.findById(decode.id).select("-password");
 
-    if (!req.user) {
-      return res.status(404).json({
-        message: "User khong ton tai",
-      });
-    }
+    if (!req.user) return next(new Error("Không tìm thấy user"));
 
     next();
   } catch (error) {
-    return res.status(500).json({
-      message: error.message,
-    });
+    return next(error);
   }
 };
 
