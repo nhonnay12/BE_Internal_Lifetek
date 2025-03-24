@@ -12,7 +12,7 @@ import SuccessResponse from "../utils/SuccessResponse.js";
 //đăng ký
 export const register = async (req, res, next) => {
     try {
-        const { email, password } = req.body;
+        const { email, password, phone, userName } = req.body;
         const { error } = authValidation.signUpValidator.validate(req.body, { abortEarly: false });
         if (error) {
             const errors = error.details.map((err) => err.message);
@@ -24,11 +24,11 @@ export const register = async (req, res, next) => {
             return next(new Error("Email đã tồn tại"));
         }
 
-        const hashedPassword = await bcryptjs.hash(password, 10);
-
         const user = await User.create({
-            ...req.body,
-            password: hashedPassword,
+            email,
+            password,
+            phone,
+            userName,
         });
 
         const verifyToken = jwt.sign({ id: user._id }, env.JWT_SECRET, {
@@ -54,9 +54,6 @@ export const register = async (req, res, next) => {
             text: "Xác thực emailabc",
             html: emailContent,
         });
-
-        user.password = undefined;
-
         new SuccessResponse(user).send(res);
     } catch (error) {
         return next(error);
