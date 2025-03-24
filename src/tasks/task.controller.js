@@ -4,10 +4,13 @@ import * as taskService from "./task.service.js";
 import * as taskValidator from "./task.validation.js";
 import SuccessResponse from "../utils/SuccessResponse.js";
 import PAGINATE from "../constants/paginate.js";
+import { PERMISSIONS } from "../constants/index.js";
 
 /// thay đổi trạng thái
 export const updateTaskStatus = async (req, res, next) => {
   try {
+    const user = req.user.role;
+    // const checkPemission = PERMISSIONS.UPDATE_TASK_STATUS.includes(user);
     const { taskId } = req.params;
 
     const { status } = req.body;
@@ -46,8 +49,7 @@ export const getAlTaskByProject = async (req, res, next) => {
     const tasks = await taskService.getAlTaskByProject(projectId, skip, limit);
     const total = await taskService.countTaskByProject(projectId);
 
-    return new SuccessResponse(tasks, 200, "success", total, limit,
-    ).sends(res);
+    return new SuccessResponse(tasks, 200, "success", total, limit).sends(res);
   } catch (error) {
     return next(error);
   }
@@ -104,6 +106,11 @@ export const searchTaskByTitle = async (req, res, next) => {
 /// thêm task
 export const addTask = async (req, res, next) => {
   try {
+    const user = req.user.role;
+    const checkPemission = PERMISSIONS.CREATE_TASK.includes(user);
+    if (!checkPemission) {
+      return next(new Error("Bạn không có quyền thêm task"));
+    }
     const dataBody = req.body;
 
     if (typeof dataBody.assigneeId === "string") {
@@ -169,7 +176,8 @@ export const getAllTasks = async (req, res, next) => {
 // lấy task bằng id
 export const getTaskById = async (req, res, next) => {
   try {
-    const task = await taskService.FindTaskById(req.params.id);
+    const taskId = req.task._id;
+    const task = await taskService.FindTaskById(taskId);
     if (!task) return next(new Error("Task không tìm thấy"));
     return new SuccessResponse(task).send(res);
   } catch (error) {
@@ -266,7 +274,6 @@ export const deleteTask = async (req, res, next) => {
 // };
 export const deleteManyTask = async (req, res, next) => {
   try {
-
     const ids = req.body.ids;
 
     if (!ids || !Array.isArray(ids) || ids.length === 0) {
@@ -287,6 +294,9 @@ export const deleteManyTask = async (req, res, next) => {
 
 export const load = async (req, res, next, id) => {
   try {
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return next(new Error("Id không hợp lệ"));
+    }
     const task = await taskService.FindTaskById(id);
     if (!task) return next(new Error("Task không tìm thấy"));
     req.task = task;
@@ -294,4 +304,4 @@ export const load = async (req, res, next, id) => {
   } catch (error) {
     next(error);
   }
-}
+};

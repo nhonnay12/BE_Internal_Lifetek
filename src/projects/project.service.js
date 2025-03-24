@@ -1,7 +1,6 @@
 import Project from "./project.model.js";
 import User from "../users/user.model.js";
 export const createProject = async (data) => {
-
   const existingProject = await Project.findOne({ code: data.code });
   const managerExists = await isUserExist(data.managerId);
   if (!managerExists) {
@@ -22,12 +21,17 @@ export const createProject = async (data) => {
 };
 
 export const getAllProjects = async (userId, skip, limit) => {
-
-  return await Project.find({ members: { $in: [userId] } })
-    .skip(skip).limit(limit)
-    .populate("managerId", "userName email phone");
+  return await Project.find({
+    $or: [
+      { members: { $in: [userId] } }, // userId nằm trong members
+      { managerId: userId }, // userId là managerId
+    ],
+  })
+    .skip(skip)
+    .limit(limit)
+    .populate("managerId", "userName email phone avatar")
+    .populate("members", "userName email phone avatar");
 };
-
 export const getProjectById = async (id) => {
   return await Project.findById(id);
 };
@@ -40,12 +44,11 @@ export const deleteProject = async (id) => {
   return await Project.findByIdAndDelete(id);
 };
 export const fetchProjectManager = async (id) => {
-  return await Project.findById(id)
-    .populate({
-      path: "managerId",
-      select: "-password -refreshToken",
-    });;
-}
+  return await Project.findById(id).populate({
+    path: "managerId",
+    select: "-password -refreshToken",
+  });
+};
 export const fetchProjectMembers = async (projectId) => {
   return await Project.findById(projectId).populate({
     path: "members",
@@ -59,4 +62,4 @@ const isUserExist = async (id) => {
 
 export const countProjects = async (userId) => {
   return await Project.countDocuments({ members: { $in: [userId] } });
-}
+};
