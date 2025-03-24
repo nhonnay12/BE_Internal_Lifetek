@@ -1,7 +1,6 @@
 import Project from "./project.model.js";
 import User from "../users/user.model.js";
 export const createProject = async (data) => {
-
   const existingProject = await Project.findOne({ code: data.code });
   const managerExists = await isUserExist(data.managerId);
   if (!managerExists) {
@@ -22,7 +21,6 @@ export const createProject = async (data) => {
 };
 
 export const getAllProjects = async (userId, skip, limit) => {
-
   return await Project.find(
     {
       $or: [
@@ -41,7 +39,6 @@ export const getAllProjects = async (userId, skip, limit) => {
       select: "userName email phone avatar -_id",
     });
 };
-
 export const getProjectById = async (id) => {
   return await Project.findById(id);
 };
@@ -54,12 +51,11 @@ export const deleteProject = async (id) => {
   return await Project.findByIdAndDelete(id);
 };
 export const fetchProjectManager = async (id) => {
-  return await Project.findById(id)
-    .populate({
-      path: "managerId",
-      select: "-password -refreshToken",
-    });;
-}
+  return await Project.findById(id).populate({
+    path: "managerId",
+    select: "-password -refreshToken",
+  });
+};
 export const fetchProjectMembers = async (projectId) => {
   return await Project.findById(projectId).populate({
     path: "members",

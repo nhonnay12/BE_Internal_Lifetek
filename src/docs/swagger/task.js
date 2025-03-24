@@ -253,8 +253,8 @@ const taskSwagger = {
       tags: ["Task"],
       security: [
         {
-          BearerAuth: []
-        }
+          BearerAuth: [],
+        },
       ],
       responses: {
         200: {
@@ -286,21 +286,26 @@ const taskSwagger = {
       },
     },
   },
-  "/tasks/{id}": {
+  "/tasks/{taskId}": {
     get: {
       summary: "Lấy thông tin chi tiết",
       description: "Trả về thống tin chi tiết của task",
 
       tags: ["Task"],
+      security: [
+        {
+          BearerAuth: [],
+        },
+      ],
       parameters: [
         {
           in: "path",
-          name: "id",
+          name: "taskId",
           required: true,
           description: "ID task",
           schema: {
             type: "string",
-            example: "67d3f68ec0587825d1b151bb",
+            example: "67d8e3e2835b109d2e16bd89",
           },
         },
       ],
