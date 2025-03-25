@@ -3,7 +3,8 @@ import User from "../users/user.model.js";
 
 const authMiddleware = async (req, res, next) => {
   try {
-    if (!req.headers.authorization) return next(new Error("Không tìm thấy token"));
+    if (!req.headers.authorization)
+      return next(new Error("Không tìm thấy token"));
 
     const token = req.headers.authorization.split(" ")[1];
 
