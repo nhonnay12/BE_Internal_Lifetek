@@ -1,5 +1,5 @@
 const taskSwagger = {
-  "/tasks/create-task": {
+  "/tasks/": {
     post: {
       summary: "Tạo nhiệm vụ mới",
       security: [
@@ -9,6 +9,11 @@ const taskSwagger = {
       ],
       description: "API tạo nhiệm vụ mới",
       tags: ["Task"],
+      security: [
+        {
+          BearerAuth: [],
+        },
+      ],
       requestBody: {
         required: true,
         content: {
@@ -49,8 +54,8 @@ const taskSwagger = {
                   example: "60d4f6d3c2f2a00015f8a3d5",
                 },
                 status: {
-                  type: "string",
-                  example: "pending",
+                  type: "number",
+                  example: 0,
                 },
                 image: {
                   type: "string",
@@ -639,7 +644,7 @@ const taskSwagger = {
       },
     },
   },
-  "tasks/delete-many-task": {
+  "tasks/": {
     delete: {
       summary: "Xoá nhiều vấn đề theo ID",
       description: "API xoá dự án",
@@ -711,6 +716,12 @@ const taskSwagger = {
       sunmary: "Tìm kiếm công việc theo Title , (người dùng nhập)",
       description: "Trả về danh sách công việc theo Title",
       tags: ["Task"],
+      security: [
+        {
+          BearerAuth: [],
+        },
+      ],
+
       parameters: [
         {
           in: "query",

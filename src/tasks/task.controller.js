@@ -90,7 +90,7 @@ export const searchTaskController = async (req, res, next) => {
 export const searchTaskByTitle = async (req, res, next) => {
   try {
     const title = req.query.search;
-    if (!title) {
+    if (!title || title.lenght === 0) {
       return next(new Error("Tiêu đề không được để trống"));
     }
     const tasks = await taskService.FindTaskByTitle(title);
@@ -246,7 +246,7 @@ export const updateTask = async (req, res, next) => {
 // xóa task
 export const deleteTask = async (req, res, next) => {
   try {
-    const task = await taskService.deleteTask(req.params.id);
+    const task = await taskService.deleteTask(req.task._id);
     if (!task) return next(new Error("Task không tìm thấy"));
 
     return new SuccessResponse(task).send(res);

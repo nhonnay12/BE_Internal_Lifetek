@@ -1,3 +1,5 @@
+import mongoose from "mongoose";
+
 import * as commentService from "./comment.service.js";
 import * as taskService from "../tasks/task.service.js";
 import SuccessResponse from "../utils/SuccessResponse.js";
@@ -13,7 +15,7 @@ export const addComment = async (req, res, next) => {
       userId,
       content,
     });
-    return new SuccessResponse(comment);
+    return new SuccessResponse(comment).send(res);
   } catch (error) {
     next(error);
   }
@@ -27,7 +29,14 @@ export const getAllComments = async (req, res, next) => {
     const comments = await commentService.getAllcmt(taskId, skip, limit);
     const total = await commentService.countComment(taskId);
 
-    return new SuccessResponse(comments, 200, "success", total, page, limit).sends(res);
+    return new SuccessResponse(
+      comments,
+      200,
+      "success",
+      total,
+      page,
+      limit
+    ).sends(res);
   } catch (error) {
     next(error);
   }
