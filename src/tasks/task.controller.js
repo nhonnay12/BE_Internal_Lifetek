@@ -7,21 +7,22 @@ import PAGINATE from "../constants/paginate.js";
 import { PERMISSIONS } from "../constants/index.js";
 
 /// thay đổi trạng thái
-export const updateTaskStatus = async (req, res, next) => {
+export const updateTaskStatus = async (req, res,next) => {
   try {
     // const checkPemission = PERMISSIONS.UPDATE_TASK_STATUS.includes(user);
     const { taskId } = req.params;
-
     const { status } = req.body;
-
-    const updatedTask = await taskService.updateTaskStatusService(
-      taskId,
-      status
-    );
-
-    return new SuccessResponse(updatedTask).send(res);
+     const validStatuses = [1,2,3,4,5,6,7];
+          if (!validStatuses.includes(status)) {
+          return  next(new Error("Giá trị status không phù hợp"));
+     }
+       const updatedTask = await taskService.updateTaskStatusService(
+          taskId,
+          status
+       )
+       return new SuccessResponse(updatedTask).send(res);
   } catch (error) {
-    return next(error);
+    return error;
   }
 };
 
@@ -278,7 +279,7 @@ export const deleteManyTask = async (req, res, next) => {
 export const load = async (req, res, next, id) => {
   try {
     if (!mongoose.Types.ObjectId.isValid(id)) {
-      return next(new Error("Id không hợp lệ"));
+      return next(new Error("Status không phù hợp"));;
     }
     const task = await taskService.FindTaskById(id);
     if (!task) return next(new Error("Task không tìm thấy"));
