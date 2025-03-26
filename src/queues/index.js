@@ -1,5 +1,5 @@
-import { Queue } from 'bullmq';
-import dotenv from 'dotenv';
+import { Queue } from "bullmq";
+import dotenv from "dotenv";
 dotenv.config();
 
 const connection = {
@@ -7,6 +7,6 @@ const connection = {
     port: process.env.REDIS_PORT || 6379,
 };
 
-export const emailQueue = new Queue('emailQueue', { connection });
+export const emailQueue = new Queue("emailQueue", { connection });
 
 export default { emailQueue };

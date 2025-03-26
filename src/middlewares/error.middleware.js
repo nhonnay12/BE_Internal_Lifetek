@@ -1,5 +1,5 @@
 const ErrorMiddleware = {
-    errorHandle: (err, req, res, next) => {
+    errorHandle: (err, req, res) => {
         console.error(err);
 
         let statusCode = err.statusCode || 500;
@@ -30,7 +30,7 @@ const ErrorMiddleware = {
         });
     },
 
-    notFound: (req, res, next) => {
+    notFound: (req, res,) => {
         res.status(404).json({
             success: false,
             message: `Not Found - ${req.originalUrl}`,

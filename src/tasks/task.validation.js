@@ -44,9 +44,6 @@ export const createTaskValidator = Joi.object({
     endDate: Joi.date().messages({
         "date.base": "Ngày hết hạn không hợp lệ",
     }),
-    startDate: Joi.date().messages({
-        "date.base": "Ngày bắt đầu không hợp lệ",
-    }),
 });
 
 export const updateTaskValidator = Joi.object({

@@ -34,9 +34,3 @@ export const STATUS_TASK_WF = {
         next: [STATUS.IN_PROGRESS],
     },
 };
-
-export const PRIORITY = {
-    LOW: "LOW",
-    MEDIUM: "MEDIUM",
-    HIGH: "HIGH",
-};

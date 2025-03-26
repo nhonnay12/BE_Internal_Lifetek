@@ -20,7 +20,7 @@ export const getAllProjects = async (req, res, next) => {
         const projects = await projectService.getAllProjects(idUser, skip, limit);
         const total = await projectService.countProjects(idUser);
 
-        return new SuccessResponse(projects, 200, 'success', total, page, limit).sends(res);
+        return new SuccessResponse(projects, 200, "success", total, page, limit).sends(res);
     } catch (error) {
         return next(error);
     }
