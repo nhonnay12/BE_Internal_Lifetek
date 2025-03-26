@@ -3,6 +3,7 @@ import * as taskController from "./task.controller.js";
 import upload from "../config/multer.js";
 
 const routerTask = express.Router();
+routerTask.get("/search", taskController.searchTaskByTitle);
 
 routerTask
   .route("/")
@@ -21,5 +22,5 @@ routerTask.put("/:taskId/status", taskController.updateTaskStatus);
 routerTask.get("/project/:projectId", taskController.getAlTaskByProject);
 routerTask.post("/:taskId/add-user", taskController.addUserToTaskController);
 routerTask.post("/filter/:projectId", taskController.searchTaskController);
-routerTask.get("/search", taskController.searchTaskByTitle);
+// routerTask.get("/search", taskController.searchTaskByTitle);
 export default routerTask;

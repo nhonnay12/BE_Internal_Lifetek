@@ -3,7 +3,7 @@ import mongoose from "mongoose";
 const TagSchema = new mongoose.Schema({
     projectId: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Project',
+        ref: "Project",
         required: true,
     },
     name: {
@@ -16,4 +16,4 @@ const TagSchema = new mongoose.Schema({
     },
 }, { timestamps: true});
 
-export default mongoose.model('Tag', TagSchema);
+export default mongoose.model("Tag", TagSchema);
