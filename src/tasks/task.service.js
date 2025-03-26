@@ -9,11 +9,6 @@ export const updateTaskStatusService = async (taskId, newStatus) => {
   }
 
   // Kiểm tra trạng thái hợp lệ
-  const validStatuses = [0,1,2,3];
-  if (!validStatuses.includes(newStatus)) {
-    throw new Error("Giá trị status không phù hợp");
-  }
-
   // Cập nhật trạng thái task
   const updatedTask = await Task.findByIdAndUpdate(
     taskId,
@@ -55,7 +50,7 @@ export const addUserToTask = async (taskId, userId) => {
         { $addToSet: { assigneeId: { $each: newUsers } } },
         { new: true }
     );
-    return result
+    return result;
   }
 
   else if ((listUserId.length > 1)){
@@ -127,7 +122,7 @@ export const countTaskByProject = async (projectId) => {
 export const FindTaskById = async (id) => {
   return await Task.findById(id).populate({
     path: "assigneeId",
-    select: "userName email", // Chỉ laý user name và email của user
+    select: "userName email", // Chỉ lấy user name và email của user
   });
 };
 

@@ -17,18 +17,16 @@ export const createTaskValidator = Joi.object({
     "string.empty": "projectId không được để trống",
     "any.required": "projectId là bắt buộc",
   }),
-  assigneeId: Joi.array().items(Joi.objectId()).required().messages({
-    "string.empty": "assignerId không được để trống",
-    "any.required": "assignerId là bắt buộc",
-  }),
-  assignerId: Joi.string().messages({
-    "string.empty": "assigneeId không được để trống",
-  }),
-  status: Joi.number()
-    .valid(...Object.values(STATUS))
-    .messages({
-      "string.empty": "Trạng thái không được để trống",
-      "any.only": "Trạng thái không hợp lệ",
+    assigneeId: Joi.array().items(Joi.objectId()).required().messages({
+        "string.empty": "assignerId không được để trống",
+        "any.required": "assignerId là bắt buộc",
+    }),
+    assignerId: Joi.string().messages({
+        "string.empty": "assigneeId không được để trống",
+    }),
+    status: Joi.string().valid("pending", "inProgress", "completed", "done").messages({
+        "string.empty": "Trạng thái không được để trống",
+        "any.only": "Trạng thái không hợp lệ",
     }),
   priority: Joi.string().valid("low", "medium", "high").messages({
     "string.empty": "Mức độ ưu tiên không được để trống",

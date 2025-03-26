@@ -1,6 +1,8 @@
 import mongoose from "mongoose";
 import bcrypt from "bcryptjs";
 import { ROLES } from "../constants/index.js";
+import crypto from "crypto";
+
 const userSchema = new mongoose.Schema(
   {
     userName: {
@@ -36,6 +38,8 @@ const userSchema = new mongoose.Schema(
       enum: Object.values(ROLES),
       default: ROLES.USER,
     },
+    resetPasswordToken: String, 
+    resetPasswordExpire: Date,
   },
   { timestamps: true }
 );
@@ -52,6 +56,14 @@ userSchema.pre("save", async function (next) {
 // so sánh password
 userSchema.methods.matchPassword = async function (enteredPassword) {
   return await bcrypt.compare(enteredPassword, this.password);
+};
+
+userSchema.methods.getResetPasswordToken = function () {
+  const resetToken = crypto.randomBytes(32).toString("hex");
+  this.resetPasswordToken = crypto.createHash("sha256").update(resetToken).digest("hex");
+
+  this.resetPasswordExpire = Date.now() + 10 * 60 * 1000; // 10 phut
+  return resetToken;
 };
 
 // tìm user theo email hoặc phone

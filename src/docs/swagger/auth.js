@@ -597,16 +597,17 @@ const authSwagger = {
       summary: "Đặt lại mật khẩu",
       description: "API đặt lại mật khẩu",
       tags: ["Auth"],
-      parameters: [
+      security: [],
+      "parameters": [
         {
-          in: "path",
-          name: "id",
-          required: true,
-          description: "ID người dùng",
-          schema: {
-            type: "string",
+          "name": "token",
+          "in": "query",
+          "required": true,
+          "schema": {
+            "type": "string"
           },
-        },
+          "description": "Token đặt lại mật khẩu"
+        }
       ],
       requestBody: {
         required: true,
@@ -615,13 +616,13 @@ const authSwagger = {
             schema: {
               type: "object",
               properties: {
-                oldpassword: {
+                password: {
                   type: "string",
                   example: "123456",
                 },
-                newpassword: {
+                confirmPassword: {
                   type: "string",
-                  example: "12345678",
+                  example: "123456",
                 },
               },
             },
