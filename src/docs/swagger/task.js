@@ -2,12 +2,6 @@ const taskSwagger = {
   "/tasks": {
     post: {
       summary: "Tạo nhiệm vụ mới",
-      security:
-            [
-              {
-                BearerAuth: []
-              }
-            ],
       description: "API tạo nhiệm vụ mới",
       tags: ["Task"],
       requestBody: {
@@ -686,12 +680,6 @@ const taskSwagger = {
       sunmary: "Tìm kiếm công việc theo Title , (người dùng nhập)",
       description: "Trả về danh sách công việc theo Title",
       tags: ["Task"],
-      security: [
-        {
-          BearerAuth: [],
-        },
-      ],
-
       parameters: [
         {
           in: "query",

@@ -1,6 +1,6 @@
 import joiObjectId from "joi-objectid";
 import Joi from "joi";
-import { STATUS } from "../constants/statusConstants";
+import { STATUS } from "../constants/statusConstants.js";
 
 Joi.objectId = joiObjectId(Joi);
 
@@ -23,7 +23,8 @@ export const createTaskValidator = Joi.object({
     assignerId: Joi.string().messages({
         "string.empty": "assigneeId không được để trống",
     }),
-    status: Joi.number().valid(Object.entries(STATUS)).messages({
+   
+    status: Joi.number().valid(Object.entries(STATUS).join(",")).messages({
         "string.empty": "Trạng thái không được để trống",
         "any.only": "Trạng thái không hợp lệ",
     }),
