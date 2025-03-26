@@ -1,11 +1,11 @@
 export const STATUS = {
-    PREPARE: 1,
-    IN_PROGRESS: 2,
-    TEST: 3,
-    FINISH: 4,
-    CLOSE: 5,
-    PAUSE: 6,
-    NOT_DO: 7,
+  PREPARE: 1,
+  IN_PROGRESS: 2,
+  TEST: 3,
+  FINISH: 4,
+  CLOSE: 5,
+  PAUSE: 6,
+  NOT_DO: 7,
 };
 
 export const STATUS_TASK_WF = {

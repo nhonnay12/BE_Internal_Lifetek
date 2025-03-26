@@ -1,5 +1,6 @@
 import Comment from "./comment.model.js";
-
+import mongoose from "mongoose";
+import Task from "../tasks/task.model.js";
 export const createComment = async (data) => {
   try {
     if (!data.taskId || !data.userId || !data.content) {
@@ -13,7 +14,13 @@ export const createComment = async (data) => {
 };
 export const getAllcmt = async (taskId, skip, limit) => {
   try {
-    const comments = await Comment.find({ taskId: taskId }).skip(skip).limit(limit);
+    const comments = await Comment.find({ taskId: taskId })
+      .skip(skip)
+      .limit(limit)
+      .populate({
+        path: "userId",
+        select: "userName avatar ",
+      });
     return comments;
   } catch (error) {
     throw new Error("Không thể lấy bình luận. Vui lòng thử lại." + error.message);

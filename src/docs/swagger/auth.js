@@ -43,7 +43,8 @@ const authSwagger = {
                 properties: {
                   message: {
                     type: "string",
-                    example: "Đăng ký thành công! Vui lòng kiểm tra email để xác thực.",
+                    example:
+                      "Đăng ký thành công! Vui lòng kiểm tra email để xác thực.",
                   },
                   user: {
                     type: "object",
@@ -72,7 +73,8 @@ const authSwagger = {
                 properties: {
                   message: {
                     type: "string",
-                    example: "Email này đã được đăng ký, bạn có muốn đăng nhập không?",
+                    example:
+                      "Email này đã được đăng ký, bạn có muốn đăng nhập không?",
                   },
                 },
               },
@@ -143,34 +145,34 @@ const authSwagger = {
                       },
                       email: {
                         type: "string",
-                        example: "ledinhkhanhquan@gmail.com"
+                        example: "ledinhkhanhquan@gmail.com",
                       },
                       password: {
                         type: "string",
-                        example: "123456"
+                        example: "123456",
                       },
                       verified: {
                         type: "boolean",
-                        example: true
+                        example: true,
                       },
                       role: {
                         type: "string",
-                        example: "USER"
+                        example: "USER",
                       },
                       createdAt: {
                         type: "string",
-                        example: "2021-09-08T06:40:48.000Z"
+                        example: "2021-09-08T06:40:48.000Z",
                       },
                       updatedAt: {
                         type: "string",
-                        example: "2021-09-08T06:40:48.000Z"
+                        example: "2021-09-08T06:40:48.000Z",
                       },
                       _v: {
                         type: "number",
-                        example: 0
-                      }
-                    }
-                  }
+                        example: 0,
+                      },
+                    },
+                  },
                 },
               },
             },
@@ -229,7 +231,7 @@ const authSwagger = {
           },
         },
       },
-    }
+    },
   },
   "/auth/login": {
     post: {
@@ -245,17 +247,16 @@ const authSwagger = {
               properties: {
                 email: {
                   type: "string",
-                  example: "Nguyễn Văn A",
+                  example: "kquan2846@gmail.com",
                 },
                 password: {
                   type: "string",
                   example: "123456",
                 },
-
-              }
-            }
-          }
-        }
+              },
+            },
+          },
+        },
       },
       responses: {
         200: {
@@ -267,11 +268,12 @@ const authSwagger = {
                 properties: {
                   message: {
                     type: "string",
-                    example: "Đăng nhập thành công"
+                    example: "Đăng nhập thành công",
                   },
                   accessToken: {
                     type: "string",
-                    example: "eyJhbGciOiJ9.eyJpZCI6IjY3ZDIzNDgyN2NiZWIxMTA5ZTdlYzI1NiIsImlhdCI6MTc0MTgyOTQyOCwiZXhwIjoxNzQzMDM5MDI4fQ.J9qMQY1km5Zydyk9ZbmM2ykX2I6gLl-YYF_9LClJ3KI"
+                    example:
+                      "eyJhbGciOiJ9.eyJpZCI6IjY3ZDIzNDgyN2NiZWIxMTA5ZTdlYzI1NiIsImlhdCI6MTc0MTgyOTQyOCwiZXhwIjoxNzQzMDM5MDI4fQ.J9qMQY1km5Zydyk9ZbmM2ykX2I6gLl-YYF_9LClJ3KI",
                   },
                   data: {
                     type: "object",
@@ -294,27 +296,26 @@ const authSwagger = {
                       },
                       verified: {
                         type: "boolean",
-                        example: true
+                        example: true,
                       },
                       role: {
                         type: "string",
-                        example: "USER"
+                        example: "USER",
                       },
                       createdAt: {
                         type: "string",
-                        example: "2021-09-08T06:40:48.000Z"
+                        example: "2021-09-08T06:40:48.000Z",
                       },
                       updatedAt: {
                         type: "string",
-                        example: "2021-09-08T06:40:48.000Z"
+                        example: "2021-09-08T06:40:48.000Z",
                       },
-
-                    }
-                  }
-                }
-              }
-            }
-          }
+                    },
+                  },
+                },
+              },
+            },
+          },
         },
         400: {
           description: "Lỗi dữ liệu đầu vào",
@@ -325,12 +326,12 @@ const authSwagger = {
                 properties: {
                   message: {
                     type: "string",
-                    example: "Email hoặc mật khẩu không đúng"
-                  }
-                }
-              }
-            }
-          }
+                    example: "Email hoặc mật khẩu không đúng",
+                  },
+                },
+              },
+            },
+          },
         },
         404: {
           description: "User không tồn tại",
@@ -363,15 +364,20 @@ const authSwagger = {
               },
             },
           },
-        }
-      }
-    }
+        },
+      },
+    },
   },
   "/auth/logout": {
     post: {
       summary: "Đăng xuất tài khoản",
       description: "API đăng xuất tài khoản",
       tags: ["Auth"],
+      security: [
+        {
+          BearerAuth: [],
+        },
+      ],
       responses: {
         200: {
           description: "Đăng xuất thành công",
@@ -382,12 +388,12 @@ const authSwagger = {
                 properties: {
                   message: {
                     type: "string",
-                    example: "Đăng xuất thành công"
-                  }
-                }
-              }
-            }
-          }
+                    example: "Đăng xuất thành công",
+                  },
+                },
+              },
+            },
+          },
         },
         404: {
           description: "User không tồn tại",
@@ -398,12 +404,12 @@ const authSwagger = {
                 properties: {
                   message: {
                     type: "string",
-                    example: "User không tồn tại"
-                  }
-                }
-              }
-            }
-          }
+                    example: "User không tồn tại",
+                  },
+                },
+              },
+            },
+          },
         },
         500: {
           description: "Lỗi server",
@@ -414,19 +420,19 @@ const authSwagger = {
                 properties: {
                   name: {
                     type: "string",
-                    example: "Internal Server Error"
+                    example: "Internal Server Error",
                   },
                   message: {
                     type: "string",
-                    example: "Something went wrong"
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    }
+                    example: "Something went wrong",
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+    },
   },
   "/auth/refresh-token": {
     post: {
@@ -447,12 +453,13 @@ const authSwagger = {
                   },
                   accessToken: {
                     type: "string",
-                    example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3ZDIzNDgyN2NiZWIxMTA5ZTdlYzI1NiIsImlhdCI6MTc0MTgyOTQyOCwiZXhwIjoxNzQzMDM5MDI4fQ.J9qMQY1km5Zydyk9ZbmM2ykX2I6gLl-YYF_9LClJ3KI"
-                  }
-                }
-              }
-            }
-          }
+                    example:
+                      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3ZDIzNDgyN2NiZWIxMTA5ZTdlYzI1NiIsImlhdCI6MTc0MTgyOTQyOCwiZXhwIjoxNzQzMDM5MDI4fQ.J9qMQY1km5Zydyk9ZbmM2ykX2I6gLl-YYF_9LClJ3KI",
+                  },
+                },
+              },
+            },
+          },
         },
         401: {
           description: "Token không hợp lệ",
@@ -463,12 +470,12 @@ const authSwagger = {
                 properties: {
                   message: {
                     type: "string",
-                    example: "Token không hợp lệ"
-                  }
-                }
-              }
-            }
-          }
+                    example: "Token không hợp lệ",
+                  },
+                },
+              },
+            },
+          },
         },
         404: {
           description: "User không tồn tại",
@@ -479,12 +486,12 @@ const authSwagger = {
                 properties: {
                   message: {
                     type: "string",
-                    example: "User không tồn tại"
-                  }
-                }
-              }
-            }
-          }
+                    example: "User không tồn tại",
+                  },
+                },
+              },
+            },
+          },
         },
         500: {
           description: "Lỗi server",
@@ -495,18 +502,18 @@ const authSwagger = {
                 properties: {
                   name: {
                     type: "string",
-                    example: "Internal Server Error"
+                    example: "Internal Server Error",
                   },
                   message: {
                     type: "string",
-                    example: "Something went wrong"
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
+                    example: "Something went wrong",
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
     },
   },
   "/auth/forgot-password": {
@@ -540,12 +547,12 @@ const authSwagger = {
                 properties: {
                   message: {
                     type: "string",
-                    example: "Vui lòng kiểm tra email để lấy mật khẩu mới"
-                  }
-                }
-              }
-            }
-          }
+                    example: "Vui lòng kiểm tra email để lấy mật khẩu mới",
+                  },
+                },
+              },
+            },
+          },
         },
         404: {
           description: "Email chưa được đăng ký",
@@ -556,12 +563,12 @@ const authSwagger = {
                 properties: {
                   message: {
                     type: "string",
-                    example: "Email chưa được đăng ký"
-                  }
-                }
-              }
-            }
-          }
+                    example: "Email chưa được đăng ký",
+                  },
+                },
+              },
+            },
+          },
         },
         500: {
           description: "Lỗi server",
@@ -572,19 +579,19 @@ const authSwagger = {
                 properties: {
                   name: {
                     type: "string",
-                    example: "Internal Server Error"
+                    example: "Internal Server Error",
                   },
                   message: {
                     type: "string",
-                    example: "Something went wrong"
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    }
+                    example: "Something went wrong",
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+    },
   },
   "/auth/reset-password/{id}": {
     post: {
@@ -616,7 +623,7 @@ const authSwagger = {
                 newpassword: {
                   type: "string",
                   example: "12345678",
-                }
+                },
               },
             },
           },
@@ -632,12 +639,12 @@ const authSwagger = {
                 properties: {
                   message: {
                     type: "string",
-                    example: "Đặt lại mật khẩu thành công!"
-                  }
-                }
-              }
-            }
-          }
+                    example: "Đặt lại mật khẩu thành công!",
+                  },
+                },
+              },
+            },
+          },
         },
         401: {
           description: "Mật khẩu cũ không đúng",
@@ -648,12 +655,12 @@ const authSwagger = {
                 properties: {
                   message: {
                     type: "string",
-                    example: "Mật khẩu cũ không đúng"
-                  }
-                }
-              }
-            }
-          }
+                    example: "Mật khẩu cũ không đúng",
+                  },
+                },
+              },
+            },
+          },
         },
         404: {
           description: "User không tồn tại",
@@ -664,12 +671,12 @@ const authSwagger = {
                 properties: {
                   message: {
                     type: "string",
-                    example: "User không tồn tại"
-                  }
-                }
-              }
-            }
-          }
+                    example: "User không tồn tại",
+                  },
+                },
+              },
+            },
+          },
         },
         500: {
           description: "Lỗi server",
@@ -680,20 +687,20 @@ const authSwagger = {
                 properties: {
                   name: {
                     type: "string",
-                    example: "Internal Server Error"
+                    example: "Internal Server Error",
                   },
                   message: {
                     type: "string",
-                    example: "Something went wrong"
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    }
-  }
+                    example: "Something went wrong",
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+  },
 };
 
 export default authSwagger;

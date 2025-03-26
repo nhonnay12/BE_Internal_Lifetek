@@ -1,5 +1,5 @@
 const taskSwagger = {
-  "/tasks/create-task": {
+  "/tasks/": {
     post: {
       summary: "Tạo nhiệm vụ mới",
       security: [
@@ -9,6 +9,11 @@ const taskSwagger = {
       ],
       description: "API tạo nhiệm vụ mới",
       tags: ["Task"],
+      security: [
+        {
+          BearerAuth: [],
+        },
+      ],
       requestBody: {
         required: true,
         content: {
@@ -49,8 +54,8 @@ const taskSwagger = {
                   example: "60d4f6d3c2f2a00015f8a3d5",
                 },
                 status: {
-                  type: "string",
-                  example: "pending",
+                  type: "number",
+                  example: 0,
                 },
                 image: {
                   type: "string",
@@ -253,8 +258,8 @@ const taskSwagger = {
       tags: ["Task"],
       security: [
         {
-          BearerAuth: []
-        }
+          BearerAuth: [],
+        },
       ],
       responses: {
         200: {
@@ -286,21 +291,26 @@ const taskSwagger = {
       },
     },
   },
-  "/tasks/{id}": {
+  "/tasks/{taskId}": {
     get: {
       summary: "Lấy thông tin chi tiết",
       description: "Trả về thống tin chi tiết của task",
 
       tags: ["Task"],
+      security: [
+        {
+          BearerAuth: [],
+        },
+      ],
       parameters: [
         {
           in: "path",
-          name: "id",
+          name: "taskId",
           required: true,
           description: "ID task",
           schema: {
             type: "string",
-            example: "67d3f68ec0587825d1b151bb",
+            example: "67d8e3e2835b109d2e16bd89",
           },
         },
       ],
@@ -634,7 +644,7 @@ const taskSwagger = {
       },
     },
   },
-  "tasks/delete-many-task": {
+  "tasks/": {
     delete: {
       summary: "Xoá nhiều vấn đề theo ID",
       description: "API xoá dự án",
@@ -706,6 +716,12 @@ const taskSwagger = {
       sunmary: "Tìm kiếm công việc theo Title , (người dùng nhập)",
       description: "Trả về danh sách công việc theo Title",
       tags: ["Task"],
+      security: [
+        {
+          BearerAuth: [],
+        },
+      ],
+
       parameters: [
         {
           in: "query",

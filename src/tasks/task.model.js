@@ -13,10 +13,12 @@ const TaskSchema = new mongoose.Schema(
       ref: "Project",
       required: true,
     },
-    assigneeId: [{
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
-    }],
+    assigneeId: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
+      },
+    ],
     assignerId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
@@ -36,8 +38,7 @@ const TaskSchema = new mongoose.Schema(
       enum: Object.values(PRIORITY),
       default: 1,
     },
-    image:
-    {
+    image: {
       type: String,
     },
     endDate: { type: Date }, // deadline

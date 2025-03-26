@@ -1,7 +1,6 @@
 import Project from "./project.model.js";
 import User from "../users/user.model.js";
 export const createProject = async (data) => {
-
   const existingProject = await Project.findOne({ code: data.code });
   const managerExists = await isUserExist(data.managerId);
   if (!managerExists) {
@@ -22,16 +21,11 @@ export const createProject = async (data) => {
 };
 
 export const getAllProjects = async (userId, skip, limit) => {
-
-  return await Project.find(
-    {
-      $or: [
-        { managerId: userId },
-        { members: { $in: [userId] } },
-      ],
-    }
-  )
-    .skip(skip).limit(limit)
+  return await Project.find({
+    $or: [{ managerId: userId }, { members: { $in: [userId] } }],
+  })
+    .skip(skip)
+    .limit(limit)
     .populate({
       path: "managerId",
       select: "userName email phone avatar -_id",
@@ -41,7 +35,6 @@ export const getAllProjects = async (userId, skip, limit) => {
       select: "userName email phone avatar -_id",
     });
 };
-
 export const getProjectById = async (id) => {
   return await Project.findById(id);
 };
@@ -54,12 +47,11 @@ export const deleteProject = async (id) => {
   return await Project.findByIdAndDelete(id);
 };
 export const fetchProjectManager = async (id) => {
-  return await Project.findById(id)
-    .populate({
-      path: "managerId",
-      select: "-password -refreshToken",
-    });;
-}
+  return await Project.findById(id).populate({
+    path: "managerId",
+    select: "-password -refreshToken",
+  });
+};
 export const fetchProjectMembers = async (projectId) => {
   return await Project.findById(projectId).populate({
     path: "members",
@@ -73,9 +65,25 @@ const isUserExist = async (id) => {
 
 export const countProjects = async (userId) => {
   return await Project.countDocuments({
-    $or: [
-      { managerId: userId },
-      { members: { $in: [userId] } },
-    ],
+    $or: [{ managerId: userId }, { members: { $in: [userId] } }],
   });
-}
+};
+// export const FindProjectByTitle = async (idUser, keyword) => {
+//   return await Project.find({
+//     owner: idUser, // Chỉ lấy dự án của user đang đăng nhập
+//     name: { $regex: keyword, $options: "i" }, // Tìm kiếm không phân biệt hoa thường
+//   });
+// };
+export const findNameProject = async (userId, name) => {
+  try {
+    const cleanName = name.trim();
+    const projects = await Project.find({
+      members: { $in: [userId] }, // Kiểm tra xem userId có nằm trong mảng members không
+      name: { $regex: cleanName, $options: "i" }, // Tìm kiếm không phân biệt hoa thường
+    });
+    return projects;
+  } catch (error) {
+    console.error("Lỗi tìm kiếm project:", error);
+    throw new Error("Không thể tìm kiếm project");
+  }
+};
