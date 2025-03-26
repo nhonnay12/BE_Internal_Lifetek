@@ -55,7 +55,7 @@ export const addUserToTask = async (taskId, userId) => {
         { $addToSet: { assigneeId: { $each: newUsers } } },
         { new: true }
     );
-    return result
+    return result;
   }
 
   else if ((listUserId.length > 1)){
@@ -127,7 +127,7 @@ export const countTaskByProject = async (projectId) => {
 export const FindTaskById = async (id) => {
   return await Task.findById(id).populate({
     path: "assigneeId",
-    select: "userName email", // Chỉ laý user name và email của user
+    select: "userName email", // Chỉ lấy user name và email của user
   });
 };
 
