@@ -1,4 +1,3 @@
-import mongoose from "mongoose";
 
 import * as commentService from "./comment.service.js";
 import * as taskService from "../tasks/task.service.js";

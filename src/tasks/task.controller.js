@@ -9,7 +9,6 @@ import { PERMISSIONS } from "../constants/index.js";
 /// thay đổi trạng thái
 export const updateTaskStatus = async (req, res, next) => {
   try {
-    const user = req.user.role;
     // const checkPemission = PERMISSIONS.UPDATE_TASK_STATUS.includes(user);
     const { taskId } = req.params;
 
@@ -37,7 +36,8 @@ export const addUserToTaskController = async (req, res, next) => {
   } catch (error) {
     return next(error);
   }
-};
+}
+
 
 // lấy tất cả task theo project
 export const getAlTaskByProject = async (req, res, next) => {
@@ -254,24 +254,7 @@ export const deleteTask = async (req, res, next) => {
     return next(error);
   }
 };
-// export const deleteManytask = async (req, res) => {
-//   try {
-//     console.log("Received IDs:", req.body.ids); // Thêm dòng này để debug
-//     const ids = req.body.ids;
 
-//     const result = await taskService.deleteMoreTasks(ids);
-//     if (result.deleteCount === 0) {
-//       return res.status(404).json({ message: "Task not found" });
-//     }
-
-//     res.status(200).json({
-//       message: "Task deleted successfully",
-//       deleteCount: result.deleteCount,
-//     });
-//   } catch (error) {
-//     res.status(500).json({ message: error.message });
-//   }
-// };
 export const deleteManyTask = async (req, res, next) => {
   try {
     const ids = req.body.ids;
