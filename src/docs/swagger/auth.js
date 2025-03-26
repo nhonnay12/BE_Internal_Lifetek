@@ -439,6 +439,11 @@ const authSwagger = {
       summary: "Lấy access token mới",
       description: "API lấy access token mới",
       tags: ["Auth"],
+      security: [
+        {
+          BearerAuth: []
+        }
+      ],
       responses: {
         200: {
           description: "Lấy access token thành",
@@ -593,11 +598,16 @@ const authSwagger = {
       },
     },
   },
-  "/auth/reset-password/{id}": {
+  "/auth/reset-password": {
     post: {
       summary: "Đặt lại mật khẩu",
       description: "API đặt lại mật khẩu",
       tags: ["Auth"],
+      security: [
+        {
+            BearerAuth: []
+        }
+    ],
       parameters: [
         {
           in: "path",

@@ -1,7 +1,5 @@
 const ErrorMiddleware = {
     errorHandle: (err, req, res) => {
-        console.error(err);
-
         let statusCode = err.statusCode || 500;
         let message = err.message || "Internal Server Error";
 

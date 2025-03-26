@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import { PRIORITY, STATUS_PROJECT } from "../constants/index.js";
 
 const ProjectSchema = new mongoose.Schema(
   {
@@ -7,8 +8,8 @@ const ProjectSchema = new mongoose.Schema(
     description: { type: String },
     status: {
       type: Number,
-      enum: [0, 1, 2], 
-      default: 0,
+      enum: Object.values(STATUS_PROJECT), 
+      default: STATUS_PROJECT.PROGRESSING,
     },
 
     managerId: {
@@ -19,8 +20,8 @@ const ProjectSchema = new mongoose.Schema(
     members: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
     priority: {
       type: Number,
-      enum: [0, 1, 2],
-      default: 0,
+      enum: Object.values(PRIORITY),
+      default: PRIORITY.LOW,
     },
   },
   { timestamps: true }

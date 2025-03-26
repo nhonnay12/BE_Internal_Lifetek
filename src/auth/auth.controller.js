@@ -190,7 +190,7 @@ export const forgotPassword = async (req, res, next) => {
 export const resetPassword = async (req, res, next) => {
     try {
         const { oldPassword, newPassword } = req.body;
-        const id = req.params.id;
+        const id = req.user._id;
 
         const user = await User.findById(id);
 
