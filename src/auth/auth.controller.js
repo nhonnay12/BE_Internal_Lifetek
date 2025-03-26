@@ -1,13 +1,12 @@
 import User from "../users/user.model.js";
 import * as authValidation from "./auth.validation.js";
-import bcryptjs from "bcryptjs";
 import jwt from "jsonwebtoken";
 import env from "../config/env.js"
 import * as tokenUtils from "../utils/tokenUtils.js";
 import * as emailTemplate from "../services/templateService.js";
 import * as emailQueue from "../queues/index.js";
-import * as passwordUtils from "../utils/generatePassword.js";
 import SuccessResponse from "../utils/SuccessResponse.js";
+import crypto from "crypto";
 
 //đăng ký
 export const register = async (req, res, next) => {
@@ -97,8 +96,8 @@ export const login = async (req, res, next) => {
         // kiem tra user
         if (!user) return next(new Error("Email chưa đăng ký"));
 
-        const isMatch = await bcryptjs.compare(password, user.password)
-        if (!isMatch) return next(new Error("Mật khẩu không đúng"));
+        const isMatch = await user.matchPassword(password);
+        if (!isMatch) return next(new Error("Mật khẩu không đúng" + password));
 
         if (!user.verified) return next(new Error("Email chưa được xác thực"));
 
@@ -161,26 +160,27 @@ export const forgotPassword = async (req, res, next) => {
     try {
         const { email } = req.body;
 
-        const user = await User.findOne({ email });
+        const user = await User.findByEmailOrPhone(email);
 
         if (!user) return next(new Error("Email chưa đăng ký"));
 
-        const newPassword = passwordUtils.generateRandomPassword(10);
-        const hashedPassword = await bcryptjs.hash(newPassword, 10);
-
-        user.password = hashedPassword;
+        const resetToken = user.getResetPasswordToken();
         await user.save();
 
-        const contextMail = emailTemplate.getResetPasswordEmailTemplate(newPassword);
+        const isTesting = process.env.NODE_ENV === "development"; // Kiểm tra đang test không
+        const url_client = isTesting
+            ? `${env.DOMAIN_SWAGGER}:${env.PORT}/api-docs/#/Auth/post_auth_reset-password_token_${resetToken}`
+            : `${env.CLIENT_URL}/reset-password?token=${resetToken}`;
+
+        const contextMail = emailTemplate.getResetPasswordEmailTemplate(url_client);
 
         await emailQueue.emailQueue.add("sendEmail", {
             email: user.email,
             subject: "Cấp lại mật khẩu",
-            text: `Mat khau moi cua ban la ${newPassword}`,
             html: contextMail,
         });
 
-        return new SuccessResponse("Mật khẩu mới đã được gửi").send(res);
+        return new SuccessResponse("Link đặt lại mật khẩu đã được gửi qua email").send(res);
 
     } catch (error) {
         return next(error);
@@ -189,23 +189,27 @@ export const forgotPassword = async (req, res, next) => {
 //  đặt lại mật khẩu bằng
 export const resetPassword = async (req, res, next) => {
     try {
-        const { oldPassword, newPassword } = req.body;
-        const id = req.user._id;
+        const { token } = req.query;
+        const { password, confirmPassword } = req.body;
 
-        const user = await User.findById(id);
+        const resetPasswordToken = crypto.createHash("sha256").update(token).digest("hex");
 
-        if (!user) return next(new Error("User không tồn tại"));
+        const user = await User.findOne({
+            resetPasswordToken,
+            resetPasswordExpire: { $gt: Date.now() },
+        });
 
-        const isMatch = await bcryptjs.compare(oldPassword, user.password);
+        if (!user) return next(new Error("Token không hợp lệ"));
 
-        if (!isMatch) return next(new Error("Mật khẩu cũ không đúng"));
+        if(password !== confirmPassword) return next(new Error("Mật khẩu không trùng khớp"));
 
-        const hashedPassword = await bcryptjs.hash(newPassword, 10);
-        user.password = hashedPassword;
+        user.password = password;
+        user.resetPasswordToken = undefined;
+        user.resetPasswordExpire = undefined;
 
         await user.save();
 
-        return new SuccessResponse("Đổi mật khẩu thành công").send(res);
+        return new SuccessResponse("Đặt lại mật khẩu thành công").send(res);
 
     } catch (error) {
         return next(error);
