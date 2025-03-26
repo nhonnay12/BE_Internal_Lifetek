@@ -26,12 +26,12 @@ const taskSwagger = {
                   description: "ID người được giao nhiệm vụ",
                   items: {
                     type: "string",
-                    example: "65f123abc123abcd12345678",
+                    example: "67d3f05b2c209d64023d0d9d",
                   },
                 },
                 assignerId: {
                   type: "string",
-                  example: "65f456def456defg45678901",
+                  example: "67d9160e6b6c2f5362dd5112",
                 },
                 startDate: {
                   type: "string",
@@ -43,7 +43,7 @@ const taskSwagger = {
                 },
                 projectId: {
                   type: "string",
-                  example: "60d4f6d3c2f2a00015f8a3d5",
+                  example: "67d8dd65edc970e80f2ed0a4",
                 },
                 status: {
                   type: "number",
