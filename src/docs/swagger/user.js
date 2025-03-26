@@ -3,11 +3,6 @@ const userSwagger = {
     get: {
       tags: ["User"],
       summary: "Lấy tất cả thông tin người dùng",
-      security: [
-        {
-          BearerAuth: [],
-        },
-      ],
       parameters: [
         {
           in: "query",
@@ -57,11 +52,6 @@ const userSwagger = {
     put: {
       tags: ["User"],
       summary: "Cập nhật thông tin người dùng",
-      security: [
-        {
-          BearerAuth: [],
-        },
-      ],
       requestBody: {
         required: true,
         content: {
