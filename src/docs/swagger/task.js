@@ -2,17 +2,12 @@ const taskSwagger = {
   "/tasks/": {
     post: {
       summary: "Tạo nhiệm vụ mới",
-      security: [
-        {
-          $ref: "#/components/securitySchemes/BearerAuth",
-        },
-      ],
       description: "API tạo nhiệm vụ mới",
       tags: ["Task"],
       security: [
         {
-          BearerAuth: [],
-        },
+          BearerAuth: []
+        }
       ],
       requestBody: {
         required: true,
@@ -120,8 +115,8 @@ const taskSwagger = {
       tags: ["Task"],
       security: [
         {
-          $ref: "#/components/securitySchemes/BearerAuth",
-        },
+          BearerAuth: []
+        }
       ],
       parameters: [
         {
@@ -365,6 +360,11 @@ const taskSwagger = {
       summary: "Cập nhật trạng thái công việc",
       description: "Trả về  công việc đã thay đổi trạng thái trong hệ thống",
       tags: ["Task"],
+      security: [
+        {
+          BearerAuth: []
+        }
+      ],
       parameters: [
         {
           in: "path",
@@ -455,6 +455,11 @@ const taskSwagger = {
       summary: "Thêm người dùng vào vấn đề",
       description: "Trả về công việc đã thêm người dùng trong hệ thống",
       tags: ["Task"],
+      security: [
+        {
+            BearerAuth: []
+        }
+    ],
       parameters: [
         {
           in: "path",
@@ -546,6 +551,11 @@ const taskSwagger = {
       summary: "Lấy danh sách công việc theo dự án",
       description: "Trả về danh sách công việc theo dự án",
       tags: ["Task"],
+      security: [
+        {
+            BearerAuth: []
+        }
+    ],
       parameters: [
         {
           in: "path",
@@ -594,6 +604,11 @@ const taskSwagger = {
       summary: "Xoá vấn đề theo ID",
       description: "API xoá dự án",
       tags: ["Task"],
+      security: [
+        {
+            BearerAuth: []
+        }
+    ],
       parameters: [
         {
           in: "path",
@@ -649,6 +664,11 @@ const taskSwagger = {
       summary: "Xoá nhiều vấn đề theo ID",
       description: "API xoá dự án",
       tags: ["Task"],
+      security: [
+        {
+            BearerAuth: []
+        }
+    ],
       requestBody: {
         required: true,
         content: {
@@ -769,6 +789,11 @@ const taskSwagger = {
       summary: "Tìm kiếm công việc",
       description: "Trả về công việc có thông tin tìm kiếm tương thích",
       tags: ["Task"],
+      security: [
+        {
+            BearerAuth: []
+        }
+    ],
       parameters: [
         {
           in: "path",

@@ -25,27 +25,26 @@ const taskSchema = {
                 type: "string",
                 example: "60d4f6d3c2f2a00015f8a3d5"
             },
-            status: {
+            link: {
                 type: "string",
-                example: "pending"
-            },
-            // priority: {
-            //     type: "string",
-            //     example: "medium"
-            // },
-            images: {
-                type: "string",
-                example: "https://example.com/image.jpg"
+                example: "https://example.com"
             },
             startDate: {
                 type: "string",
                 example: "2021-06-25T00:00:00.000Z"
             },
-            link: {
-                type: "string",
-                example: "https://example.com"
+            status: {
+                type: "number",
+                example: 1
             },
-
+            priority: {
+                type: "number",
+                example: 1
+            },
+            images: {
+                type: "string",
+                example: "https://example.com/image.jpg"
+            },  
             endDate: {   
                 type: "string",
                 example: "2021-06-25T00:00:00.000Z"
