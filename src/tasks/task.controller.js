@@ -9,8 +9,9 @@ import { CHANGE_SOURCE, PERMISSIONS } from "../constants/index.js";
 import { STATUS } from "../constants/statusConstants.js";
 
 /// thay đổi trạng thái
-export const updateTaskStatus = async (req, res, next) => {
+export const updateTaskStatus = async (req, res,next) => {
   try {
+    const user = req.user.role;
     // const checkPemission = PERMISSIONS.UPDATE_TASK_STATUS.includes(user);
     const { taskId } = req.params;
     const userId = req.user._id;
@@ -32,7 +33,7 @@ export const updateTaskStatus = async (req, res, next) => {
 
     return new SuccessResponse(updatedTask).send(res);
   } catch (error) {
-    return next(error);
+    return error;
   }
 };
 
@@ -129,6 +130,7 @@ export const addTask = async (req, res, next) => {
     if (typeof dataBody.assigneeId === "string") {
       dataBody.assigneeId = dataBody.assigneeId.split(",");
     }
+    
     const { error } = taskValidator.createTaskValidator.validate(dataBody, {
       abortEarly: false,
     });
@@ -295,7 +297,7 @@ export const deleteManyTask = async (req, res, next) => {
 export const load = async (req, res, next, id) => {
   try {
     if (!mongoose.Types.ObjectId.isValid(id)) {
-      return next(new Error("Id không hợp lệ"));
+      return next(new Error("Status không phù hợp"));;
     }
     const task = await taskService.FindTaskById(id);
     if (!task) return next(new Error("Task không tìm thấy"));

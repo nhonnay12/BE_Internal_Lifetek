@@ -1,5 +1,6 @@
 import joiObjectId from "joi-objectid";
 import Joi from "joi";
+
 import { STATUS } from "../constants/statusConstants.js";
 
 Joi.objectId = joiObjectId(Joi);
@@ -23,28 +24,27 @@ export const createTaskValidator = Joi.object({
     assignerId: Joi.string().messages({
         "string.empty": "assigneeId không được để trống",
     }),
-   
     status: Joi.number().valid(...Object.values(STATUS)).messages({
         "string.empty": "Trạng thái không được để trống",
         "any.only": "Trạng thái không hợp lệ ",
     }),
-    priority: Joi.string().valid("low", "medium", "high").messages({
-        "string.empty": "Mức độ ưu tiên không được để trống",
-        "any.only": "Mức độ ưu tiên không hợp lệ",
-    }),
-    image: Joi.string().uri().messages({
-        "string.empty": "Hình ảnh không được để trống",
-        "string.uri": "Hình ảnh không hợp lệ",
-    }),
-    link: Joi.string().messages({
-        "string.empty": "Link không được để trống",
-    }),
-    startDate: Joi.date().messages({
-        "date.base": "Ngày bắt đầu không hợp lệ",
-    }),
-    endDate: Joi.date().messages({
-        "date.base": "Ngày hết hạn không hợp lệ",
-    }),
+  priority: Joi.string().valid("low", "medium", "high").messages({
+    "string.empty": "Mức độ ưu tiên không được để trống",
+    "any.only": "Mức độ ưu tiên không hợp lệ",
+  }),
+  image: Joi.string().uri().messages({
+    "string.empty": "Hình ảnh không được để trống",
+    "string.uri": "Hình ảnh không hợp lệ",
+  }),
+  link: Joi.string().messages({
+    "string.empty": "Link không được để trống",
+  }),
+  startDate: Joi.date().messages({
+    "date.base": "Ngày bắt đầu không hợp lệ",
+  }),
+  endDate: Joi.date().messages({
+    "date.base": "Ngày hết hạn không hợp lệ",
+  }),
 });
 
 export const updateTaskValidator = Joi.object({

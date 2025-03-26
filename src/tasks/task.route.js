@@ -15,6 +15,7 @@ routerTask
   .route("/:taskId")
   .get(taskController.getTaskById)
   .put(upload.single("image"), taskController.updateTask)
+  .post( taskController.addUserToTaskController)
   .delete(taskController.deleteTask);
 routerTask.param("taskId", taskController.load);
 

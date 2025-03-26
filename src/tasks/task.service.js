@@ -9,11 +9,6 @@ export const updateTaskStatusService = async (taskId, newStatus) => {
   }
 
   // Kiểm tra trạng thái hợp lệ
-  const validStatuses = ["pending", "inProgress", "completed", "done"];
-  if (!validStatuses.includes(newStatus)) {
-    throw new Error("Giá trị status không phù hợp");
-  }
-
   // Cập nhật trạng thái task
   const updatedTask = await Task.findByIdAndUpdate(
     taskId,

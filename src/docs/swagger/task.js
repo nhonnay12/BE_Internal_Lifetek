@@ -26,12 +26,12 @@ const taskSwagger = {
                   description: "ID người được giao nhiệm vụ",
                   items: {
                     type: "string",
-                    example: "65f123abc123abcd12345678",
+                    example: "67d3f05b2c209d64023d0d9d",
                   },
                 },
                 assignerId: {
                   type: "string",
-                  example: "65f456def456defg45678901",
+                  example: "67d9160e6b6c2f5362dd5112",
                 },
                 startDate: {
                   type: "string",
@@ -43,7 +43,7 @@ const taskSwagger = {
                 },
                 projectId: {
                   type: "string",
-                  example: "60d4f6d3c2f2a00015f8a3d5",
+                  example: "67d8dd65edc970e80f2ed0a4",
                 },
                 status: {
                   type: "number",
@@ -107,12 +107,7 @@ const taskSwagger = {
      get: {
       summary: "Lấy danh sách tất cả công việc",
        description: "Trả về danh sách các công việc trong hệ thống",
-       security:
-            [
-              {
-                BearerAuth: []
-              }
-            ],
+      
       tags: ["Task"],
        "parameters": [
       {
@@ -165,22 +160,85 @@ const taskSwagger = {
         },
       },
     },
+      delete: {
+      summary: "Xoá nhiều vấn đề theo ID",
+      description: "API xoá dự án",
+      tags: ["Task"],
+      requestBody: {
+        required: true,
+        content: {
+          "application/json": {
+            schema: {
+              type: "object",
+              properties: {
+                ids: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                  },
+                  example: [
+                    "67d8ebc88d93c6abba32d5a5",
+                    "67d8f0df1dc8e20c175bffa8",
+                  ],
+                },
+              },
+            },
+          },
+        },
+      },
+      responses: {
+        200: {
+          description: "Xoá vấn đề thành công",
+          content: {
+            "application/json": {
+              schema: {
+                type: "object",
+                properties: {
+                  message: {
+                    type: "string",
+                    example: "Task deleted successfully",
+                  },
+                },
+              },
+            },
+          },
+        },
+        404: {
+          description: "Không tìm thấy vấn đề",
+          content: {
+            "application/json": {
+              schema: {
+                type: "object",
+                properties: {
+                  message: {
+                    type: "string",
+                    example: "Task not found",
+                  },
+                },
+              },
+            },
+          },
+        },
+        500: {
+          description: "Lỗi server",
+        },
+      },
+    },
   },
-  "/tasks/{id}": {
-     get: {
+  "/tasks/{taskId}": {
+    get: {
       summary: "Lấy thông tin chi tiết",
       description: "Trả về thống tin chi tiết của task",
-
       tags: ["Task"],
       parameters: [
         {
           in: "path",
-          name: "id",
+          name: "taskId",
           required: true,
           description: "ID task",
           schema: {
             type: "string",
-            example: "67d3f68ec0587825d1b151bb",
+            example: "67d8e3e2835b109d2e16bd89",
           },
         },
       ],
@@ -430,7 +488,7 @@ const taskSwagger = {
           },
         },
       ],
-      requestBody: {
+        requestBody: {
         required: true,
         content: {
           "application/json": {
@@ -692,72 +750,7 @@ const taskSwagger = {
       },
     },
   },
-  "tasks/delete-many-task": {
-    delete: {
-      summary: "Xoá nhiều vấn đề theo ID",
-      description: "API xoá dự án",
-      tags: ["Task"],
-      requestBody: {
-        required: true,
-        content: {
-          "application/json": {
-            schema: {
-              type: "object",
-              properties: {
-                ids: {
-                  type: "array",
-                  items: {
-                    type: "string",
-                  },
-                  example: [
-                    "67d8ebc88d93c6abba32d5a5",
-                    "67d8f0df1dc8e20c175bffa8",
-                  ],
-                },
-              },
-            },
-          },
-        },
-      },
-      responses: {
-        200: {
-          description: "Xoá vấn đề thành công",
-          content: {
-            "application/json": {
-              schema: {
-                type: "object",
-                properties: {
-                  message: {
-                    type: "string",
-                    example: "Task deleted successfully",
-                  },
-                },
-              },
-            },
-          },
-        },
-        404: {
-          description: "Không tìm thấy vấn đề",
-          content: {
-            "application/json": {
-              schema: {
-                type: "object",
-                properties: {
-                  message: {
-                    type: "string",
-                    example: "Task not found",
-                  },
-                },
-              },
-            },
-          },
-        },
-        500: {
-          description: "Lỗi server",
-        },
-      },
-    },
-  },
+ 
 
 };
 
