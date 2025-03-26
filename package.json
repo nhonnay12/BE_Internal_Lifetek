@@ -3,8 +3,7 @@
   "version": "1.0.0",
   "description": "",
   "main": "src/server.js",
-  "type": "module",
-  "scripts": {
+  "type": "module",  "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "worker": "node ./src/workers/index.js",
     "start": "nodemon --experimental-specifier-resolution=node ./src/server.js",

@@ -9,13 +9,22 @@ import { CHANGE_SOURCE, PERMISSIONS } from "../constants/index.js";
 import { STATUS } from "../constants/statusConstants.js";
 
 /// thay đổi trạng thái
-export const updateTaskStatus = async (req, res,next) => {
+export const updateTaskStatus = async (req, res, next) => {
   try {
-    const user = req.user.role;
-    // const checkPemission = PERMISSIONS.UPDATE_TASK_STATUS.includes(user);
+    const roleUser = req.user.role;
+    const { oldStatus, newStatus } = req.body;
+
+    const canChangeStatus = (role, oldStatus, newStatus) => {
+      const allowedStatuses = PERMISSIONS.TASK_STATUS_CHANGE[role] || [];
+      return allowedStatuses.includes(newStatus);
+    };
+
+    if (!canChangeStatus(roleUser, oldStatus, newStatus)) {
+      return next(new Error("Bạn không có quyền thay đổi trạng thái"));
+    }
+
     const { taskId } = req.params;
     const userId = req.user._id;
-    const { oldStatus, newStatus } = req.body;
 
     if (!Object.values(STATUS).includes(oldStatus) || !Object.values(STATUS).includes(newStatus)) {
       return next(new Error("Trạng thái không hợp lệ !"));
@@ -83,7 +92,7 @@ export const filterTaskController = async (req, res, next) => {
     const page = parseInt(req.query.page) || PAGINATE.PAGE;
     const limit = parseInt(req.query.limit) || PAGINATE.LIMIT;
     const skip = (page - 1) * limit;
-    const searchResult = await taskService.filterTaskService(skip, limit,filter);
+    const searchResult = await taskService.filterTaskService(skip, limit, filter);
     const total = searchResult.length;
     if (searchResult.length === 0) {
       return new SuccessResponse("Không tìm thấy task nào", 404).send(res);
@@ -130,7 +139,7 @@ export const addTask = async (req, res, next) => {
     if (typeof dataBody.assigneeId === "string") {
       dataBody.assigneeId = dataBody.assigneeId.split(",");
     }
-    
+
     const { error } = taskValidator.createTaskValidator.validate(dataBody, {
       abortEarly: false,
     });
