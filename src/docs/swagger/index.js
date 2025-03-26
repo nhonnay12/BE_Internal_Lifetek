@@ -50,11 +50,11 @@ const swaggerDocs = {
       ...commentSchema,
     },
   },
-  // security: [
-  //   {
-  //     BearerAuth: [], // Kích hoạt xác thực toàn bộ API
-  //   },
-  // ],
+  security: [
+    {
+      BearerAuth: [], // Kích hoạt xác thực toàn bộ API
+    },
+  ],
 };
 
 export default swaggerDocs;
