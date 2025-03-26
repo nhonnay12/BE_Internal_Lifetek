@@ -1,6 +1,5 @@
 import Comment from "./comment.model.js";
-import mongoose from "mongoose";
-import Task from "../tasks/task.model.js";
+
 export const createComment = async (data) => {
   try {
     if (!data.taskId || !data.userId || !data.content) {

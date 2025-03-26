@@ -9,7 +9,7 @@ import { PERMISSIONS } from "../constants/index.js";
 /// thay đổi trạng thái
 export const updateTaskStatus = async (req, res, next) => {
   try {
-    const user = req.user.role;
+    //const user = req.user.role;
     // const checkPemission = PERMISSIONS.UPDATE_TASK_STATUS.includes(user);
     const { taskId } = req.params;
 
@@ -116,6 +116,7 @@ export const addTask = async (req, res, next) => {
     if (typeof dataBody.assigneeId === "string") {
       dataBody.assigneeId = dataBody.assigneeId.split(",");
     }
+    
     const { error } = taskValidator.createTaskValidator.validate(dataBody, {
       abortEarly: false,
     });
