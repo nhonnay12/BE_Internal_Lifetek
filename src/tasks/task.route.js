@@ -15,12 +15,12 @@ routerTask
   .route("/:taskId")
   .get(taskController.getTaskById)
   .put(upload.single("image"), taskController.updateTask)
+  .post( taskController.addUserToTaskController)
   .delete(taskController.deleteTask);
 routerTask.param("taskId", taskController.load);
 
 routerTask.put("/:taskId/status", taskController.updateTaskStatus);
 routerTask.get("/project/:projectId", taskController.getAlTaskByProject);
-routerTask.post("/:taskId/add-user", taskController.addUserToTaskController);
 routerTask.post("/filter/:projectId", taskController.searchTaskController);
 // routerTask.get("/search", taskController.searchTaskByTitle);
 export default routerTask;
