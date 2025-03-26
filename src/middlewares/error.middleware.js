@@ -1,5 +1,5 @@
 const ErrorMiddleware = {
-    errorHandle: (err, req, res) => {
+    errorHandle: (err, req, res, next) => {
         let statusCode = err.statusCode || 500;
         let message = err.message || "Internal Server Error";
 
@@ -26,13 +26,15 @@ const ErrorMiddleware = {
             message,
             stack: process.env.NODE_ENV === "development" ? err.stack : undefined,
         });
+        next();
     },
 
-    notFound: (req, res,) => {
+    notFound: (req, res, next) => {
         res.status(404).json({
             success: false,
             message: `Not Found - ${req.originalUrl}`,
         });
+        next();
     }
 }
 
