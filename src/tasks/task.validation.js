@@ -6,27 +6,27 @@ import { STATUS } from "../constants/statusConstants.js";
 Joi.objectId = joiObjectId(Joi);
 
 export const createTaskValidator = Joi.object({
-  title: Joi.string().required().messages({
+  title: Joi.string().messages({
     "string.empty": "Tiêu đề không được để trống",
     "any.required": "Tiêu đề là bắt buộc",
   }),
   description: Joi.string().messages({
     "string.empty": "Mô tả không được để trống",
   }),
-  projectId: Joi.string().required().messages({
+  projectId: Joi.string().messages({
     "string.empty": "projectId không được để trống",
     "any.required": "projectId là bắt buộc",
   }),
-    assigneeId: Joi.array().items(Joi.objectId()).required().messages({
+    assigneeId: Joi.array().items(Joi.objectId()).messages({
         "string.empty": "assignerId không được để trống",
         "any.required": "assignerId là bắt buộc",
     }),
     assignerId: Joi.string().messages({
         "string.empty": "assigneeId không được để trống",
     }),
-    status: Joi.string().valid("pending", "inProgress", "completed", "done").messages({
+    status: Joi.number().valid(...Object.values(STATUS)).messages({
         "string.empty": "Trạng thái không được để trống",
-        "any.only": "Trạng thái không hợp lệ",
+        "any.only": "Trạng thái không hợp lệ ",
     }),
   priority: Joi.string().valid("low", "medium", "high").messages({
     "string.empty": "Mức độ ưu tiên không được để trống",
@@ -48,34 +48,32 @@ export const createTaskValidator = Joi.object({
 });
 
 export const updateTaskValidator = Joi.object({
-  title: Joi.string().required().messages({
+  title: Joi.string().messages({
     "string.empty": "Tiêu đề không được để trống",
     "any.required": "Tiêu đề là bắt buộc",
   }),
   description: Joi.string().optional().messages({
     "string.empty": "Mô tả không được để trống",
   }),
-  projectId: Joi.objectId().required().messages({
+  projectId: Joi.objectId().messages({
     "string.empty": "projectId không được để trống",
     "any.required": "projectId là bắt buộc",
   }),
   assigneeId: Joi.array().items(Joi.objectId()).optional().messages({
     "string.empty": "assigneeId không được để trống",
   }),
-  assignerId: Joi.objectId().required().messages({
+  assignerId: Joi.objectId().messages({
     "string.empty": "assignerId không được để trống",
     "any.required": "assignerId là bắt buộc",
   }),
-  status: Joi.string()
+  status: Joi.number()
     .valid(...Object.values(STATUS))
-    .default("pending")
     .messages({
       "string.empty": "Trạng thái không được để trống",
       "any.only": "Trạng thái không hợp lệ",
     }),
-  priority: Joi.string()
-    .valid("low", "medium", "high")
-    .default("medium")
+  priority: Joi.number()
+    .valid(...Object.values(STATUS))
     .messages({
       "string.empty": "Mức độ ưu tiên không được để trống",
       "any.only": "Mức độ ưu tiên không hợp lệ",

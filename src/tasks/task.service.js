@@ -31,53 +31,57 @@ export const addUserToTask = async (taskId, userId) => {
     throw new Error("Danh sách người dùng thêm vào không tồn tại trong bảng người dùng");
   }
   else if (listUserId.length === 1) {
-      const task = await Task.findById(taskId);
-      if (!task) {
-        throw new Error("Task không tìm thấy");
-    }  
+    const task = await Task.findById(taskId);
+    if (!task) {
+      throw new Error("Task không tìm thấy");
+    }
     // Lấy danh sách userId đã tồn tại trong assigneeId
     const existingUsers = task.assigneeId.map(id => id.toString());
 
     // Kiểm tra xem có userId nào bị trùng không
     const duplicateUsers = listUserId.filter(id => existingUsers.includes(id));
     if (duplicateUsers.length > 0) {
-        throw new Error(`UserId bị trùng: ${duplicateUsers.join(", ")}. Vui lòng chọn user khác.`);
+      throw new Error(`UserId bị trùng: ${duplicateUsers.join(", ")}. Vui lòng chọn user khác.`);
     }
-   const newUsers = listUserId.map(id => new mongoose.Types.ObjectId(id));
+    const newUsers = listUserId.map(id => new mongoose.Types.ObjectId(id));
 
     const result = await Task.findByIdAndUpdate(
-        taskId,
-        { $addToSet: { assigneeId: { $each: newUsers } } },
-        { new: true }
+      taskId,
+      { $addToSet: { assigneeId: { $each: newUsers } } },
+      { new: true }
     );
     return result;
   }
 
-  else if ((listUserId.length > 1)){
-      const updatedTask = await Task.findByIdAndUpdate(
-    taskId,
-    { $set: { assigneeId: listUserId.map(id => new mongoose.Types.ObjectId(id))  } }, // Dùng $addToSet để tránh trùng lặp
-    { new: true }, { assigneeId: 1 }
-  );// Populate để lấy chi tiết user nếu cần
+  else if ((listUserId.length > 1)) {
+    const updatedTask = await Task.findByIdAndUpdate(
+      taskId,
+      { $set: { assigneeId: listUserId.map(id => new mongoose.Types.ObjectId(id)) } }, // Dùng $addToSet để tránh trùng lặp
+      { new: true }, { assigneeId: 1 }
+    );// Populate để lấy chi tiết user nếu cần
 
-  if (!updatedTask) {
-    throw new Error("Task không tìm thấy");
-  }
+    if (!updatedTask) {
+      throw new Error("Task không tìm thấy");
+    }
 
     return updatedTask;
   }
-  
+
 }
-export const filterTaskService = async (data) => {
-  try {
-    const task = await Task.find(data);
-    return task;
-  } catch (error) {
-    console.log(error);
-  }
+export const filterTaskService = async (skip, limit, filter) => {
+  return Task
+    .find(filter)
+    .skip(skip)
+    .limit(limit)
+    .populate("assigneeId", "userName email avatar")
+    .populate("assignerId", "userName email avatar");
 };
-export const getAllTasks = async () => {
-  return await Task.find().select("+assigneeId +assignerId").populate("assigneeId", "userName email");
+export const getAllTasks = async (skip, limit) => {
+  return await Task.find()
+    .skip(skip)
+    .limit(limit)
+    .select("+assigneeId +assignerId")
+    .populate("assigneeId", "userName email");
 };
 export const getTaskByProject = async (projectId) => {
   return await Task.find({ projectId });
@@ -120,10 +124,15 @@ export const countTaskByProject = async (projectId) => {
   return await Task.countDocuments({ projectId });
 }
 export const FindTaskById = async (id) => {
-  return await Task.findById(id).populate({
-    path: "assigneeId",
-    select: "userName email", // Chỉ lấy user name và email của user
-  });
+  return await Task.findById(id)
+    .populate({
+      path: "assigneeId",
+      select: "userName email avatar", // Chỉ lấy user name và email của user
+    })
+    .populate({
+      path: "assignerId",
+      select: "userName email avatar", // Chỉ lấy user name và email của user
+    });
 };
 
 export const getTaskById = async (id) => {
@@ -141,15 +150,18 @@ export const convertToSlug = (str) => {
     .replace(/\s+/g, " "); // Chuyển nhiều khoảng trắng thành 1 khoảng trắng
 };
 
-export const FindTaskByTitle = async (data) => {
+export const FindTaskByTitle = async (skip, limit, data) => {
   const slugTitle = convertToSlug(data); // Chuyển input thành không dấu
 
-  return await Task.find({
-    $or: [
-      { title: { $regex: new RegExp(`.*${data}*`, "i") } }, // Tìm kiếm một phần của chuỗi có dấu
-      { title: { $regex: new RegExp(`.*${slugTitle}*`, "i") } }, // Tìm kiếm một phần của chuỗi không dấu
-    ],
-  });
+  return await Task
+    .find({
+      $or: [
+        { title: { $regex: new RegExp(`.*${data}*`, "i") } }, // Tìm kiếm một phần của chuỗi có dấu
+        { title: { $regex: new RegExp(`.*${slugTitle}*`, "i") } }, // Tìm kiếm một phần của chuỗi không dấu
+      ],
+    })
+    .skip(skip)
+    .limit(limit);
 };
 // check assigneeID có trong bảng user không
 export const checkAssigneeId = async (assigneeId) => {
@@ -159,4 +171,8 @@ export const checkAssigneeId = async (assigneeId) => {
 // check assignerId có trong bảng user không
 export const checkAssignerId = async (assignerId) => {
   return await User.findById(assignerId);
+};
+
+export const countTasks = async () => {
+  return await Task.countDocuments();
 };
