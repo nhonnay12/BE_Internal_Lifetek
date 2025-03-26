@@ -1,21 +1,30 @@
-import mongoose from "mongoose";
-import { uploadSingleFile } from "../services/cloudinaryService.js";
-import * as taskService from "./task.service.js";
-import * as taskStatusChangeService from "./statusChange.service.js"
-import * as taskValidator from "./task.validation.js";
-import SuccessResponse from "../utils/SuccessResponse.js";
-import PAGINATE from "../constants/paginate.js";
-import { CHANGE_SOURCE, PERMISSIONS } from "../constants/index.js";
-import { STATUS } from "../constants/statusConstants.js";
+const mongoose = require("mongoose");
+const { uploadSingleFile } = require("../services/cloudinaryService.js");
+const  taskService = require("./task.service.js");
+const  taskStatusChangeService = require("./statusChange.service.js")
+const  taskValidator = require("./task.validation.js");
+const SuccessResponse = require("../utils/SuccessResponse.js");
+const PAGINATE = require("../constants/paginate.js");
+const { CHANGE_SOURCE, PERMISSIONS } = require("../constants/index.js");
+const { STATUS } = require("../constants/statusConstants.js");
 
 /// thay đổi trạng thái
-export const updateTaskStatus = async (req, res,next) => {
+exports.updateTaskStatus = async (req, res, next) => {
   try {
-    const user = req.user.role;
-    // const checkPemission = PERMISSIONS.UPDATE_TASK_STATUS.includes(user);
+    const roleUser = req.user.role;
+    const { oldStatus, newStatus } = req.body;
+
+    const canChangeStatus = (role, oldStatus, newStatus) => {
+      const allowedStatuses = PERMISSIONS.TASK_STATUS_CHANGE[role] || [];
+      return allowedStatuses.includes(newStatus);
+    };
+
+    if (!canChangeStatus(roleUser, oldStatus, newStatus)) {
+      return next(new Error("Bạn không có quyền thay đổi trạng thái"));
+    }
+
     const { taskId } = req.params;
     const userId = req.user._id;
-    const { oldStatus, newStatus } = req.body;
 
     if (!Object.values(STATUS).includes(oldStatus) || !Object.values(STATUS).includes(newStatus)) {
       return next(new Error("Trạng thái không hợp lệ !"));
@@ -38,7 +47,7 @@ export const updateTaskStatus = async (req, res,next) => {
 };
 
 // thêm user vào task
-export const addUserToTaskController = async (req, res, next) => {
+exports.addUserToTaskController = async (req, res, next) => {
   try {
     const { taskId } = req.params;
     const { userId } = req.body;
@@ -52,7 +61,7 @@ export const addUserToTaskController = async (req, res, next) => {
 
 
 // lấy tất cả task theo project
-export const getAlTaskByProject = async (req, res, next) => {
+exports.getAlTaskByProject = async (req, res, next) => {
   try {
     const { projectId } = req.params;
     const page = parseInt(req.query.page) || PAGINATE.PAGE;
@@ -68,7 +77,7 @@ export const getAlTaskByProject = async (req, res, next) => {
 };
 // lọc task theo điều kiện
 
-export const filterTaskController = async (req, res, next) => {
+exports.filterTaskController = async (req, res, next) => {
   try {
     const { projectId } = req.params;
     const { status, priority, assigneeId, startDate, endDate } = req.body;
@@ -83,7 +92,7 @@ export const filterTaskController = async (req, res, next) => {
     const page = parseInt(req.query.page) || PAGINATE.PAGE;
     const limit = parseInt(req.query.limit) || PAGINATE.LIMIT;
     const skip = (page - 1) * limit;
-    const searchResult = await taskService.filterTaskService(skip, limit,filter);
+    const searchResult = await taskService.filterTaskService(skip, limit, filter);
     const total = searchResult.length;
     if (searchResult.length === 0) {
       return new SuccessResponse("Không tìm thấy task nào", 404).send(res);
@@ -97,7 +106,7 @@ export const filterTaskController = async (req, res, next) => {
 
 // tìm kiếm task
 
-export const searchTaskByTitle = async (req, res, next) => {
+exports.searchTaskByTitle = async (req, res, next) => {
   try {
     const title = req.query.search;
     if (!title || title.lenght === 0) {
@@ -118,7 +127,7 @@ export const searchTaskByTitle = async (req, res, next) => {
 };
 
 /// thêm task
-export const addTask = async (req, res, next) => {
+exports.addTask = async (req, res, next) => {
   try {
     const user = req.user.role;
     const checkPermission = PERMISSIONS.CREATE_TASK.includes(user);
@@ -130,7 +139,7 @@ export const addTask = async (req, res, next) => {
     if (typeof dataBody.assigneeId === "string") {
       dataBody.assigneeId = dataBody.assigneeId.split(",");
     }
-    
+
     const { error } = taskValidator.createTaskValidator.validate(dataBody, {
       abortEarly: false,
     });
@@ -179,7 +188,7 @@ export const addTask = async (req, res, next) => {
 };
 
 // lấy tất cả task
-export const getAllTasks = async (req, res, next) => {
+exports.getAllTasks = async (req, res, next) => {
   try {
     const page = parseInt(req.query.page) || PAGINATE.PAGE;
     const limit = parseInt(req.query.limit) || PAGINATE.LIMIT;
@@ -194,7 +203,7 @@ export const getAllTasks = async (req, res, next) => {
 };
 
 // lấy task bằng id
-export const getTaskById = async (req, res, next) => {
+exports.getTaskById = async (req, res, next) => {
   try {
     const taskId = req.task._id;
     const task = await taskService.FindTaskById(taskId);
@@ -206,7 +215,7 @@ export const getTaskById = async (req, res, next) => {
 };
 
 // cập nhật task
-export const updateTask = async (req, res, next) => {
+exports.updateTask = async (req, res, next) => {
   try {
     const id = req.task._id;
     const dataBody = req.body;
@@ -262,7 +271,7 @@ export const updateTask = async (req, res, next) => {
 };
 
 // xóa task
-export const deleteTask = async (req, res, next) => {
+exports.deleteTask = async (req, res, next) => {
   try {
     const taskId = req.task._id;
     const task = await taskService.deleteTask(taskId);
@@ -274,7 +283,7 @@ export const deleteTask = async (req, res, next) => {
   }
 };
 
-export const deleteManyTask = async (req, res, next) => {
+exports.deleteManyTask = async (req, res, next) => {
   try {
     const ids = req.body.ids;
 
@@ -294,7 +303,7 @@ export const deleteManyTask = async (req, res, next) => {
   }
 };
 
-export const load = async (req, res, next, id) => {
+exports.load = async (req, res, next, id) => {
   try {
     if (!mongoose.Types.ObjectId.isValid(id)) {
       return next(new Error("Status không phù hợp"));;

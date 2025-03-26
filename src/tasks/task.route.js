@@ -1,6 +1,6 @@
-import express from "express";
-import * as taskController from "./task.controller.js";
-import upload from "../config/multer.js";
+const express = require("express");
+const  taskController = require("./task.controller.js");
+const upload = require("../config/multer.js");
 
 const routerTask = express.Router();
 routerTask.get("/search", taskController.searchTaskByTitle);
@@ -24,4 +24,4 @@ routerTask.get("/project/:projectId", taskController.getAlTaskByProject);
 routerTask.post("/:taskId/add-user", taskController.addUserToTaskController);
 routerTask.post("/filter/:projectId", taskController.filterTaskController);
 // routerTask.get("/search", taskController.searchTaskByTitle);
-export default routerTask;
+module.exports = routerTask;

@@ -1,8 +1,8 @@
-import Task from "./task.model.js";
-import User from "../users/user.model.js";
-import mongoose from "mongoose";
+const Task = require("./task.model.js");
+const User = require("../users/user.model.js");
+const mongoose = require("mongoose");
 
-export const updateTaskStatusService = async (taskId, newStatus) => {
+exports.updateTaskStatusService = async (taskId, newStatus) => {
   // Kiểm tra xem taskId có hợp lệ không
   if (!mongoose.Types.ObjectId.isValid(taskId)) {
     throw new Error(" task ID không phù hợp");
@@ -24,7 +24,7 @@ export const updateTaskStatusService = async (taskId, newStatus) => {
 };
 
 /// thêm user vào task
-export const addUserToTask = async (taskId, userId) => {
+exports.addUserToTask = async (taskId, userId) => {
   const listUserId = await User.find({ _id: { $in: userId } }).distinct("_id");
   console.log(listUserId)
   if (listUserId.length === 0) {
@@ -68,7 +68,7 @@ export const addUserToTask = async (taskId, userId) => {
   }
 
 }
-export const filterTaskService = async (skip, limit, filter) => {
+exports.filterTaskService = async (skip, limit, filter) => {
   return Task
     .find(filter)
     .skip(skip)
@@ -76,26 +76,26 @@ export const filterTaskService = async (skip, limit, filter) => {
     .populate("assigneeId", "userName email avatar")
     .populate("assignerId", "userName email avatar");
 };
-export const getAllTasks = async (skip, limit) => {
+exports.getAllTasks = async (skip, limit) => {
   return await Task.find()
     .skip(skip)
     .limit(limit)
     .select("+assigneeId +assignerId")
     .populate("assigneeId", "userName email");
 };
-export const getTaskByProject = async (projectId) => {
+exports.getTaskByProject = async (projectId) => {
   return await Task.find({ projectId });
 };
-export const addTask = async (data) => {
+exports.addTask = async (data) => {
   return await Task.create(data);
 };
-export const editTask = async (id, data) => {
+exports.editTask = async (id, data) => {
   return await Task.findByIdAndUpdate(id, data, { new: true });
 };
-export const deleteTask = async (id) => {
+exports.deleteTask = async (id) => {
   return await Task.findByIdAndDelete(id);
 };
-export const deleteMoreTasks = async (ids) => {
+exports.deleteMoreTasks = async (ids) => {
   if (!ids || !Array.isArray(ids) || ids.length === 0) {
     throw new Error("Danh sách ID không hợp lệ");
   }
@@ -106,7 +106,7 @@ export const deleteMoreTasks = async (ids) => {
   return await Task.deleteMany({ _id: { $in: objectIds } });
 };
 
-export const getAlTaskByProject = async (projectId, skip, limit) => {
+exports.getAlTaskByProject = async (projectId, skip, limit) => {
   return await Task.find({ projectId })
     .skip(skip)
     .limit(limit)
@@ -120,10 +120,10 @@ export const getAlTaskByProject = async (projectId, skip, limit) => {
     });
 };
 
-export const countTaskByProject = async (projectId) => {
+exports.countTaskByProject = async (projectId) => {
   return await Task.countDocuments({ projectId });
 }
-export const FindTaskById = async (id) => {
+exports.FindTaskById = async (id) => {
   return await Task.findById(id)
     .populate({
       path: "assigneeId",
@@ -135,11 +135,11 @@ export const FindTaskById = async (id) => {
     });
 };
 
-export const getTaskById = async (id) => {
+exports.getTaskById = async (id) => {
   return await Task.findById(id);
 }
 
-export const convertToSlug = (str) => {
+exports.convertToSlug = (str) => {
   return str
     .normalize("NFD") // Chuẩn hóa Unicode
     .replace(/[\u0300-\u036f]/g, "") // Xóa dấu tiếng Việt
@@ -150,7 +150,7 @@ export const convertToSlug = (str) => {
     .replace(/\s+/g, " "); // Chuyển nhiều khoảng trắng thành 1 khoảng trắng
 };
 
-export const FindTaskByTitle = async (skip, limit, data) => {
+exports.FindTaskByTitle = async (skip, limit, data) => {
   const slugTitle = convertToSlug(data); // Chuyển input thành không dấu
 
   return await Task
@@ -164,15 +164,15 @@ export const FindTaskByTitle = async (skip, limit, data) => {
     .limit(limit);
 };
 // check assigneeID có trong bảng user không
-export const checkAssigneeId = async (assigneeId) => {
+exports.checkAssigneeId = async (assigneeId) => {
   return await User.find({ _id: { $in: assigneeId } });
 };
 
 // check assignerId có trong bảng user không
-export const checkAssignerId = async (assignerId) => {
+exports.checkAssignerId = async (assignerId) => {
   return await User.findById(assignerId);
 };
 
-export const countTasks = async () => {
+exports.countTasks = async () => {
   return await Task.countDocuments();
 };
