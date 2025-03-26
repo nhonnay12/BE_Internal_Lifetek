@@ -1,3 +1,5 @@
+import { STATUS } from "../../constants/statusConstants.js";
+
 const taskSwagger = {
   "/tasks": {
     post: {
@@ -45,7 +47,7 @@ const taskSwagger = {
                 },
                 status: {
                   type: "number",
-                  example: 0,
+                  example: 1,
                 },
                 image: {
                   type: "string",
@@ -116,7 +118,7 @@ const taskSwagger = {
       {
         "in": "query",
         "name": "page",
-        "required": true,
+        "required" : false,
         "description": "Phân trang hiện tại",
         "schema": {
           "type": "number",
@@ -283,8 +285,8 @@ const taskSwagger = {
                   example: "60d4f6d3c2f2a00015f8a3d5",
                 },
                 status: {
-                  type: "string",
-                  example: "pending",
+                  type: "number",
+                  example: 2,
                 },
                 image: {
                   type: "string",
@@ -410,133 +412,6 @@ const taskSwagger = {
                 }
             }
     },
-     post: {
-      summary: "Thêm người dùng vào vấn đề",
-      description: "Trả về công việc đã thêm người dùng trong hệ thống",
-      tags: ["Task"],
-
-      parameters: [
-        {
-          in: "path",
-          name: "taskId",
-          required: true,
-          description: "ID nhiệm vụ",
-          schema: {
-            type: "string",
-            example: "67d3f68ec0587825d1b151bb",
-          },
-        },
-      ],
-      requestBody: {
-        required: true,
-        content: {
-          "application/json": {
-            schema: {
-              type: "string",
-              example: { userId: ["60d4f6d3c2f2a00015f8a3d6"] },
-            },
-          },
-        },
-      },
-
-      security: [
-        {
-          BearerAuth: [],
-        },
-      ],
-
-      responses: {
-        200: {
-          description: "Thêm người dùng vào vấn đề thành công",
-          content: {
-            "application/json": {
-              schema: {
-                $ref: "#/components/schemas/Task",
-              },
-            },
-          },
-        },
-        400: {
-          description: "Lỗi phía server",
-          content: {
-            "application/json": {
-              schema: {
-                type: "object",
-                properties: {
-                  message: {
-                    type: "string",
-                    example: "Internal server error",
-                  },
-                },
-              },
-            },
-          },
-        },
-      },
-    },
-  },
-  "/tasks/{taskId}": {
-    get: {
-      summary: "Lấy thông tin chi tiết",
-      description: "Trả về thống tin chi tiết của task",
-      tags: ["Task"],
-      parameters: [
-        {
-          in: "path",
-          name: "taskId",
-          required: true,
-          description: "ID task",
-          schema: {
-            type: "string",
-            example: "67d8e3e2835b109d2e16bd89",
-          },
-        },
-      ],
-      responses: {
-        200: {
-          description: "Lấy thống tin chi tiết task thành công",
-          content: {
-            "application/json": {
-              schema: {
-                $ref: "#/components/schemas/Task",
-              },
-            },
-          },
-        },
-        404: {
-          description: "Khoông tìm thấy task",
-          content: {
-            "application/json": {
-              schema: {
-                type: "object",
-                properties: {
-                  message: {
-                    type: "string",
-                    example: "Task not found",
-                  },
-                },
-              },
-            },
-          },
-        },
-        500: {
-          description: "Lỗi server",
-          content: {
-            "application/json": {
-              schema: {
-                type: "object",
-                properties: {
-                  message: {
-                    type: "string",
-                    example: "Internal server error",
-                  },
-                },
-              },
-            },
-          },
-        },
-      },
-    },
   },
   "/tasks/{taskId}/status": {
     put: {
@@ -560,8 +435,17 @@ const taskSwagger = {
         content: {
           "application/json": {
             schema: {
-              type: "string",
-              example: { status: "completed" },
+              type: "object",
+              properties: {
+                oldStatus: {
+                  type: "number",
+                  example: 2,
+                },
+                newStatus: {
+                  type:"number",
+                  example: STATUS.FINISH
+                },
+              }
             },
           },
         },
@@ -677,7 +561,7 @@ const taskSwagger = {
   },
   "/tasks/search": {
     get: {
-      sunmary: "Tìm kiếm công việc theo Title , (người dùng nhập)",
+      summary: "Tìm kiếm công việc theo Title , (người dùng nhập)",
       description: "Trả về danh sách công việc theo Title",
       tags: ["Task"],
       parameters: [
@@ -724,8 +608,8 @@ const taskSwagger = {
   },
   "/tasks/filter/{projectId}": {
     post: {
-      summary: "Tìm kiếm công việc",
-      description: "Trả về công việc có thông tin tìm kiếm tương thích",
+      summary: "Lọc công việc theo người giao, người nhận, thời gian",
+      description: "Trả về danh sách công việc theo người giao, người nhận, thời gian",
       tags: ["Task"],
       parameters: [
         {
@@ -735,7 +619,7 @@ const taskSwagger = {
           description: "ID project",
           schema: {
             type: "string",
-            example: "67d24709bf0422c295e3f5a7",
+            example: "67d8ddb3edc970e80f2ed0a8",
           },
         },
       ],
@@ -744,13 +628,36 @@ const taskSwagger = {
         content: {
           "application/json": {
             schema: {
-              type: "string",
-              example: {
-                assigneeId: "60d4f6d3c2f2a00015f8a3d5",
-                assignerId: "60d4f6d3c2f2a00015f8a3d5",
-                startDate: "2021-06-25T00:00:00.000Z",
-                endDate: "2021-06-02T00:00:00.000Z",
-              },
+              type: "object",
+              properties: {
+                status: {
+                  type: "number",
+                  example: 1,
+                },
+                priority: {
+                  type: "number",
+                  example: 1,
+                },
+                assigneeId: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                    example: "67d3a5ee5fb33b3c2442fb68",
+                  },
+                },
+                assignerId: {
+                  type: "string",
+                  example: "67dd0e3b4e734fdc9ab4ba24",
+                },
+                startDate: {
+                  type: "string",
+                  example: "2025-03-15",
+                },
+                endDate: {
+                  type: "string",
+                  example: "2025-04-30",
+                },
+              }
             },
           },
         },
