@@ -14,6 +14,10 @@ const projectSchema = {
                 type: "string",
                 example: "Dự án phát triển hệ thống CRM hỗ trợ quản lý khách hàng"
             },
+            status: {
+                type: "number",
+                example: 0
+            },
             managerId: {
                 type: "object",
                 properties: {
@@ -38,14 +42,6 @@ const projectSchema = {
                         example: "https://res.cloudinary.com/dxl1gsy3h/image/upload/v1742280198/uploads/ux92oetku5b4lugmnq20.jpg"
                     }
                 }
-            },
-            status: {
-                type: "string",
-                example: "todo"
-            },
-            priority: {
-                type: "string",
-                example: "high"
             },
             members: {
                 type: "array",
@@ -74,7 +70,11 @@ const projectSchema = {
                         }
                     }
                 }
-            }
+            },
+            priority: {
+                type: "number",
+                example: 0
+            },
         }
     }
 };

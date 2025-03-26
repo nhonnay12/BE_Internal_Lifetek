@@ -31,12 +31,12 @@ const TaskSchema = new mongoose.Schema(
     status: {
       type: Number,
       enum: Object.values(STATUS),
-      default: 1,
+      default: STATUS.PREPARE,
     },
     priority: {
       type: Number,
       enum: Object.values(PRIORITY),
-      default: 1,
+      default: PRIORITY.MEDIUM,
     },
     image: {
       type: String,

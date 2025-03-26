@@ -10,11 +10,6 @@ const taskSwagger = {
             ],
       description: "API tạo nhiệm vụ mới",
       tags: ["Task"],
-      security: [
-        {
-          BearerAuth: [],
-        },
-      ],
       requestBody: {
         required: true,
         content: {
@@ -242,11 +237,6 @@ const taskSwagger = {
       summary: "chỉnh sửa nhiệm vụ",
       description: "API chỉnh sửa nhiệm vụ",
       tags: ["Task"],
-      security: [
-        {
-          $ref: "#/components/securitySchemes/BearerAuth",
-        },
-      ],
       parameters: [
         {
           in: "path",
@@ -495,13 +485,7 @@ const taskSwagger = {
     get: {
       summary: "Lấy thông tin chi tiết",
       description: "Trả về thống tin chi tiết của task",
-
       tags: ["Task"],
-      security: [
-        {
-          BearerAuth: [],
-        },
-      ],
       parameters: [
         {
           in: "path",

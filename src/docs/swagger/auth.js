@@ -4,6 +4,7 @@ const authSwagger = {
       summary: "Đăng ký tài khoản",
       description: "API đăng ký tài khoản mới",
       tags: ["Auth"],
+      security: [],
       requestBody: {
         required: true,
         content: {
@@ -109,6 +110,7 @@ const authSwagger = {
       summary: "Xác thực email",
       description: "API xác thực email người dùng",
       tags: ["Auth"],
+      security: [],
       parameters: [
         {
           in: "path",
@@ -238,6 +240,7 @@ const authSwagger = {
       summary: "Đăng Nhập",
       description: "API đăng nhập tài khoản",
       tags: ["Auth"],
+      security: [],
       requestBody: {
         required: true,
         content: {
@@ -373,11 +376,6 @@ const authSwagger = {
       summary: "Đăng xuất tài khoản",
       description: "API đăng xuất tài khoản",
       tags: ["Auth"],
-      security: [
-        {
-          BearerAuth: [],
-        },
-      ],
       responses: {
         200: {
           description: "Đăng xuất thành công",
@@ -521,6 +519,7 @@ const authSwagger = {
       summary: "Quên mật khẩu",
       description: "API quên mật khẩu",
       tags: ["Auth"],
+      security: [],
       requestBody: {
         required: true,
         content: {
@@ -593,7 +592,7 @@ const authSwagger = {
       },
     },
   },
-  "/auth/reset-password/{id}": {
+  "/auth/reset-password": {
     post: {
       summary: "Đặt lại mật khẩu",
       description: "API đặt lại mật khẩu",

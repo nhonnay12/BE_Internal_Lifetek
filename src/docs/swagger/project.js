@@ -4,6 +4,7 @@ const projectSwagger = {
             summary: "Tạo dự án mới",
             description: "API tạo dự án mới",
             tags: ["Project"],
+           
             requestBody: {
                 required: true,
                 content: {
@@ -63,6 +64,7 @@ const projectSwagger = {
             summary: "Lấy tất cả dự án",
             description: "API lấy danh sách tất cả dự án",
             tags: ["Project"],
+           
             parameters: [
                 {
                     in: "query",
@@ -85,12 +87,6 @@ const projectSwagger = {
                     }
                 }
             ],
-            security:
-                [
-                    {
-                        BearerAuth: []
-                    }
-                ],
             responses: {
                 200: {
                     description: "Danh sách dự án",
@@ -141,6 +137,7 @@ const projectSwagger = {
             summary: "Lấy chi tiết dự án theo ID",
             description: "API lấy chi tiết dự án",
             tags: ["Project"],
+           
             parameters: [
                 {
                     in: "path",
@@ -203,6 +200,7 @@ const projectSwagger = {
             summary: "Cập nhật dự án theo ID",
             description: "API cập nhật thông tin dự án",
             tags: ["Project"],
+           
             parameters: [
                 {
                     in: "path",
@@ -277,6 +275,7 @@ const projectSwagger = {
             summary: "Xoá dự án theo ID",
             description: "API xoá dự án",
             tags: ["Project"],
+           
             parameters: [
                 {
                     in: "path",
@@ -333,6 +332,7 @@ const projectSwagger = {
             summary: "Lấy thông tin người quản lý dự án",
             description: "API lấy thông tin người quản lý dự án",
             tags: ["Project"],
+           
             parameters: [
                 {
                     in: "path",
@@ -392,6 +392,7 @@ const projectSwagger = {
             summary: "Lấy thông tin members tham gia dự án theo id  ",
             description: "API lấy thông tin members tham gia dự án theo id ",
             tags: ["Project"],
+           
             parameters: [
                 {
                     in: "path",

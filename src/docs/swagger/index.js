@@ -7,6 +7,7 @@ import projectSwagger from "./project.js";
 import dotenv from "dotenv";
 import { userSwagger } from "./user.js";
 import CmtSwagger from "./comment.js";
+import commentSchema from "./components/commentComponent.js";
 dotenv.config();
 
 const domainUrl = process.env.DOMAIN_SWAGGER
@@ -46,13 +47,14 @@ const swaggerDocs = {
       ...authSchema,
       ...taskSchema,
       ...projectSchema,
+      ...commentSchema,
     },
   },
-  // security: [
-  //   {
-  //     BearerAuth: [], // Kích hoạt xác thực toàn bộ API
-  //   },
-  // ],
+  security: [
+    {
+      BearerAuth: [], // Kích hoạt xác thực toàn bộ API
+    },
+  ],
 };
 
 export default swaggerDocs;

@@ -9,7 +9,6 @@ import { PERMISSIONS } from "../constants/index.js";
 /// thay đổi trạng thái
 export const updateTaskStatus = async (req, res, next) => {
   try {
-    const user = req.user.role;
     // const checkPemission = PERMISSIONS.UPDATE_TASK_STATUS.includes(user);
     const { taskId } = req.params;
 
