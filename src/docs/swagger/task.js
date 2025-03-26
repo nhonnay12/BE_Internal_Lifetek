@@ -1,4 +1,4 @@
-import { STATUS } from "../../constants/statusConstants.js";
+const { STATUS } = require("../../constants/statusConstants.js");
 
 const taskSwagger = {
   "/tasks": {
@@ -754,4 +754,4 @@ const taskSwagger = {
 
 };
 
-export default taskSwagger;
+module.exports = taskSwagger;

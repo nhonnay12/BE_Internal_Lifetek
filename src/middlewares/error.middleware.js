@@ -42,4 +42,4 @@ const ErrorMiddleware = {
     }
 }
 
-export default ErrorMiddleware;
+module.exports = ErrorMiddleware;
