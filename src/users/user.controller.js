@@ -21,7 +21,7 @@ export const getAllUsers = async (req, res, next) => {
         const users = await userService.getAllUser(skip, limit);
         const total = await userService.countUser();
 
-        return new SuccessResponse(users, 200, 'success', total, page, limit).sends(res);
+        return new SuccessResponse(users, 200, "success", total, page, limit).sends(res);
     } catch (error) {
         return next(error);
     }

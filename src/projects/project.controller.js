@@ -13,25 +13,18 @@ export const addProject = async (req, res, next) => {
 };
 
 export const getAllProjects = async (req, res, next) => {
-  try {
-    const page = parseInt(req.query.page) || PAGINATE.PAGE;
-    const limit = parseInt(req.query.limit) || PAGINATE.LIMIT;
-    const skip = (page - 1) * limit;
-    const idUser = req.user._id;
-    const projects = await projectService.getAllProjects(idUser, skip, limit);
-    const total = await projectService.countProjects(idUser);
+    try {
+        const page = parseInt(req.query.page) || PAGINATE.PAGE;
+        const limit = parseInt(req.query.limit) || PAGINATE.LIMIT;
+        const skip = (page - 1) * limit;
+        const idUser = req.user._id;
+        const projects = await projectService.getAllProjects(idUser, skip, limit);
+        const total = await projectService.countProjects(idUser);
 
-    return new SuccessResponse(
-      projects,
-      200,
-      "success",
-      total,
-      page,
-      limit
-    ).sends(res);
-  } catch (error) {
-    return next(error);
-  }
+        return new SuccessResponse(projects, 200, "success", total, page, limit).sends(res);
+    } catch (error) {
+        return next(error);
+    }
 };
 
 export const getProjectById = async (req, res, next) => {

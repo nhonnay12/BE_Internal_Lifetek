@@ -14,7 +14,7 @@ export default [
       "no-unused-vars": "error",
       "no-undef": "error",
       "no-unsafe-optional-chaining": "error",
-      "no-console": "error"
+      "no-console": process.env.NODE_ENV === "production" ? "error" : "off"
     }
   }
 ];

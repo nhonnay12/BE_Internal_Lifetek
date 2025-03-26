@@ -16,38 +16,34 @@ export const createTaskValidator = Joi.object({
     "string.empty": "projectId không được để trống",
     "any.required": "projectId là bắt buộc",
   }),
-
-  assigneeId: Joi.array().items(Joi.objectId()).required().messages({
-    "string.empty": "assignerId không được để trống",
-    "any.required": "assignerId là bắt buộc",
-  }),
-  assignerId: Joi.string().messages({
-    "string.empty": "assigneeId không được để trống",
-  }),
-  status: Joi.string().messages({
-    "string.empty": "Trạng thái không được để trống",
-    "any.only": "Trạng thái không hợp lệ",
-  }),
-  priority: Joi.string().messages({
-    "string.empty": "Mức độ ưu tiên không được để trống",
-    "any.only": "Mức độ ưu tiên không hợp lệ",
-  }),
-  image: Joi.string().uri().messages({
-    "string.empty": "Hình ảnh không được để trống",
-    "string.uri": "Hình ảnh không hợp lệ",
-  }),
-  link: Joi.string().messages({
-    "string.empty": "Link không được để trống",
-  }),
-  startDate: Joi.date().messages({
-    "date.base": "Ngày bắt đầu không hợp lệ",
-  }),
-  endDate: Joi.date().messages({
-    "date.base": "Ngày hết hạn không hợp lệ",
-  }),
-  startDate: Joi.date().messages({
-    "date.base": "Ngày bắt đầu không hợp lệ",
-  }),
+    assigneeId: Joi.array().items(Joi.objectId()).required().messages({
+        "string.empty": "assignerId không được để trống",
+        "any.required": "assignerId là bắt buộc",
+    }),
+    assignerId: Joi.string().messages({
+        "string.empty": "assigneeId không được để trống",
+    }),
+    status: Joi.string().valid("pending", "inProgress", "completed", "done").messages({
+        "string.empty": "Trạng thái không được để trống",
+        "any.only": "Trạng thái không hợp lệ",
+    }),
+    priority: Joi.string().valid("low", "medium", "high").messages({
+        "string.empty": "Mức độ ưu tiên không được để trống",
+        "any.only": "Mức độ ưu tiên không hợp lệ",
+    }),
+    image: Joi.string().uri().messages({
+        "string.empty": "Hình ảnh không được để trống",
+        "string.uri": "Hình ảnh không hợp lệ",
+    }),
+    link: Joi.string().messages({
+        "string.empty": "Link không được để trống",
+    }),
+    startDate: Joi.date().messages({
+        "date.base": "Ngày bắt đầu không hợp lệ",
+    }),
+    endDate: Joi.date().messages({
+        "date.base": "Ngày hết hạn không hợp lệ",
+    }),
 });
 
 export const updateTaskValidator = Joi.object({

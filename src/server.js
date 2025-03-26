@@ -7,7 +7,7 @@ import cookieParser from "cookie-parser";
 import swaggerDocs from "./config/swaggerConfig.js";
 import { connectRedis } from "./config/redisClient.js";
 import ErrorMiddleware from "./middlewares/error.middleware.js";
-import listEndpoints from "express-list-endpoints";
+import listEndpoints from "express-list-endpoints"; // eslint-disable-line
 const app = express();
 const PORT = env.PORT;
 
