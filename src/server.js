@@ -39,7 +39,4 @@ app.listen(PORT, "0.0.0.0", () => {
 });
 // minhbfưefhjbshjfbhsdbhjfsbfbdsfbjsbdjfhjdsbdfh
 ///fwkedjfdsfnjknjdsnfkjdsnkjnsdkndsk
-///fwkedjfdsfnjknjdsnfkjdsnkjnsdkndsk
-///fwkedjfdsfnjknjdsnfkjdsnkjnsdkndsk
-///fwkedjfdsfnjknjdsnfkjdsnkjnsdkndsk
-///fwkedjfdsfnjknjdsnfkjdsnkjnsdkndsk
+///fwkedjfdsfnjknjdsnfkjdsnkjnsdknd
