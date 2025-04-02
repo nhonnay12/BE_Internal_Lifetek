@@ -4,7 +4,7 @@ const { PRIORITY, STATUS_PROJECT } = require("../constants/index.js");
 const ProjectSchema = new mongoose.Schema(
   {
     name: { type: String, required: true },
-    code: { type: Number, required: true },
+    code: { type: String, required: true },
     description: { type: String },
     status: {
       type: Number,

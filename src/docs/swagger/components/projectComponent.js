@@ -7,8 +7,8 @@ const projectSchema = {
         example: "Dự án phát triển hệ thống CRM",
       },
       code: {
-        type: "number",
-        example: 12345678,
+        type: "String",
+        example: "abc123",
       },
       description: {
         type: "string",
