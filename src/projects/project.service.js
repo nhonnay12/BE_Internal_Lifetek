@@ -143,22 +143,29 @@ exports.countProjects = async (userId) => {
     $or: [{ managerId: userId }, { members: { $in: [userId] } }],
   });
 };
-// exports.FindProjectByTitle = async (idUser, keyword) => {
-//   return await Project.find({
-//     owner: idUser, // Chỉ lấy dự án của user đang đăng nhập
-//     name: { $regex: keyword, $options: "i" }, // Tìm kiếm không phân biệt hoa thường
-//   });
-// };
+
 exports.findNameProject = async (userId, name) => {
   try {
     const cleanName = name.trim();
+    const slugNames = removeAccents.remove(cleanName.toLowerCase());
     const projects = await Project.find({
-      members: { $in: [userId] }, // Kiểm tra xem userId có nằm trong mảng members không
-      name: { $regex: cleanName, $options: "i" }, // Tìm kiếm không phân biệt hoa thường
+      $or: [
+        { members: { $in: [userId] } }, // Kiểm tra userId có trong mảng members
+        { managerId: userId }, // Kiểm tra userId có phải là manager
+      ],
+      slugName: { $regex: slugNames, $options: "i" }, // Tìm kiếm không phân biệt hoa thường
     });
     return projects;
   } catch (error) {
     console.error("Lỗi tìm kiếm project:", error);
     throw new Error("Không thể tìm kiếm project");
   }
+};
+exports.countNameProjects = async (userId, name) => {
+  const cleanName = name.trim();
+  const slugNames = removeAccents.remove(cleanName.toLowerCase());
+  return await Project.countDocuments({
+    $or: [{ managerId: userId }, { members: { $in: [userId] } }],
+    slugName: { $regex: slugNames, $options: "i" },
+  });
 };
