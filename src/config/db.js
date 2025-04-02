@@ -11,7 +11,7 @@ const connectDB = async () => {
     if (env.NODE_ENV === "development") {
       // mongoose.set("debug", true);
       await mongoose.connect(env.URI_DB);
-    console.log("✅ Kết nối MongoDB Atlas cá nhân thành công!");
+      console.log("✅ Kết nối MongoDB Atlas cá nhân thành công!");
 
     } else {
       await mongoose.connect(env.MONGO_HOST, {

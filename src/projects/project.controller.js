@@ -38,7 +38,7 @@ exports.getProjectById = async (req, res, next) => {
   try {
     const project = await projectService.getProjectById(req.project._id);
     if (!project) return next(new Error("Project không tồn tại"));
-
+    
     return new SuccessResponse(project).send(res);
   } catch (error) {
     return next(error);

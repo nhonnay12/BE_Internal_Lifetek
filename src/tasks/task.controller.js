@@ -221,7 +221,7 @@ exports.filterTaskController = async (req, res, next) => {
 // tìm kiếm task// tìm kiếm task
 exports.searchTaskByTitle = async (req, res, next) => {
   try {
-    const projectId = req.query.projectId;
+    const projectId = req.params.projectId;
     const title = req.query.search.trim();
     const assigneeIds = req.user._id;
     if (!title || title.length === 0) {
