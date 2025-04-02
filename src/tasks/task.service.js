@@ -148,47 +148,21 @@ exports.getTaskById = async (id) => {
   return await Task.findById(id);
 };
 
-// exports.convertToSlug = (str) => {
-//   return str
-//     .normalize("NFD") // Chuẩn hóa Unicode
-//     .replace(/[\u0300-\u036f]/g, "") // Xóa dấu tiếng Việt
-//     .replace(/đ/g, "d")
-//     .replace(/Đ/g, "D") // Chuyển đ -> d, Đ -> D
-//     .replace(/[^a-zA-Z0-9\s]/g, "") // Xóa ký tự đặc biệt (chỉ giữ chữ & số)
-//     .trim() // Xóa khoảng trắng đầu & cuối
-//     .replace(/\s+/g, " "); // Chuyển nhiều khoảng trắng thành 1 khoảng trắng
-// };
+
 
 exports.FindTaskByTitle = async (skip, limit, data, assigneeIds, projectId) => {
-
-    //*** chèn thêm trường slug vào task đã có dữ liệu */
-  // const tasks = await Task.find(); // Lấy toàn bộ danh sách task
-  //   console.log(tasks)
-  //   await Promise.all(tasks.map(task => {
-  //       if (task.title) {
-  //           const slugName = removeAccents.remove(task.title.toLowerCase());
-  //           return Task.updateOne({ _id: task._id }, { $set: { slugName: slugName } });
-  //       }
-  //   }));
-  /* ----------------------*/
-  // tìm kiếm ko dấu
-    const slugNames = removeAccents.remove(data.toLowerCase());
-  try {
-    const tasks = await Task.find({
-      slugName: { $regex: slugNames, $options: "i" }, // Tìm kiếm không phân biệt hoa thường
-      projectId: projectId,
-    })
-      .skip(skip)
-      .limit(limit)
-      .populate("assigneeId", "userName ")
-      .populate("assignerId", "userName ");
-    return tasks;
-
-  }catch (error) {
-    console.error("Lỗi tìm kiếm task:", error);
-    throw new Error("Không thể tìm kiếm task");
-  }
-  
+  return await Task.find({
+    $or: [
+      { title: { $regex: new RegExp(`.*${data}*`, "i") } }, // Tìm kiếm một phần của chuỗi có dấu
+      // { title: { $regex: new RegExp(`.*${slugTitle}*`, "i") } }, // Tìm kiếm một phần của chuỗi không dấu
+    ],
+    assigneeId: { $in: assigneeIds }, // Sửa lỗi: Truyền đúng biến danh sách assigneeId
+    projectId: projectId,
+  })
+    .skip(skip)
+    .limit(limit)
+    .populate("assigneeId", "userName ")
+    .populate("assignerId", "userName");
 };
 
 // check assigneeID có trong bảng user không
