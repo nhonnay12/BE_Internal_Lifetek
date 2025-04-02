@@ -19,7 +19,7 @@ exports.getAllProjects = async (req, res, next) => {
     const skip = (page - 1) * limit;
     const idUser = req.user._id;
     const projects = await projectService.getAllProjects(idUser, skip, limit);
-    const total = await projectService.countProjects(idUser);
+    const total = await projectService.countProjects();
 
     return new SuccessResponse(
       projects,

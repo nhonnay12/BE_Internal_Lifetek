@@ -7,9 +7,8 @@ const SuccessResponse = require("../utils/SuccessResponse.js");
 const PAGINATE = require("../constants/paginate.js");
 const { CHANGE_SOURCE, PERMISSIONS } = require("../constants/index.js");
 const { STATUS } = require("../constants/statusConstants.js");
-const ErrorMiddleware = require("../middlewares/error.middleware.js");
 const projectService = require("../projects/project.service.js");
-
+const { ObjectId } = require("mongodb");
 /// thay đổi trạng thái
 exports.updateTaskStatus = async (req, res, next) => {
   try {
@@ -136,24 +135,21 @@ exports.addUserToTaskController = async (req, res, next) => {
         message: " Không tìm thấy Project",
       });
     }
-
-    if (!project.members.includes(assigneeId)) {
+  const assigneeIdsObject = assigneeId.map(id => new ObjectId(id)); // Chuyển sang ObjectId
+  const exists = assigneeIdsObject.some(id => project.members.some(member => member.equals(id)));
+   
+    if (!exists) {
       return next({
         statusCode: 400,
         message: "Người dùng không có trong project",
       });
     }
 
-    // Kiểm tra trùng assignee trong Task
-    if (task.assignees.includes(assigneeId)) {
-      return next({
-        statusCode: 400,
-        message: "Người dùng đã có trong project",
-      });
-    }
 
     // Thêm user vào task
-    const updatedTask = await taskService.addUserToTask(taskId, assigneeId);
+    const updatedTask = await taskService.addUserToTask(taskId, assigneeId,projectId);
+    
+
     return new SuccessResponse(updatedTask).send(res);
   } catch (error) {
     return next(error);

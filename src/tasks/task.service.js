@@ -1,8 +1,9 @@
 const Task = require("./task.model.js");
 const User = require("../users/user.model.js");
+const Notification = require('../notifications/notification.model.js');
 const mongoose = require("mongoose");
 const removeAccents = require("remove-accents");
-
+const { sendNotification } = require("../socket.js");
 exports.updateTaskStatusService = async (taskId, newStatus) => {
   // Kiểm tra xem taskId có hợp lệ không
   if (!mongoose.Types.ObjectId.isValid(taskId)) {
@@ -25,20 +26,17 @@ exports.updateTaskStatusService = async (taskId, newStatus) => {
 };
 
 /// thêm user vào task
-exports.addUserToTask = async (taskId, userId) => {
+exports.addUserToTask = async (taskId, userId,projectId) => {
   const listUserId = await User.find({ _id: { $in: userId } }).distinct("_id");
-  console.log(listUserId);
+  const task = await Task.findById(taskId);
   if (listUserId.length === 0) {
-    throw new Error(
-      "Danh sách người dùng thêm vào không tồn tại trong bảng người dùng"
-    );
-  } else if (listUserId.length === 1) {
-    const task = await Task.findById(taskId);
-    if (!task) {
-      throw new Error("Task không tìm thấy");
-    }
-    // Lấy danh sách userId đã tồn tại trong assigneeId
-    const existingUsers = task.assigneeId.map((id) => id.toString());
+      throw new Error(
+        "Danh sách người dùng thêm vào không tồn tại trong bảng người dùng"
+      );
+  }
+  else if (listUserId.length === 1) {
+        // Lấy danh sách userId đã tồn tại trong assigneeId
+      const existingUsers = task.assigneeId.map((id) => id.toString());
 
     // Kiểm tra xem có userId nào bị trùng không
     const duplicateUsers = listUserId.filter((id) =>
@@ -58,8 +56,26 @@ exports.addUserToTask = async (taskId, userId) => {
       { $addToSet: { assigneeId: { $each: newUsers } } },
       { new: true }
     );
+    const userId = newUsers[0];
+    // // thông báo và thêm vò bảng notifi
+    const message = `Bạn đã được thêm vào task: ${task.title}`;
+    const notification = new Notification({
+      userId,
+      projectId,
+      taskId,
+      type: "task_assigned",
+      message,
+    });
+    await notification.save();
+
+    // Gửi thông báo qua WebSockets
+    sendNotification(userId, message);
+    
     return result;
-  } else if (listUserId.length > 1) {
+
+  }
+    
+  else if (listUserId.length > 1) {
     const updatedTask = await Task.findByIdAndUpdate(
       taskId,
       {
@@ -71,9 +87,22 @@ exports.addUserToTask = async (taskId, userId) => {
       { assigneeId: 1 }
     ); // Populate để lấy chi tiết user nếu cần
 
-    if (!updatedTask) {
-      throw new Error("Task không tìm thấy");
-    }
+    // thông báo nhiều người dùng
+     const message = `Bạn đã được thêm vào task: ${task.title}`;
+     listUserId.forEach(async (userId) => {
+      // Lưu thông báo vào MongoDB
+      const notification = new Notification({
+        userId,
+         projectId,
+        taskId,
+        type: "task_assigned",
+        message,
+      });
+      await notification.save();
+
+      // Gửi thông báo qua WebSockets
+      sendNotification(userId, message);
+    });
 
     return updatedTask;
   }

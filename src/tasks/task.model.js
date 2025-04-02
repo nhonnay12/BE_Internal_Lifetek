@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 const { STATUS } = require("../constants/statusConstants.js");
-const { PRIORITY } = require("../constants/index.js");
+const { PRIORITY, STATUS_TASK } = require("../constants/index.js");
 const TaskSchema = new mongoose.Schema(
   {
     title: {
@@ -9,6 +9,11 @@ const TaskSchema = new mongoose.Schema(
     },
      slugName: { type: String, required: true, unique: true },
     description: { type: String },
+    type: {
+      type: String,
+      enum: ['bug', 'new_request'], 
+      required: true,
+    },
     projectId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Project",

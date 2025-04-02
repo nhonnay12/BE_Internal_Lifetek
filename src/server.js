@@ -1,4 +1,5 @@
 const express = require("express");
+const http = require("http");
 const env = require("./config/env.js");
 const cors = require("cors");
 const router = require("./routes/index.js");
@@ -7,8 +8,13 @@ const cookieParser = require("cookie-parser");
 const swaggerDocs = require("./config/swaggerConfig.js");
 const { connectRedis } = require("./config/redisClient.js");
 const ErrorMiddleware = require("./middlewares/error.middleware.js");
-const listEndpoints = require("express-list-endpoints"); // eslint-disable-line
+const { initSocket } = require("./socket.js");
+
 const app = express();
+// thông báo thời gian thực
+const server = http.createServer(app); // Tạo server HTTP
+initSocket(server); // Khởi tạo socket.io
+
 const PORT = env.PORT;
 
 connectDB();

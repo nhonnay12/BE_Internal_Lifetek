@@ -790,11 +790,11 @@ const taskSwagger = {
             schema: {
               type: "object",
               properties: {
-                userId: {
+                assigneeId: {
                   type: "array",
                   items: {
                     type: "string",
-                    example: "67dd0e3b4e734fdc9ab4ba24",
+                    example: "67e53306ecb5b7e3fd73352a",
                   },
                 },
               },

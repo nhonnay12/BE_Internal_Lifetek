@@ -2,8 +2,10 @@ const authSwagger = require("./auth.js");
 const { authSchema } = require("./components/authComponent.js");
 const { taskSchema } = require("./components/taskComponent.js");
 const { projectSchema } = require("./components/projectComponent.js");
+const {notifiSchema}   = require("./components/notifiComponent.js")
 const taskSwagger = require("./task.js");
 const projectSwagger = require("./project.js");
+const notifiSwagger = require("./notifi.js")
 const dotenv = require("dotenv");
 const { userSwagger } = require("./user.js");
 const CmtSwagger = require("./comment.js");
@@ -34,6 +36,7 @@ const swaggerDocs = {
     ...projectSwagger,
     ...userSwagger,
     ...CmtSwagger,
+    ...notifiSwagger,
   },
   components: {
     securitySchemes: {
@@ -48,6 +51,7 @@ const swaggerDocs = {
       ...taskSchema,
       ...projectSchema,
       ...commentSchema,
+      ...notifiSchema,
     },
   },
   security: [

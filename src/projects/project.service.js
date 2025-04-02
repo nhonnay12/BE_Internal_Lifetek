@@ -181,3 +181,6 @@ exports.countNameProjects = async (userId, name) => {
     slugName: { $regex: slugNames, $options: "i" },
   });
 };
+exports.countProjects = async () => {
+  return await Project.countDocuments();
+};
