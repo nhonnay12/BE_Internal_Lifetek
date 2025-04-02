@@ -49,6 +49,10 @@ const taskSwagger = {
                   type: "number",
                   example: 1,
                 },
+                priority: {
+                  type: "number",
+                  example: 2,
+                },
                 image: {
                   type: "string",
                   format: "binary",

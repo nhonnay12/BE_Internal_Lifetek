@@ -251,12 +251,15 @@ exports.searchTaskByTitle = async (req, res, next) => {
 exports.addTask = async (req, res, next) => {
   try {
     const user = req.user.role;
+
     const checkPermission = PERMISSIONS.CREATE_TASK.includes(user);
     if (!checkPermission) {
       return next(new Error("Bạn không có quyền thêm task"));
     }
     const dataBody = req.body;
-
+    // if (typeof dataBody.priority === "string") {
+    //   dataBody.priority = Number(dataBody.priority);
+    // }
     if (typeof dataBody.assigneeId === "string") {
       dataBody.assigneeId = dataBody.assigneeId.split(",");
     }

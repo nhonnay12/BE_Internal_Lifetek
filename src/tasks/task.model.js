@@ -7,7 +7,7 @@ const TaskSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-     slugName: { type: String, required: true, unique: true },
+    slugName: { type: String, required: true, unique: true },
     description: { type: String },
     projectId: {
       type: mongoose.Schema.Types.ObjectId,
@@ -47,7 +47,7 @@ const TaskSchema = new mongoose.Schema(
   { timestamps: true }
 );
 TaskSchema.pre("save", function (next) {
-    this.slugName = removeAccents.remove(this.title.toLowerCase()); // Xóa dấu
-    next();
+  this.slugName = removeAccents.remove(this.title.toLowerCase()); // Xóa dấu
+  next();
 });
 module.exports = mongoose.model("Task", TaskSchema);
