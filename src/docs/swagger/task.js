@@ -617,7 +617,7 @@ const taskSwagger = {
       },
     },
   },
-  "/tasks/search": {
+  "/tasks/search/{projectId}": {
     get: {
       summary: "Tìm kiếm công việc theo Title , (người dùng nhập)",
       description: "Trả về danh sách công việc theo Title",
@@ -634,13 +634,13 @@ const taskSwagger = {
           },
         },
         {
-          in: "query",
+          in: "path",
           name: "projectId",
           required: true,
-          description: "Tìm kiếm công việc theo người nhận thuộc 1 project",
+          description: "ID project",
           schema: {
             type: "string",
-            example: "67d8dd65edc970e80f2ed0a4",
+            example: "67d8ddb3edc970e80f2ed0a8",
           },
         },
       ],

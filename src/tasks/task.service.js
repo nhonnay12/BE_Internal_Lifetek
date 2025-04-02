@@ -1,6 +1,7 @@
 const Task = require("./task.model.js");
 const User = require("../users/user.model.js");
 const mongoose = require("mongoose");
+const removeAccents = require("remove-accents");
 
 exports.updateTaskStatusService = async (taskId, newStatus) => {
   // Kiểm tra xem taskId có hợp lệ không
@@ -159,20 +160,35 @@ exports.getTaskById = async (id) => {
 // };
 
 exports.FindTaskByTitle = async (skip, limit, data, assigneeIds, projectId) => {
-  // const slugTitle = this.convertToSlug(data); // Chuyển input thành không dấu
 
-  return await Task.find({
-    $or: [
-      { title: { $regex: new RegExp(`.*${data}*`, "i") } }, // Tìm kiếm một phần của chuỗi có dấu
-      // { title: { $regex: new RegExp(`.*${slugTitle}*`, "i") } }, // Tìm kiếm một phần của chuỗi không dấu
-    ],
-    assigneeId: { $in: assigneeIds }, // Sửa lỗi: Truyền đúng biến danh sách assigneeId
-    projectId: projectId,
-  })
-    .skip(skip)
-    .limit(limit)
-    .populate("assigneeId", "userName ")
-    .populate("assignerId", "userName");
+    //*** chèn thêm trường slug vào task đã có dữ liệu */
+  // const tasks = await Task.find(); // Lấy toàn bộ danh sách task
+  //   console.log(tasks)
+  //   await Promise.all(tasks.map(task => {
+  //       if (task.title) {
+  //           const slugName = removeAccents.remove(task.title.toLowerCase());
+  //           return Task.updateOne({ _id: task._id }, { $set: { slugName: slugName } });
+  //       }
+  //   }));
+  /* ----------------------*/
+  // tìm kiếm ko dấu
+    const slugNames = removeAccents.remove(data.toLowerCase());
+  try {
+    const tasks = await Task.find({
+      slugName: { $regex: slugNames, $options: "i" }, // Tìm kiếm không phân biệt hoa thường
+      projectId: projectId,
+    })
+      .skip(skip)
+      .limit(limit)
+      .populate("assigneeId", "userName ")
+      .populate("assignerId", "userName ");
+    return tasks;
+
+  }catch (error) {
+    console.error("Lỗi tìm kiếm task:", error);
+    throw new Error("Không thể tìm kiếm task");
+  }
+  
 };
 
 // check assigneeID có trong bảng user không
