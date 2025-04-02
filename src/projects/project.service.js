@@ -2,6 +2,9 @@ const Project = require("./project.model.js");
 const User = require("../users/user.model.js");
 const mongoose = require("mongoose");
 const removeAccents = require("remove-accents");
+const taskModel = require("../tasks/task.model.js");
+
+
 exports.createProject = async (data) => {
   const existingProject = await Project.findOne({ code: data.code });
   const managerExists = await isUserExist(data.managerId);
@@ -139,12 +142,6 @@ const isUserExist = async (id) => {
   return !!user; // true nếu tồn tại, false nếu không
 };
 
-exports.countProjects = async (userId) => {
-  return await Project.countDocuments({
-    $or: [{ managerId: userId }, { members: { $in: [userId] } }],
-  });
-};
-
 exports.findNameProject = async (userId, name) => {
   try {
     const cleanName = name.trim();
@@ -162,6 +159,20 @@ exports.findNameProject = async (userId, name) => {
     throw new Error("Không thể tìm kiếm project");
   }
 };
+exports.fetchCountTaskInProject = async (userId, projectId) => {
+  try {
+    const count = await taskModel.countDocuments({
+      projectId, // Lọc theo projectId
+      assigneeId: userId, // Kiểm tra userId có trong mảng assigneeId
+      status: { $nin: [5, 6] } // Loại trừ status 5 và 6
+    });
+    return count;
+  } catch (error) {
+    console.error("Lỗi tìm kiếm task:", error);
+    throw new Error("Không thể tìm kiếm task");
+  }
+};
+
 exports.countNameProjects = async (userId, name) => {
   const cleanName = name.trim();
   const slugNames = removeAccents.remove(cleanName.toLowerCase());

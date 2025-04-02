@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const  projectService = require("./project.service.js");
+const projectService = require("./project.service.js");
 const SuccessResponse = require("../utils/SuccessResponse.js");
 const PAGINATE = require("../constants/paginate.js");
 const jwt = require("jsonwebtoken");
@@ -154,3 +154,26 @@ exports.getNameProject = async (req, res, next) => {
     return next(new Error("Lỗi server"));
   }
 };
+
+exports.getCountTaskInProject = async (req, res, next) => {
+  try {
+    const userId = req.user._id; // Lấy userId từ token xác thực
+    const { idProject } = req.params; // Lấy projectId từ URL
+
+    // Kiểm tra nếu không có projectId
+    if (!idProject) {
+      return next(new Error("ProjectId không được để trống!!!"));
+    }
+
+    // Lấy số lượng task trong dự án
+    const totalTasks = await projectService.fetchCountTaskInProject(userId, idProject);
+
+    // Trả kết quả thành công
+    return new SuccessResponse(totalTasks).send(res);
+  } catch (error) {
+    console.error("Lỗi khi lấy số lượng task:", error);
+    // Xử lý lỗi nếu có
+    return next(new Error("Lỗi server"));
+  }
+};
+
