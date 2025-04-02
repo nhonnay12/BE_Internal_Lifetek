@@ -1,6 +1,7 @@
 const Project = require("./project.model.js");
 const User = require("../users/user.model.js");
 const mongoose = require("mongoose");
+const removeAccents = require("remove-accents");
 exports.createProject = async (data) => {
   const existingProject = await Project.findOne({ code: data.code });
   const managerExists = await isUserExist(data.managerId);
