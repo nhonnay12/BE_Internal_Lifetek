@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const  projectService = require("./project.service.js");
+const projectService = require("./project.service.js");
 const SuccessResponse = require("../utils/SuccessResponse.js");
 const PAGINATE = require("../constants/paginate.js");
 const jwt = require("jsonwebtoken");
@@ -121,34 +121,10 @@ exports.load = async (req, res, next, id) => {
     return next(error);
   }
 };
-// exports.searchProject = async (req, res, next) => {
-//   try {
-//     const { q } = req.query.search; // Lấy từ khóa từ query (thay vì params)
-//     const idUser = req.user._id;
 
-//     console.log(idUser);
-
-//     if (!q || q.trim() === "") return next(new Error("Từ khóa không hợp lệ"));
-
-//     const projects = await projectService.FindProjectByTitle(idUser, q.trim());
-
-//     return res.json({ success: true, data: projects });
-//   } catch (error) {
-//     return next(error);
-//   }
-// };
 exports.getNameProject = async (req, res, next) => {
   try {
-    // Lấy token từ header
-    const token = req.headers.authorization?.split(" ")[1];
-    if (!token)
-      // return res.status(401).json({ message: "Unauthorized" });
-      return next(new Error("Unauthorized"));
-
-    // Giải mã token để lấy userId
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    const userId = decoded.id; // Giả sử token có chứa `id`
-
+    const userId = req.user._id;
     // Lấy từ khóa tìm kiếm từ query string
     const { name } = req.query;
 
@@ -160,10 +136,44 @@ exports.getNameProject = async (req, res, next) => {
     const projects = await projectService.findNameProject(userId, name);
     // Trả về kết quả
     // return res.status(200).json({ success: true, projects });
-    return new SuccessResponse(projects).send(res);
+    const page = parseInt(req.query.page) || PAGINATE.PAGE;
+    const limit = parseInt(req.query.limit) || PAGINATE.LIMIT;
+
+    const total = await projectService.countNameProjects(userId, name);
+    return new SuccessResponse(
+      projects,
+      200,
+      "success",
+      total,
+      page,
+      limit
+    ).sends(res);
   } catch (error) {
     console.error("Lỗi tìm kiếm project:", error);
     // return res.status(500).json({ message: "Lỗi server" });
     return next(new Error("Lỗi server"));
   }
 };
+
+exports.getCountTaskInProject = async (req, res, next) => {
+  try {
+    const userId = req.user._id; // Lấy userId từ token xác thực
+    const { idProject } = req.params; // Lấy projectId từ URL
+
+    // Kiểm tra nếu không có projectId
+    if (!idProject) {
+      return next(new Error("ProjectId không được để trống!!!"));
+    }
+
+    // Lấy số lượng task trong dự án
+    const totalTasks = await projectService.fetchCountTaskInProject(userId, idProject);
+
+    // Trả kết quả thành công
+    return new SuccessResponse(totalTasks).send(res);
+  } catch (error) {
+    console.error("Lỗi khi lấy số lượng task:", error);
+    // Xử lý lỗi nếu có
+    return next(new Error("Lỗi server"));
+  }
+};
+

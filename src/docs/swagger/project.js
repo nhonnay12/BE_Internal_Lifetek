@@ -450,7 +450,6 @@ const projectSwagger = {
       summary: "Lấy thông tin members tham gia dự án theo id  ",
       description: "API lấy thông tin members tham gia dự án theo id ",
       tags: ["Project"],
-
       parameters: [
         {
           in: "path",
@@ -502,6 +501,115 @@ const projectSwagger = {
         },
         500: {
           description: "Lỗi server",
+        },
+      },
+    },
+  },
+  "/projects/search": {
+    get: {
+      summary: "Tìm kiếm Project theo name , (theo người dùng đăng nhập)",
+      description:
+        "Trả về dữ liệu được tìm kiếm theo name và người dùng đó đăng nhập",
+      tags: ["Project"],
+      parameters: [
+        {
+          in: "query",
+          name: "name",
+          required: true,
+          description: "Tìm kiếm dự án theo tên",
+          schema: {
+            type: "string",
+            example: "Tạo API cho hệ thống",
+          },
+        },
+      ],
+      responses: {
+        200: {
+          description: "Lấy danh sách công việc theo Title",
+          content: {
+            "application/json": {
+              schema: {
+                $ref: "#/components/schemas/Project",
+              },
+            },
+          },
+        },
+        500: {
+          description: "Lỗi phía server",
+          content: {
+            "application/json": {
+              schema: {
+                type: "object",
+                properties: {
+                  message: {
+                    type: "string",
+                    example: "Internal server error",
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+  },
+  "/projects/{idProject}/countTask": {
+    get: {
+      summary: "Đếm số lượng task trong Project đó",
+      description: "Trả về số lượng task",
+      tags: ["Project"],
+      parameters: [
+        {
+          in: "path",
+          name: "idProject",
+          required: true,
+          description: "Số lượng task trong project của user đó",
+          schema: {
+            type: "string",
+            example: "67d8dde4edc970e80f2ed0ae",
+          },
+        },
+      ],
+      responses: {
+        200: {
+          description: "Lấy số lượng task thành công",
+          content: {
+            "application/json": {
+              schema: {
+                type: "object",
+                properties: {
+                  success: {
+                    type: "boolean",
+                    example: true,
+                  },
+                  message: {
+                    type: "string",
+                    example: "success",
+                  },
+                  data: {
+                    type: "integer",
+                    example: 0,
+                  },
+                },
+              },
+            },
+          },
+          500: {
+            description: "Lỗi phía server",
+            content: {
+              "application/json": {
+                schema: {
+                  type: "object",
+                  properties: {
+                    message: {
+                      type: "string",
+                      example: "Internal server error",
+                    },
+                  },
+                },
+              },
+            },
+          },
         },
       },
     },
