@@ -90,7 +90,7 @@ exports.getAllTasks = async (skip, limit) => {
     .skip(skip)
     .limit(limit)
     .select("+assigneeId +assignerId")
-    .populate("assigneeId", "userName email");
+    .populate("assigneeId", "userName email avatar");
 };
 exports.getTaskByProject = async (projectId) => {
   return await Task.find({ projectId });
@@ -121,12 +121,8 @@ exports.getAlTaskByProject = async (projectId, skip, limit) => {
     .limit(limit)
     .populate({
       path: "assigneeId",
-      select: "userName email", // Chỉ lấy userName và email của user
+      select: "userName email avatar", // Chỉ lấy userName và email của user
     })
-    .populate({
-      path: "assignerId",
-      select: "userName email",
-    });
 };
 
 exports.countTaskByProject = async (projectId) => {
