@@ -148,15 +148,12 @@ exports.getTaskById = async (id) => {
   return await Task.findById(id);
 };
 
-
-
 exports.FindTaskByTitle = async (skip, limit, data, assigneeIds, projectId) => {
+  const cleanName = data.trim();
+  const slugNames = removeAccents.remove(cleanName.toLowerCase());
   return await Task.find({
-    $or: [
-      { title: { $regex: new RegExp(`.*${data}*`, "i") } }, // Tìm kiếm một phần của chuỗi có dấu
-      // { title: { $regex: new RegExp(`.*${slugTitle}*`, "i") } }, // Tìm kiếm một phần của chuỗi không dấu
-    ],
-    assigneeId: { $in: assigneeIds }, // Sửa lỗi: Truyền đúng biến danh sách assigneeId
+   // assigneeId: { $in: assigneeIds }, // Sửa lỗi: Truyền đúng biến danh sách assigneeId
+    slugName: { $regex: slugNames, $options: "i" },
     projectId: projectId,
   })
     .skip(skip)
