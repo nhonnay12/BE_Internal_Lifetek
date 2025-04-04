@@ -22,7 +22,7 @@ connectRedis();
 
 app.use(
   cors({
-    origin: ["http://localhost:5173", "http://192.168.11.11:5173"],
+    origin: "*",  // Chấp nhận tất cả các nguồn
     credentials: true,
   })
 );

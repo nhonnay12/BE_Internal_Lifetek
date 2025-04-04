@@ -47,19 +47,28 @@ exports.createProject = async (data) => {
 };
 
 exports.getAllProjects = async (userId, skip, limit) => {
-  return await Project.find({
-    $or: [{ managerId: userId }, { members: { $in: [userId] } }],
-  })
-    .skip(skip)
-    .limit(limit)
-    .populate({
-      path: "managerId",
-      select: "userName email phone avatar -_id",
-    })
-    .populate({
-      path: "members",
-      select: "userName email phone avatar -_id",
-    });
+  return await Project.aggregate([
+  {
+    $match: {
+      $or: [
+        { managerId: userId },
+        { members: { $in: [userId] } }
+      ]
+    }
+  },
+ 
+  {
+    $sort: { priority: -1 }
+    },
+  {
+    $skip: skip 
+  },
+  {
+    $limit: limit 
+  }
+  
+])
+
 };
 exports.getProjectById = async (id) => {
   return await Project.findById(id);
