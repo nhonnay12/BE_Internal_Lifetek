@@ -8,6 +8,8 @@ const dotenv = require("dotenv");
 const { userSwagger } = require("./user.js");
 const CmtSwagger = require("./comment.js");
 const commentSchema = require("./components/commentComponent.js");
+const notifiSwagger = require('./notification.js')
+const notifiSchema = require('./components/notificationComponent.js')
 dotenv.config();
 
 const domainUrl = process.env.DOMAIN_SWAGGER
@@ -34,6 +36,7 @@ const swaggerDocs = {
     ...projectSwagger,
     ...userSwagger,
     ...CmtSwagger,
+    ...notifiSwagger,
   },
   components: {
     securitySchemes: {
@@ -48,6 +51,7 @@ const swaggerDocs = {
       ...taskSchema,
       ...projectSchema,
       ...commentSchema,
+      ...notifiSchema,
     },
   },
   security: [
