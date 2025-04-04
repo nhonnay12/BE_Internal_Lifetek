@@ -6,10 +6,7 @@ const projectSchema = {
         type: "string",
         example: "Dự án phát triển hệ thống CRM",
       },
-      code: {
-        type: "String",
-        example: "abc123",
-      },
+  
       description: {
         type: "string",
         example: "Dự án phát triển hệ thống CRM hỗ trợ quản lý khách hàng",

@@ -96,7 +96,7 @@ exports.updateTaskStatus = async (req, res, next) => {
 exports.addUserToTaskController = async (req, res, next) => {
   try {
     const { taskId } = req.params;
-    const { assigneeId } = req.body;
+    const  assigneeId  = req.body.userId;
     const roleUser = req.user.role;
 
     // Kiểm tra quyền
@@ -107,6 +107,7 @@ exports.addUserToTaskController = async (req, res, next) => {
         message: "Bạn không có quyền thêm người dùng vào task",
       });
     }
+console.log(">>>>>>>",assigneeId);
 
     // Kiểm tra assigneeId có tồn tại không
     if (!assigneeId) {
@@ -135,13 +136,24 @@ exports.addUserToTaskController = async (req, res, next) => {
         message: " Không tìm thấy Project",
       });
     }
-  const assigneeIdsObject = assigneeId.map(id => new ObjectId(id)); // Chuyển sang ObjectId
-  const exists = assigneeIdsObject.some(id => project.members.some(member => member.equals(id)));
-   
-    if (!exists) {
+
+
+    assigneeId.forEach(id => {
+      // Kiểm tra nếu assigneeId không có trong project.members
+      if (!project.members.some(member => member.toString() === id.toString())) {
+        return next({
+          statusCode: 400,
+          message: `Người dùng với ID ${id} không có trong project`,
+        });
+      }
+    });
+    
+
+    // Kiểm tra trùng assignee trong Task
+    if (task.assigneeId.includes(assigneeId)) {
       return next({
         statusCode: 400,
-        message: "Người dùng không có trong project",
+        message: "Người dùng đã có trong project",
       });
     }
 

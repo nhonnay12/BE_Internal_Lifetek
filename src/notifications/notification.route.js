@@ -1,14 +1,16 @@
 const express = require("express");
-const notificontroller = require("./notification.controller.js");
 
-const routerNotification = express.Router();
+ const { getAllNotifi, getAllNotifiByUserId } = require("./notification.controller.js");
+ 
+ const routerNotification = express.Router();
+ 
+ routerNotification
+     .route("/")
+     .get(getAllNotifi);
+ 
+ routerNotification
+      .route("/:userId")
+     .get(getAllNotifiByUserId);
+ 
+ module.exports = routerNotification;
 
-routerNotification
-    .route("/")
-    .get(notificontroller.getAllNotifi);
-
-routerNotification
-     .route("/:userId")
-    .get(notificontroller.getAllNotifiByUserId);
-
-module.exports = routerNotification;
