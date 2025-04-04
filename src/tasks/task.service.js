@@ -55,10 +55,20 @@ exports.addUserToTask = async (taskId, userId,projectId) => {
       taskId,
       { $addToSet: { assigneeId: { $each: newUsers } } },
       { new: true }
-    );
+    )
+      .populate({
+        path: 'projectId',    // Populating thông tin của dự án
+        select:'managerId',
+        populate: {           // Populating thông tin của người quản lý dự án và các thành viên
+          path: 'managerId',  // Populating người quản lý của dự án
+          select: 'userName email'  // Chỉ lấy name và email
+        }
+    });
     const userId = newUsers[0];
     // // thông báo và thêm vò bảng notifi
-    const message = `Bạn đã được thêm vào task: ${task.title}`;
+    console.log(result.projectId.managerId.userName)
+    const message = `${result.projectId.managerId.userName} đã thêm  bạn  vào việc: ${result.title}`;
+
     const notification = new Notification({
       userId,
       projectId,
@@ -85,10 +95,18 @@ exports.addUserToTask = async (taskId, userId,projectId) => {
       }, // Dùng $addToSet để tránh trùng lặp
       { new: true },
       { assigneeId: 1 }
-    ); // Populate để lấy chi tiết user nếu cần
+    )
+    .populate({
+      path: 'projectId',    // Populating thông tin của dự án
+      select:'managerId',
+      populate: {           // Populating thông tin của người quản lý dự án và các thành viên
+        path: 'managerId',  // Populating người quản lý của dự án
+        select: 'userName email'  // Chỉ lấy name và email
+      }
+    }); // Populate để lấy chi tiết user nếu cần
 
     // thông báo nhiều người dùng
-     const message = `Bạn đã được thêm vào task: ${task.title}`;
+     const message = `${result.projectId.managerId.userName} đã thêm  bạn  vào việc: ${result.title}`;
      listUserId.forEach(async (userId) => {
       // Lưu thông báo vào MongoDB
       const notification = new Notification({
@@ -119,7 +137,15 @@ exports.getAllTasks = async (skip, limit) => {
     .skip(skip)
     .limit(limit)
     .select("+assigneeId +assignerId")
-    .populate("assigneeId", "userName email avatar");
+    .populate("assigneeId", "userName email avatar")
+    .populate({
+      path: 'projectId',    // Populating thông tin của dự án
+      select:'managerId',
+      populate: {           // Populating thông tin của người quản lý dự án và các thành viên
+        path: 'managerId',  // Populating người quản lý của dự án
+        select: 'userName email'  // Chỉ lấy name và email
+      }
+    });
 };
 exports.getTaskByProject = async (projectId) => {
   return await Task.find({ projectId });
