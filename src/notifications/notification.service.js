@@ -12,7 +12,7 @@ const Notification = require("./notification.model.js");
  };
  
  exports.FindNotifiByUserId = async (userId) => {
-   return await Notification.find({userId: userId})
+   return await Notification.find({ userId})
        .populate("userId","userName email avatar") // Chỉ lấy user name và email của user});
  }
 

@@ -6,11 +6,9 @@ const express = require("express");
  
  routerNotification
      .route("/")
-     .get(getAllNotifi);
- 
- routerNotification
-      .route("/:userId")
      .get(getAllNotifiByUserId);
+ 
+
  
  module.exports = routerNotification;
 

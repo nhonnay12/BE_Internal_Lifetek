@@ -53,6 +53,10 @@ const taskSwagger = {
                   type: "number",
                   example: 1,
                 },
+                type: {
+                  type: "string",
+                  example: "bug",
+                },
                 image: {
                   type: "string",
                   format: "binary",
@@ -126,7 +130,7 @@ const taskSwagger = {
         },
         {
           in: "query",
-          name: "pageSize",
+          name: "limit",
           required: false,
           description: "Số lượng hiển thị",
           schema: {

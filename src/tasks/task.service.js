@@ -134,6 +134,7 @@ exports.filterTaskService = async (skip, limit, filter) => {
 };
 exports.getAllTasks = async (skip, limit) => {
   return await Task.find()
+    .sort({ priority: -1 , type:1})
     .skip(skip)
     .limit(limit)
     .select("+assigneeId +assignerId")

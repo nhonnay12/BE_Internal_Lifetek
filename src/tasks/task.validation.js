@@ -33,6 +33,10 @@ exports.createTaskValidator = Joi.object({
     .valid(...Object.values(PRIORITY)).messages({
     "string.empty": "Mức độ ưu tiên không được để trống",
     "any.only": "Mức độ ưu tiên không hợp lệ",
+    }),
+    type: Joi.string().messages({
+    "string.empty": "Loại công việc không được để trống",
+    "any.required": "Loại công việc là bắt buộc",
   }),
   image: Joi.string().uri().messages({
     "string.empty": "Hình ảnh không được để trống",

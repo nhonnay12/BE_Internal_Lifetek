@@ -19,7 +19,7 @@ exports.getAllNotifi = async (req, res, next) => {
  
 exports.getAllNotifiByUserId = async (req, res, next) => {
    try {
-    const { userId } = req.params;
+    const  userId  = req.user._id;
     console.log(userId)
     const notifi = await notifiService.FindNotifiByUserId(userId);
  

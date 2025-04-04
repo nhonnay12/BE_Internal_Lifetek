@@ -58,15 +58,48 @@ exports.getAllProjects = async (userId, skip, limit) => {
   },
  
   {
-    $sort: { priority: -1 }
-    },
+    $lookup: {
+      from: "tasks",
+      localField: "_id",
+      foreignField: "projectId",
+      as: "tasks"
+    }
+  },
+  {
+    $addFields: {
+      bugCount: {
+        $size: {
+          $filter: {
+            input: "$tasks",
+            as: "task",
+            cond: { $eq: ["$$task.type", "bug"] }
+          }
+        }
+      }
+    }
+  },
+  {
+    $sort: { priority: -1, bugCount: -1 } // Sắp xếp theo priority trước, bugCount sau
+  },
   {
     $skip: skip 
   },
   {
     $limit: limit 
+  },
+  {
+    $project: {
+      _id: 1,
+      name: 1,
+      code: 1,
+      description: 1,
+      status: 1,
+      managerId: 1,
+      members: 1,
+      priority:1,
+      bugCount: 1
+    }
   }
-  
 ])
 
 };
