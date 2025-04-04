@@ -2,6 +2,7 @@ const joiObjectId = require("joi-objectid");
 const Joi = require("joi");
 
 const { STATUS } = require("../constants/statusConstants.js");
+const { PRIORITY } = require("../constants/index.js");
 
 Joi.objectId = joiObjectId(Joi);
 
@@ -28,7 +29,8 @@ exports.createTaskValidator = Joi.object({
         "string.empty": "Trạng thái không được để trống",
         "any.only": "Trạng thái không hợp lệ ",
     }),
-  priority: Joi.string().valid("low", "medium", "high").messages({
+    priority: Joi.number()
+    .valid(...Object.values(PRIORITY)).messages({
     "string.empty": "Mức độ ưu tiên không được để trống",
     "any.only": "Mức độ ưu tiên không hợp lệ",
   }),
@@ -73,7 +75,7 @@ exports.updateTaskValidator = Joi.object({
       "any.only": "Trạng thái không hợp lệ",
     }),
   priority: Joi.number()
-    .valid(...Object.values(STATUS))
+    .valid(...Object.values(PRIORITY))
     .messages({
       "string.empty": "Mức độ ưu tiên không được để trống",
       "any.only": "Mức độ ưu tiên không hợp lệ",

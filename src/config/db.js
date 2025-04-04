@@ -5,7 +5,7 @@ const env = require("./env");
 
 mongoose.Promise = Promise;
 const connectDB = async () => {
-  console.log(env.MONGO_HOST);
+  // console.log(env.MONGO_HOST);
 
   try {
     if (env.NODE_ENV === "development1") {

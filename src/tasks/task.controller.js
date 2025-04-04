@@ -247,12 +247,15 @@ exports.searchTaskByTitle = async (req, res, next) => {
 exports.addTask = async (req, res, next) => {
   try {
     const user = req.user.role;
+
     const checkPermission = PERMISSIONS.CREATE_TASK.includes(user);
     if (!checkPermission) {
       return next(new Error("Bạn không có quyền thêm task"));
     }
     const dataBody = req.body;
-
+    // if (typeof dataBody.priority === "string") {
+    //   dataBody.priority = Number(dataBody.priority);
+    // }
     if (typeof dataBody.assigneeId === "string") {
       dataBody.assigneeId = dataBody.assigneeId.split(",");
     }
@@ -290,7 +293,13 @@ exports.addTask = async (req, res, next) => {
     if (!assignerIdFromDB) {
       return next(new Error("Người giao việc không hợp lệ"));
     }
-
+    // 📌 Kiểm tra ngày kết thúc phải sau ngày bắt đầu
+    if (
+      dataBody.endDate &&
+      new Date(dataBody.endDate) <= new Date(dataBody.startDate)
+    ) {
+      return next(new Error("Ngày kết thúc phải sau ngày bắt đầu"));
+    }
     if (req.file) {
       const filePath = req.file.buffer;
       const imageUrl = await uploadSingleFile(filePath);
