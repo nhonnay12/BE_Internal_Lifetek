@@ -126,7 +126,7 @@ const taskSwagger = {
         },
         {
           in: "query",
-          name: "pageSize",
+          name: "limit",
           required: false,
           description: "Số lượng hiển thị",
           schema: {
@@ -590,6 +590,26 @@ const taskSwagger = {
             example: "60d4f6d3c2f2a00015f8a3d5",
           },
         },
+        {
+          "in": "query",
+          "name": "page",
+          "required": false,
+          "description": "Số trang, mặc định là 1",
+          "schema": {
+            "type": "integer",
+            "example": 1
+          }
+        },
+        {
+          "in": "query",
+          "name": "limit",
+          "required": false,
+          "description": "Số lượng công việc trên mỗi trang, mặc định là 10",
+          "schema": {
+            "type": "integer",
+            "example": 10
+          }
+        }
       ],
       responses: {
         200: {
