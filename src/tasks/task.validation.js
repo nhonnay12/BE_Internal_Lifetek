@@ -38,6 +38,10 @@ exports.createTaskValidator = Joi.object({
     "string.empty": "Hình ảnh không được để trống",
     "string.uri": "Hình ảnh không hợp lệ",
   }),
+  type: Joi.string().messages({
+    "string.empty": "Type task không được để trống",
+    "string.uri": "Type không hợp lệ",
+  }),
   link: Joi.string().messages({
     "string.empty": "Link không được để trống",
   }),

@@ -160,12 +160,12 @@ exports.FindTaskByTitle = async (skip, limit, data, assigneeIds, projectId) => {
 
 // check assigneeID có trong bảng user không
 exports.checkAssigneeId = async (assigneeId) => {
-  return await User.find({ _id: { $in: assigneeId } });
+  return await User.find({ _id: { $in: assigneeId }}).lean();
 };
 
 // check assignerId có trong bảng user không
 exports.checkAssignerId = async (assignerId) => {
-  return await User.findById(assignerId);
+  return await User.findById(assignerId).lean();
 };
 
 exports.countTasks = async () => {

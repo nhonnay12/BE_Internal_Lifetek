@@ -7,6 +7,7 @@ const ROLES = {
   BA: 3,
   USER: 4,
 };
+
 const STATUS_PROJECT = {
   PROGRESSING: 0,
   DONE: 1,
@@ -38,6 +39,10 @@ const COMMENT = {
   TASK: "TASK",
   BUG: "BUG",
   STORY: "STORY",
+};
+const TYPETASK = {
+  bug: "bug",
+  new_request: "new_request",
 };
 const STATUS_CODE = {
   OK: 200,
@@ -83,4 +88,5 @@ module.exports = {
   COMMENT,
   STATUS_CODE,
   PERMISSIONS,
+  TYPETASK,
 };

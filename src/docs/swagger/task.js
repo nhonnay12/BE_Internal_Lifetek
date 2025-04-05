@@ -58,6 +58,11 @@ const taskSwagger = {
                   format: "binary",
                   description: "Ảnh của task",
                 },
+                type: {
+                  type: "string",
+                  
+                  example: "bug",
+                },
               },
             },
           },
