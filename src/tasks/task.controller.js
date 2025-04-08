@@ -16,12 +16,12 @@ exports.updateTaskStatus = async (req, res, next) => {
     const roleUser = req.user.role;
     const { oldStatus, newStatus } = req.body;
 
-    const canChangeStatus = (role, oldStatus, newStatus) => {
+    const canChangeStatus = (role , newStatus) => {
       const allowedStatuses = PERMISSIONS.TASK_STATUS_CHANGE[role] || [];
       return allowedStatuses.includes(newStatus);
     };
 
-    if (!canChangeStatus(roleUser, oldStatus, newStatus)) {
+    if (!canChangeStatus(roleUser, newStatus)) {
       return next(new Error("Bạn không có quyền thay đổi trạng thái"));
     }
 
@@ -108,7 +108,7 @@ exports.addUserToTaskController = async (req, res, next) => {
         message: "Bạn không có quyền thêm người dùng vào task",
       });
     }
-console.log(">>>>>>>",assigneeId);
+
 
     // Kiểm tra assigneeId có tồn tại không
     if (!assigneeId) {
@@ -172,8 +172,9 @@ exports.getAlTaskByProject = async (req, res, next) => {
     const page = parseInt(req.query.page) || PAGINATE.PAGE;
     const limit = parseInt(req.query.limit) || PAGINATE.LIMIT;
     const skip = (page - 1) * limit;
-    const tasks = await taskService.getAlTaskByProject(projectId, skip, limit);
-    const total = await taskService.countTaskByProject(projectId);
+    const userId = req.user._id;
+    const tasks = await taskService.getAlTaskByProject(projectId, skip, limit, userId);
+    const total = await taskService.countTaskByProject(projectId, userId);
 
     return new SuccessResponse(tasks, 200, "success", total, page, limit).sends(
       res
