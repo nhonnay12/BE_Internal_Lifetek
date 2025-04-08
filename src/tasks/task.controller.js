@@ -303,13 +303,14 @@ exports.addTask = async (req, res, next) => {
       return next(new Error("Người giao việc không hợp lệ"));
     }
 
-    // Ngày kết thúc phải sau ngày bắt đầu
-    if (
-      dataBody.endDate &&
-      new Date(dataBody.endDate) <= new Date(dataBody.startDate)
-    ) {
-      return next(new Error("Ngày kết thúc phải sau ngày bắt đầu"));
-    }
+   // Ngày kết thúc phải sau hoặc bằng ngày bắt đầu
+if (
+  dataBody.endDate &&
+  new Date(dataBody.endDate) < new Date(dataBody.startDate)
+) {
+  return next(new Error("Ngày kết thúc không được nhỏ hơn ngày bắt đầu"));
+}
+
 
     // Upload ảnh nếu có
     if (req.file) {
