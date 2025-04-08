@@ -5,7 +5,7 @@ const taskStatusChangeService = require("./statusChange.service.js");
 const taskValidator = require("./task.validation.js");
 const SuccessResponse = require("../utils/SuccessResponse.js");
 const PAGINATE = require("../constants/paginate.js");
-const { CHANGE_SOURCE, PERMISSIONS } = require("../constants/index.js");
+const { CHANGE_SOURCE, PERMISSIONS, TYPETASK } = require("../constants/index.js");
 const { STATUS } = require("../constants/statusConstants.js");
 const projectService = require("../projects/project.service.js");
 const { ObjectId } = require("mongodb");
@@ -255,32 +255,32 @@ exports.searchTaskByTitle = async (req, res, next) => {
   }
 };
 
-/// thêm task
 exports.addTask = async (req, res, next) => {
   try {
-    const user = req.user.role;
+    const userRole = req?.user?.role;
+    const hasPermission = PERMISSIONS.CREATE_TASK.includes(userRole);
 
-    const checkPermission = PERMISSIONS.CREATE_TASK.includes(user);
-    if (!checkPermission) {
+    if (!hasPermission) {
       return next(new Error("Bạn không có quyền thêm task"));
     }
+
     const dataBody = req.body;
-    // if (typeof dataBody.priority === "string") {
-    //   dataBody.priority = Number(dataBody.priority);
-    // }
+
+    // Chuyển assigneeId thành mảng nếu là string
     if (typeof dataBody.assigneeId === "string") {
       dataBody.assigneeId = dataBody.assigneeId.split(",");
     }
 
+    // Validate với Joi
     const { error } = taskValidator.createTaskValidator.validate(dataBody, {
       abortEarly: false,
     });
-
     if (error) {
       const errors = error.details.map((err) => err.message);
-      return next(new Error(errors));
+      return next(new Error(errors.join(", ")));
     }
 
+    // Kiểm tra ObjectId hợp lệ
     const invalidAssigneeId = dataBody.assigneeId.filter(
       (id) => !mongoose.Types.ObjectId.isValid(id)
     );
@@ -288,42 +288,50 @@ exports.addTask = async (req, res, next) => {
       return next(new Error("Id của assignee không hợp lệ"));
     }
 
-    // kiểm tra id của assignee có id nào trong bẳng user không
-    const assigneeIds = dataBody.assigneeId;
-    const assigneeIdsFromDB = await taskService.checkAssigneeId(assigneeIds);
-    if (assigneeIdsFromDB.length !== assigneeIds.length) {
-      return next(new Error("Người nhận việc không hợp lệ"));
-    }
-
     if (!mongoose.Types.ObjectId.isValid(dataBody.assignerId)) {
       return next(new Error("Id của assigner không hợp lệ"));
     }
 
-    //kiểm tra id của assigner có id nào trong bảng user không
-    const assignerId = dataBody.assignerId;
-    const assignerIdFromDB = await taskService.checkAssignerId(assignerId);
-    if (!assignerIdFromDB) {
+    // Chạy song song check assignee và assigner
+    const [assigneeIdsFromDB, assignerFromDB] = await Promise.all([
+      taskService.checkAssigneeId(dataBody.assigneeId),
+      taskService.checkAssignerId(dataBody.assignerId),
+    ]);
+
+    if (assigneeIdsFromDB.length !== dataBody.assigneeId.length) {
+      return next(new Error("Người nhận việc không hợp lệ"));
+    }
+
+    if (!assignerFromDB) {
       return next(new Error("Người giao việc không hợp lệ"));
     }
-    // 📌 Kiểm tra ngày kết thúc phải sau ngày bắt đầu
+
+    // Ngày kết thúc phải sau ngày bắt đầu
     if (
       dataBody.endDate &&
       new Date(dataBody.endDate) <= new Date(dataBody.startDate)
     ) {
       return next(new Error("Ngày kết thúc phải sau ngày bắt đầu"));
     }
+
+    // Upload ảnh nếu có
     if (req.file) {
-      const filePath = req.file.buffer;
-      const imageUrl = await uploadSingleFile(filePath);
-      dataBody.image = imageUrl.secure_url;
+      try {
+        const imageUrl = await uploadSingleFile(req.file.buffer);
+        dataBody.image = imageUrl.secure_url;
+      } catch (uploadErr) {
+        return next(new Error("Lỗi khi upload ảnh: " + uploadErr.message));
+      }
     }
 
-    const task = await taskService.addTask(req.body);
+    // Thêm task
+    const task = await taskService.addTask(dataBody);
     return new SuccessResponse(task).send(res);
-  } catch (error) {
-    return next(error);
-  }
+  } catch (err) {
+    return next(err);
+  } 
 };
+
 
 // lấy tất cả task
 exports.getAllTasks = async (req, res, next) => {

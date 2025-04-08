@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 const { STATUS } = require("../constants/statusConstants.js");
-const { PRIORITY } = require("../constants/index.js");
+const { PRIORITY, STATUS_TASK, TYPETASK } = require("../constants/index.js");
 const removeAccents = require("remove-accents");
 
 const TaskSchema = new mongoose.Schema(
@@ -9,7 +9,7 @@ const TaskSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    slugName: { type: String }, // Trường không dấu để tìm kiếm
+     slugName: { type: String },
     description: { type: String },
     type: {
       type: String,
@@ -35,6 +35,7 @@ const TaskSchema = new mongoose.Schema(
       type: String,
     },
     startDate: { type: Date, default: Date.now },
+
     status: {
       type: Number,
       enum: Object.values(STATUS),
@@ -48,13 +49,17 @@ const TaskSchema = new mongoose.Schema(
     image: {
       type: String,
     },
+    type: {
+      type: String,
+      enum: Object.values(TYPETASK),
+      default: TYPETASK.new_request,
+    },
     endDate: { type: Date }, // deadline
   },
   { timestamps: true }
 );
-// 📌 Middleware: Chuyển đổi `name` thành `slugName` trước khi lưu
 TaskSchema.pre("save", function (next) {
-  this.slugName = removeAccents.remove(this.title.toLowerCase()); // Loại bỏ dấu
-  next();
+    this.slugName = removeAccents.remove(this.title.toLowerCase()); // Xóa dấu
+    next();
 });
 module.exports = mongoose.model("Task", TaskSchema);
