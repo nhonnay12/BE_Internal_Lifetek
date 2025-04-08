@@ -154,8 +154,8 @@ exports.FindTaskByTitle = async (skip, limit, data, assigneeIds, projectId) => {
   })
     .skip(skip)
     .limit(limit)
-    .populate("assigneeId", "userName ")
-    .populate("assignerId", "userName");
+    .populate("assigneeId", "userName avatar") // người nhận task 
+    .populate("assigneerId", "userName avatar"); // người giao task
 };
 
 // check assigneeID có trong bảng user không

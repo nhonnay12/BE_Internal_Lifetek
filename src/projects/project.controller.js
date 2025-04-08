@@ -131,15 +131,13 @@ exports.getNameProject = async (req, res, next) => {
     if (!name)
       // return res.status(400).json({ message: "Thiếu từ khóa tìm kiếm" });
       return next(new Error("Thiếu từ khóa tìm kiếm"));
+     const [ projects, total] = await Promise.all (projectService.findNameProject(userId, name),projectService.countNameProjects(userId, name) );
 
-    // Gọi service để tìm project
-    const projects = await projectService.findNameProject(userId, name);
-    // Trả về kết quả
     // return res.status(200).json({ success: true, projects });
     const page = parseInt(req.query.page) || PAGINATE.PAGE;
     const limit = parseInt(req.query.limit) || PAGINATE.LIMIT;
 
-    const total = await projectService.countNameProjects(userId, name);
+  
     return new SuccessResponse(
       projects,
       200,
