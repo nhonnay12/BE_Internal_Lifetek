@@ -30,3 +30,15 @@ exports.getAllNotifiByUserId = async (req, res, next) => {
     return next(error);
   }
 }
+
+exports.deleteNotifi = async (req, res, next) => {
+   try {
+      const notifiId = req.params.id;
+      const notifi = await notifiService.deleteNotifi(notifiId);
+      if (!notifi) return next(new Error(" Không tìm thấy thông báo"));
+  
+      return new SuccessResponse("Xóa thông báo thành công").send(res);
+    } catch (error) {
+      return next(error);
+    }
+}

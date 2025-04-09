@@ -16,3 +16,6 @@ const Notification = require("./notification.model.js");
        .populate("userId","userName email avatar") // Chỉ lấy user name và email của user});
  }
 
+exports.deleteNotifi = async (id) => {
+   return await Notification.findByIdAndDelete(id);
+ }

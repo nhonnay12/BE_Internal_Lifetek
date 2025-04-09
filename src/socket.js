@@ -5,7 +5,7 @@ let io;
 function initSocket(server) {
   io = new Server(server, {
     cors: {
-      origin: ["http://localhost:5173", "http://192.168.11.11:5173"], // Chỉ định frontend được phép kết nối
+      origin: "*", // Chỉ định frontend được phép kết nối
       credentials: true,
     },
   });
@@ -13,6 +13,11 @@ function initSocket(server) {
   io.on("connection", (socket) => {
     console.log(`🔌 User Connected: ${socket.id}`);
 
+    // Gửi thông báo định kỳ
+    setInterval(() => {
+        const msg = `📢 Thông báo lúc ${new Date().toLocaleTimeString()}`;
+        socket.emit('server_notification', msg);
+    }, 10000);
     // Nhận sự kiện từ client
     socket.on("joinRoom", (userId) => {
       socket.join(userId); // User tham gia room theo ID của họ

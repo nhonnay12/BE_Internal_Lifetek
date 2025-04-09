@@ -106,7 +106,7 @@ exports.addUserToTask = async (taskId, userId,projectId) => {
     }); // Populate để lấy chi tiết user nếu cần
 
     // thông báo nhiều người dùng
-     const message = `${result.projectId.managerId.userName} đã thêm  bạn  vào việc: ${result.title}`;
+     const message = `${updatedTask.projectId.managerId.userName} đã thêm  bạn  vào việc: ${updatedTask.title}`;
      listUserId.forEach(async (userId) => {
       // Lưu thông báo vào MongoDB
       const notification = new Notification({

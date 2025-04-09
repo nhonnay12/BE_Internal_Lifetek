@@ -96,7 +96,7 @@ exports.updateTaskStatus = async (req, res, next) => {
 exports.addUserToTaskController = async (req, res, next) => {
   try {
     const { taskId } = req.params;
-    const  assigneeId  = req.body.userId;
+    const  assigneeId  = req.body.assigneeId;
     const roleUser = req.user.role;
 
     // Kiểm tra quyền
@@ -113,7 +113,7 @@ console.log(">>>>>>>",assigneeId);
     if (!assigneeId) {
       return next({
         statusCode: 400,
-        message: "AssigneeId không tồn tạitại",
+        message: "AssigneeId không tồn tại",
       });
     }
     const task = await taskService.getTaskById(taskId);
