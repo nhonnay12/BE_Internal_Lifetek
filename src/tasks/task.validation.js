@@ -38,17 +38,24 @@ exports.createTaskValidator = Joi.object({
     "string.empty": "Loại công việc không được để trống",
     "any.required": "Loại công việc là bắt buộc",
   }),
-  image: Joi.string().uri().messages({
-    "string.empty": "Hình ảnh không được để trống",
-    "string.uri": "Hình ảnh không hợp lệ",
+  image: Joi.string().optional().allow(null, '').messages({
+    "string.base": "Hình ảnh không hợp lệ",
   }),
+  
+  link: Joi.string().optional().allow(null, '').messages({
+    "string.base": "Link không hợp lệ",
+  }),
+  // image: Joi.string().uri().messages({
+  //   "string.empty": "Hình ảnh không được để trống",
+  //   "string.uri": "Hình ảnh không hợp lệ",
+  // }),
   type: Joi.string().messages({
     "string.empty": "Type task không được để trống",
     "string.uri": "Type không hợp lệ",
   }),
-  link: Joi.string().messages({
-    "string.empty": "Link không được để trống",
-  }),
+  // link: Joi.string().messages({
+  //   "string.empty": "Link không được để trống",
+  // }),
   startDate: Joi.date().messages({
     "date.base": "Ngày bắt đầu không hợp lệ",
   }),
@@ -88,13 +95,20 @@ exports.updateTaskValidator = Joi.object({
       "string.empty": "Mức độ ưu tiên không được để trống",
       "any.only": "Mức độ ưu tiên không hợp lệ",
     }),
-  images: Joi.string().uri().optional().messages({
-    "string.empty": "Hình ảnh không được để trống",
-    "string.uri": "Hình ảnh không hợp lệ",
-  }),
-  link: Joi.string().messages({
-    "string.empty": "Link không được để trống",
-  }),
+    image: Joi.string().optional().allow(null, '').messages({
+      "string.base": "Hình ảnh không hợp lệ",
+    }),
+    
+    link: Joi.string().optional().allow(null, '').messages({
+      "string.base": "Link không hợp lệ",
+    }),
+  // images: Joi.string().uri().optional().messages({
+  //   "string.empty": "Hình ảnh không được để trống",
+  //   "string.uri": "Hình ảnh không hợp lệ",
+  // }),
+  // link: Joi.string().messages({
+  //   "string.empty": "Link không được để trống",
+  // }),
   startDate: Joi.date().messages({
     "date.base": "Ngày bắt đầu không hợp lệ",
   }),

@@ -171,18 +171,36 @@ exports.deleteMoreTasks = async (ids) => {
   return await Task.deleteMany({ _id: { $in: objectIds } });
 };
 
-exports.getAlTaskByProject = async (projectId, skip, limit) => {
-  return await Task.find({ projectId })
+exports.getAlTaskByProject = async (projectId, skip, limit, userId) => {
+  const pid = new mongoose.Types.ObjectId(projectId);
+  const uid = new mongoose.Types.ObjectId(userId);
+
+  return await Task.find({
+    projectId: pid,
+    $or: [
+      { assigneeId: uid },
+      { assignerId: uid },
+    ],
+  })
     .skip(skip)
     .limit(limit)
     .populate({
       path: "assigneeId",
-      select: "userName email avatar", // Chỉ lấy userName và email của user
-    })
+      select: "userName email avatar",
+    });
 };
 
-exports.countTaskByProject = async (projectId) => {
-  return await Task.countDocuments({ projectId });
+exports.countTaskByProject = async (projectId, userId) => {
+  const pid = new mongoose.Types.ObjectId(projectId);
+  const uid = new mongoose.Types.ObjectId(userId);
+
+  return await Task.countDocuments({
+    projectId: pid,
+    $or: [
+      { assigneeId: uid },
+      { assignerId: uid },
+    ],
+  });
 };
 exports.FindTaskById = async (id) => {
   return await Task.findById(id)
@@ -210,8 +228,8 @@ exports.FindTaskByTitle = async (skip, limit, data, assigneeIds, projectId) => {
   })
     .skip(skip)
     .limit(limit)
-    .populate("assigneeId", "userName ")
-    .populate("assignerId", "userName");
+    .populate("assigneeId", "userName avatar") // người nhận task 
+    .populate("assigneerId", "userName avatar"); // người giao task
 };
 
 // check assigneeID có trong bảng user không

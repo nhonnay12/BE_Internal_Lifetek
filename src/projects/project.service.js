@@ -194,7 +194,10 @@ exports.findNameProject = async (userId, name) => {
         { managerId: userId }, // Kiểm tra userId có phải là manager
       ],
       slugName: { $regex: slugNames, $options: "i" }, // Tìm kiếm không phân biệt hoa thường
-    });
+    })
+    .populate("managerId", "userName avatar")
+    .populate("managerId", "userName avatar")
+    ;
     return projects;
   } catch (error) {
     console.error("Lỗi tìm kiếm project:", error);
