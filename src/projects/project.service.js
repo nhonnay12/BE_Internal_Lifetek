@@ -61,7 +61,7 @@ exports.getAllProjects = async (userId, skip, limit) => {
         from: "users",  // Join với bảng users để lấy thông tin người quản lý của project
         localField: "managerId",
         foreignField: "_id",
-        as: "manager"
+        as: "managerId"
       }
     },
     {
@@ -76,7 +76,7 @@ exports.getAllProjects = async (userId, skip, limit) => {
       from: "users",
       localField: "members",
       foreignField: "_id",
-      as: "memberDetails"
+      as: "members"
     }
   },
   {
@@ -116,14 +116,16 @@ exports.getAllProjects = async (userId, skip, limit) => {
       code: 1,
       description: 1,
       status: 1,
-      "manager.userName": 1,
-      "manager.avatar": 1,
-      "manager.email": 1,
-      "manager.phone": 1,
-      "memberDetails.userName": 1,
-      "memberDetails.avatar": 1,
-      "memberDetails.email": 1,
-      "memberDetails.avatar": 1,
+      "managerId.userName": 1,
+      "managerId.avatar": 1,
+      "managerId.email": 1,
+      "managerId.phone": 1,
+      "members.userName": 1,
+      "members.avatar": 1,
+      "members.email": 1,
+      "members.avatar": 1,
+      createdAt: 1,
+      updatedAt:1,
       priority:1,
       bugCount: 1
     }
