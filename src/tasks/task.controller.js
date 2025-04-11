@@ -231,7 +231,7 @@ exports.filterTaskController = async (req, res, next) => {
 exports.searchTaskByTitle = async (req, res, next) => {
   try {
     const projectId = req.params.projectId;
-    const title = req.query.search.trim();
+    const title = req.query.search;
     const assigneeIds = req.user._id;
     if (!title || title.length === 0) {
       return next(new Error("Tiêu đề không được để trống"));
