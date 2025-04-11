@@ -118,7 +118,11 @@ exports.getAllProjects = async (userId, skip, limit) => {
       status: 1,
       "manager.userName": 1,
       "manager.avatar": 1,
+      "manager.email": 1,
+      "manager.phone": 1,
       "memberDetails.userName": 1,
+      "memberDetails.avatar": 1,
+      "memberDetails.email": 1,
       "memberDetails.avatar": 1,
       priority:1,
       bugCount: 1
