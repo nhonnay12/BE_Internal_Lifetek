@@ -15,11 +15,12 @@ const routes = {
     "/tasks": routerTask,
     "/comments": routerCmt,
     "/users": routeUser,
-    "/notifi":routerNotification,
+    "/notifi": routerNotification,
+    
 };
 
 Object.entries(routes).forEach(([path, rou]) => {    
-    router.use(path, authMiddleware, rou);
+    router.use(path, authMiddleware ,rou);
 });
 
 module.exports = router;

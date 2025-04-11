@@ -236,6 +236,7 @@ exports.searchTaskByTitle = async (req, res, next) => {
     if (!title || title.length === 0) {
       return next(new Error("Tiêu đề không được để trống"));
     }
+    
     const page = parseInt(req.query.page) || PAGINATE.PAGE;
     const limit = parseInt(req.query.limit) || PAGINATE.LIMIT;
     const skip = (page - 1) * limit;
@@ -246,6 +247,7 @@ exports.searchTaskByTitle = async (req, res, next) => {
       assigneeIds,
       projectId
     );
+    console.log(tasks)
     const total = tasks.length;
 
     return new SuccessResponse(tasks, 200, "success", total, page, limit).sends(

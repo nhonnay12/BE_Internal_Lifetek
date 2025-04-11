@@ -218,9 +218,10 @@ exports.getTaskById = async (id) => {
   return await Task.findById(id);
 };
 
-exports.FindTaskByTitle = async (skip, limit, data, assigneeIds, projectId) => {
-  const cleanName = data.trim();
+exports.FindTaskByTitle = async (skip, limit, title, assigneeIds, projectId) => {
+  const cleanName = title.trim();
   const slugNames = removeAccents.remove(cleanName.toLowerCase());
+ 
   return await Task.find({
    // assigneeId: { $in: assigneeIds }, // Sửa lỗi: Truyền đúng biến danh sách assigneeId
     slugName: { $regex: slugNames, $options: "i" },
@@ -228,8 +229,7 @@ exports.FindTaskByTitle = async (skip, limit, data, assigneeIds, projectId) => {
   })
     .skip(skip)
     .limit(limit)
-    .populate("assigneeId", "userName avatar") // người nhận task 
-    .populate("assigneerId", "userName avatar"); // người giao task
+   
 };
 
 // check assigneeID có trong bảng user không

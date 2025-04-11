@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 const SuccessResponse = require("../utils/SuccessResponse.js");
 const PAGINATE = require("../constants/paginate.js");
 const notifiService = require("./notification.service.js")
- 
+ const { webpush } = require('../config/webPushConfig.js');
 exports.getAllNotifi = async (req, res, next) => {
    try {
      const page = parseInt(req.query.page) || PAGINATE.PAGE;
@@ -42,3 +42,39 @@ exports.deleteNotifi = async (req, res, next) => {
       return next(error);
     }
 }
+let latestSubscription = null;
+
+exports.handleSubscription = (req, res) => {
+
+  const subscription = req.body;
+  console.log(subscription)
+  latestSubscription = subscription;
+
+  const payload = JSON.stringify({
+    title: '🚨 Thông báo từ Web App!',
+    body: 'Đây là nội dung thông báo push gửi từ server Node.js!',
+  });
+
+  webpush.sendNotification(subscription, payload)
+    .then(() => res.status(200).json({ message: 'Thông báo đã được gửi!' ,payload}))
+    .catch(err => console.error(err));
+};
+
+exports.sendTestNotification = (req, res) => {
+  if (!latestSubscription) {
+    return res.status(400).json({ error: 'Chưa có subscription nào được ghi nhận.' });
+  }
+
+  const payload = JSON.stringify({
+    title: '🧪 Đây là thông báo test',
+    body: 'Bạn đã nhận được tin nhắn từ server!',
+  });
+
+  webpush.sendNotification(latestSubscription, payload)
+    .then(() => res.status(200).json({ message: 'Thông báo test đã được gửi!', payload }))
+    .catch(err => {
+      console.error('Lỗi gửi thông báo test:', err);
+      res.sendStatus(500);
+    });
+};
+

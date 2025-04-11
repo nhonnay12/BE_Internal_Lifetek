@@ -14,10 +14,10 @@ function initSocket(server) {
     console.log(`🔌 User Connected: ${socket.id}`);
 
     // Gửi thông báo định kỳ
-    setInterval(() => {
-        const msg = `📢 Thông báo lúc ${new Date().toLocaleTimeString()}`;
-        socket.emit('server_notification', msg);
-    }, 10000);
+    // setInterval(() => {
+    //     const msg = `📢 Thông báo lúc ${new Date().toLocaleTimeString()}`;
+    //     socket.emit('server_notification', msg);
+    // }, 10000);
     // Nhận sự kiện từ client
     socket.on("joinRoom", (userId) => {
       socket.join(userId); // User tham gia room theo ID của họ
