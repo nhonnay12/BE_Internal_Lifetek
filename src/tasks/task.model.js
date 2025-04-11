@@ -59,7 +59,7 @@ const TaskSchema = new mongoose.Schema(
   { timestamps: true }
 );
 TaskSchema.pre("save", function (next) {
-    this.slugName =emoveAccents
+    this.slugName =removeAccents
   .remove(this.title.toLowerCase())
   .replace(/[^a-z0-9\s-]/g, "")   // Giữ lại chữ, số, khoảng trắng, gạch nối
   .replace(/\s+/g, "-")           // Đổi khoảng trắng thành dấu gạch nối
