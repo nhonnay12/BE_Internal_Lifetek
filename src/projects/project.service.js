@@ -64,11 +64,8 @@ exports.getAllProjects = async (userId, skip, limit) => {
         as: "managerId"
       }
     },
-    {
-    // Convert manager từ mảng về object (vì lookup tạo mảng)
-    $addFields: {
-      manager: { $arrayElemAt: ["$manager", 0] }
-    }
+     {
+    $unwind: "$managerId" // Chuyển mảng thành object
   },
   {
     // Populate members nhưng chỉ lấy name và email
