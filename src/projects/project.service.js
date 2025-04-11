@@ -56,7 +56,29 @@ exports.getAllProjects = async (userId, skip, limit) => {
       ]
     }
   },
- 
+    {
+      $lookup: {
+        from: "users",  // Join với bảng users để lấy thông tin người quản lý của project
+        localField: "managerId",
+        foreignField: "_id",
+        as: "manager"
+      }
+    },
+    {
+    // Convert manager từ mảng về object (vì lookup tạo mảng)
+    $addFields: {
+      manager: { $arrayElemAt: ["$manager", 0] }
+    }
+  },
+  {
+    // Populate members nhưng chỉ lấy name và email
+    $lookup: {
+      from: "users",
+      localField: "members",
+      foreignField: "_id",
+      as: "memberDetails"
+    }
+  },
   {
     $lookup: {
       from: "tasks",
@@ -94,8 +116,10 @@ exports.getAllProjects = async (userId, skip, limit) => {
       code: 1,
       description: 1,
       status: 1,
-      managerId: 1,
-      members: 1,
+      "manager.userName": 1,
+      "manager.avatar": 1,
+      "memberDetails.userName": 1,
+      "memberDetails.avatar": 1,
       priority:1,
       bugCount: 1
     }
