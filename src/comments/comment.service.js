@@ -19,7 +19,7 @@ exports.getAllcmt = async (taskId, skip, limit) => {
       .limit(limit)
       .populate({
         path: "userId",
-        select: "userName avatar ",
+        select: "userName avatar email ",
       });
     return comments;
   } catch (error) {
