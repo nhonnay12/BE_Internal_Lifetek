@@ -223,11 +223,22 @@ exports.getTaskById = async (id) => {
   return await Task.findById(id);
 };
 
-exports.FindTaskByTitle = async (skip, limit, title, assigneeIds, projectId) => {
+exports.FindTaskByTitle = async (roleUser,skip, limit, title, assigneeIds, projectId) => {
   const cleanName = title.trim();
   const slugNames = removeAccents.remove(cleanName.toLowerCase());
- 
-  return await Task.find({
+  if (roleUser === 0) {
+        return await Task.find({
+        // assigneeId: { $in: [assigneeIds] }, // Sửa lỗi: Truyền đúng biến danh sách assigneeId
+        slugName: { $regex: slugNames, $options: "i" },
+        projectId: projectId,
+      })
+        .skip(skip)
+        .limit(limit)
+        .populate("assigneeId", "userName avatar") // người nhận task 
+        .populate("assignerId", "userName avatar"); // người giao task
+  }
+  else {
+     return await Task.find({
     assigneeId: { $in: [assigneeIds] }, // Sửa lỗi: Truyền đúng biến danh sách assigneeId
     slugName: { $regex: slugNames, $options: "i" },
     projectId: projectId,
@@ -236,6 +247,8 @@ exports.FindTaskByTitle = async (skip, limit, title, assigneeIds, projectId) => 
     .limit(limit)
     .populate("assigneeId", "userName avatar") // người nhận task 
     .populate("assignerId", "userName avatar"); // người giao task
+  }
+ 
 };
 
 // check assigneeID có trong bảng user không
