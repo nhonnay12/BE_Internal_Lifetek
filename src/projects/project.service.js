@@ -122,7 +122,9 @@ exports.getAllProjects = async (userId, skip, limit) => {
       "members.email": 1,
       "members.avatar": 1,
       createdAt: 1,
-      updatedAt:1,
+      updatedAt: 1,
+      startDate: 1,
+      endDate:1,
       priority:1,
       bugCount: 1
     }

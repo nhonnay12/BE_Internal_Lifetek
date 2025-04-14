@@ -24,6 +24,8 @@ const ProjectSchema = new mongoose.Schema(
       enum: Object.values(PRIORITY),
       default: PRIORITY.LOW,
     },
+     startDate: { type: Date, default: Date.now },
+     endDate: { type: Date }, // deadline
   },
   { timestamps: true }
 );

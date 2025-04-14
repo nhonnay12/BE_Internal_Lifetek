@@ -96,7 +96,7 @@ exports.updateTaskStatus = async (req, res, next) => {
 exports.addUserToTaskController = async (req, res, next) => {
   try {
     const { taskId } = req.params;
-    const  userId  = req.body.userId;
+    const  assigneeId  = req.body.userId;
     const roleUser = req.user.role;
 
     // Kiểm tra quyền
@@ -150,7 +150,7 @@ exports.addUserToTaskController = async (req, res, next) => {
     
 
     // Kiểm tra trùng assignee trong Task
-    if (task.assigneeId.includes(userId)) {
+    if (task.assigneeId.includes(assigneeId)) {
       return next({
         statusCode: 400,
         message: "Người dùng đã có trong project",
@@ -159,7 +159,7 @@ exports.addUserToTaskController = async (req, res, next) => {
 
 
     // Thêm user vào task
-    const updatedTask = await taskService.addUserToTask(taskId, userId,projectId);
+    const updatedTask = await taskService.addUserToTask(taskId, assigneeId,projectId);
     
 
     return new SuccessResponse(updatedTask).send(res);
