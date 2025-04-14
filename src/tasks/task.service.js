@@ -53,7 +53,12 @@ exports.addUserToTask = async (taskId, userId,projectId) => {
 
     const result = await Task.findByIdAndUpdate(
       taskId,
-      { $addToSet: { assigneeId: { $each: newUsers } } },
+      {
+        $set: {
+          assigneeId: newUsers,
+        },
+      },
+      
       { new: true }
     )
       .populate({
@@ -126,7 +131,10 @@ exports.addUserToTask = async (taskId, userId,projectId) => {
   }
 };
 exports.filterTaskService = async (skip, limit, filter) => {
-  return Task.find(filter)
+  return Task.find({
+    assigneeId: { $in: assigneeIds },
+    filter
+  })
     .skip(skip)
     .limit(limit)
     .populate("assigneeId", "userName email avatar")
@@ -223,7 +231,7 @@ exports.FindTaskByTitle = async (skip, limit, title, assigneeIds, projectId) => 
   const slugNames = removeAccents.remove(cleanName.toLowerCase());
  
   return await Task.find({
-   // assigneeId: { $in: assigneeIds }, // Sửa lỗi: Truyền đúng biến danh sách assigneeId
+   assigneeId: { $in: assigneeIds }, // Sửa lỗi: Truyền đúng biến danh sách assigneeId
     slugName: { $regex: slugNames, $options: "i" },
     projectId: projectId,
   })

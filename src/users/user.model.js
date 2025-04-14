@@ -60,10 +60,16 @@ userSchema.methods.matchPassword = async function (enteredPassword) {
 
 userSchema.methods.getResetPasswordToken = function () {
   const resetToken = crypto.randomBytes(32).toString("hex");
-  this.resetPasswordToken = crypto.createHash("sha256").update(resetToken).digest("hex");
 
-  this.resetPasswordExpire = Date.now() + 10 * 60 * 1000; // 10 phut
-  return resetToken;
+  // Hash token rồi lưu vào DB
+  this.resetPasswordToken = crypto
+    .createHash("sha256")
+    .update(resetToken)
+    .digest("hex");
+
+  this.resetPasswordExpire = Date.now() + 15 * 60 * 1000;
+
+  return resetToken; // Trả về bản chưa hash để gửi vào URL
 };
 
 // tìm user theo email hoặc phone
