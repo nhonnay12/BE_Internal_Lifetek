@@ -204,7 +204,7 @@ exports.resetPassword = async (req, res, next) => {
       resetPasswordToken,
       resetPasswordExpire: { $gt: Date.now() },
     });
-
+    console.log(resetPasswordToken,resetPasswordExpire)
     if (!user) return next(new Error("Token không hợp lệ"));
 
     if (password !== confirmPassword)

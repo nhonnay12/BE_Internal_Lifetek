@@ -42,6 +42,8 @@ exports.createProject = async (data) => {
     status: data.status,
     managerId: data.managerId._id,
     members: memberIds,
+    startDate: data.startDate,
+    endDate: data.endDate,
     priority: data.priority,
   });
 };
@@ -124,7 +126,7 @@ exports.getAllProjects = async (userId, skip, limit) => {
       createdAt: 1,
       updatedAt: 1,
       startDate: 1,
-      endDate:1,
+      endDate: 1,
       priority:1,
       bugCount: 1
     }
