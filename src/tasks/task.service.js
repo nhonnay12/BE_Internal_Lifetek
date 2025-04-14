@@ -226,7 +226,7 @@ exports.getTaskById = async (id) => {
 exports.FindTaskByTitle = async (roleUser,skip, limit, title, assigneeIds, projectId) => {
   const cleanName = title.trim();
   const slugNames = removeAccents.remove(cleanName.toLowerCase());
-  if (roleUser === 0) {
+  if (roleUser == 0) {
         return await Task.find({
         // assigneeId: { $in: [assigneeIds] }, // Sửa lỗi: Truyền đúng biến danh sách assigneeId
         slugName: { $regex: slugNames, $options: "i" },

@@ -245,6 +245,7 @@ exports.searchTaskByTitle = async (req, res, next) => {
     const limit = parseInt(req.query.limit) || PAGINATE.LIMIT;
     const skip = (page - 1) * limit;
     const tasks = await taskService.FindTaskByTitle(
+      roleUser,
       skip,
       limit,
       title,
