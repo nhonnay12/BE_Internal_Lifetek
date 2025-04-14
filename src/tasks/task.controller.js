@@ -96,7 +96,7 @@ exports.updateTaskStatus = async (req, res, next) => {
 exports.addUserToTaskController = async (req, res, next) => {
   try {
     const { taskId } = req.params;
-    const  assigneeId  = req.body.assigneeId;
+    const  userId  = req.body.userId;
     const roleUser = req.user.role;
 
     // Kiểm tra quyền
@@ -150,7 +150,7 @@ exports.addUserToTaskController = async (req, res, next) => {
     
 
     // Kiểm tra trùng assignee trong Task
-    if (task.assigneeId.includes(assigneeId)) {
+    if (task.assigneeId.includes(userId)) {
       return next({
         statusCode: 400,
         message: "Người dùng đã có trong project",
@@ -159,7 +159,7 @@ exports.addUserToTaskController = async (req, res, next) => {
 
 
     // Thêm user vào task
-    const updatedTask = await taskService.addUserToTask(taskId, assigneeId,projectId);
+    const updatedTask = await taskService.addUserToTask(taskId, userId,projectId);
     
 
     return new SuccessResponse(updatedTask).send(res);
@@ -456,7 +456,30 @@ exports.deleteManyTask = async (req, res, next) => {
     return next(error);
   }
 };
+// thay đổi task
+exports.updateType = async (req, res, next) => {
+  try {
+    const { type } = req.body;
+    const { taskId } = req.params;
+     const roleUser = req.user.role;
 
+    // Kiểm tra quyền
+    const checkPermission = PERMISSIONS.ASSIGN_TASK.includes(roleUser);
+    if (!checkPermission) {
+      return next({
+        statusCode: 403,
+        message: "Bạn không có quyền thêm người dùng vào task",
+      });
+    }
+    const task = await taskService.updateTypeTask(taskId, type);
+    
+    if (!task) next(new Error("Task không tìm thấy"));
+
+    return new SuccessResponse(task).send(res);
+  } catch (err) {
+    return next(err);
+  }
+}
 exports.load = async (req, res, next, id) => {
   try {
     if (!mongoose.Types.ObjectId.isValid(id)) {

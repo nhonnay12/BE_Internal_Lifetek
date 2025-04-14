@@ -18,4 +18,13 @@ const Notification = require("./notification.model.js");
 
 exports.deleteNotifi = async (id) => {
    return await Notification.findByIdAndDelete(id);
- }
+}
+ 
+exports.updateIsRead = async (id) => {
+  console.log(id)
+  const noti = Notification.findById(id);
+  if (noti.isRead == true) {
+      throw new Error("Không thể cập nhật trạng thái.");
+  }
+  return await Notification.findByIdAndUpdate(id,{ $set: { isRead: true } }, { new: true })
+}

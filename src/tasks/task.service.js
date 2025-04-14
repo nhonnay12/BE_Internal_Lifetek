@@ -246,3 +246,10 @@ exports.checkAssignerId = async (assignerId) => {
 exports.countTasks = async () => {
   return await Task.countDocuments();
 };
+// update type task
+exports.updateTypeTask = async (id, newType) => {
+
+  return await Task.findByIdAndUpdate(id, { $set: { type: newType } }, { new: true })
+          .populate("assigneeId", "userName email avatar")
+            .populate("assignerId", "userName email avatar");
+}

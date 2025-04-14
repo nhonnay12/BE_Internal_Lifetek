@@ -1,3 +1,5 @@
+const { get } = require("mongoose");
+
 const notifiSwagger = {
     "/notifi": {
       get: {
@@ -57,8 +59,61 @@ const notifiSwagger = {
         },
       },
   },
-  "/notifi/{notifiId}": {
+  "/notifi/{id}": {
      delete: {
+      summary: "Xoá thông báo theo ID",
+      description: "API xoá thông báo",
+      tags: ["Notifi"],
+      parameters: [
+        {
+          in: "path",
+          name: "id",
+          required: true,
+          description: "ID notifi",
+          schema: {
+            type: "string",
+          },
+        },
+      ],
+      responses: {
+        200: {
+          description: "Xoá thông báo thành công",
+          content: {
+            "application/json": {
+              schema: {
+                type: "object",
+                properties: {
+                  message: {
+                    type: "string",
+                    example: "Xoá thông báo thành công",
+                  },
+                },
+              },
+            },
+          },
+        },
+        404: {
+          description: "Không tìm thấy thông báo",
+          content: {
+            "application/json": {
+              schema: {
+                type: "object",
+                properties: {
+                  message: {
+                    type: "string",
+                    example: "Không tìm thấy thông báo",
+                  },
+                },
+              },
+            },
+          },
+        },
+        500: {
+          description: "Lỗi server",
+        },
+      },
+    },
+     put: {
       summary: "Xoá thông báo theo ID",
       description: "API xoá thông báo",
       tags: ["Notifi"],

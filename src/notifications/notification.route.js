@@ -1,6 +1,6 @@
 const express = require("express");
 
- const {  getAllNotifiByUserId,deleteNotifi,handleSubscription,sendTestNotification } = require("./notification.controller.js");
+ const {  getAllNotifiByUserId,deleteNotifi,handleSubscription,sendTestNotification,updateIsRead } = require("./notification.controller.js");
  
  const routerNotification = express.Router();
  
@@ -10,7 +10,8 @@ routerNotification
 
 routerNotification
   .route("/:id")
-  .delete(deleteNotifi);
+  .delete(deleteNotifi)
+  .put(updateIsRead);
 
 routerNotification
   .route("/subscribe")

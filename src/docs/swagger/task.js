@@ -823,7 +823,7 @@ const taskSwagger = {
             schema: {
               type: "object",
               properties: {
-                assigneeId: {
+                userId: {
                   type: "array",
                   items: {
                     type: "string",
@@ -904,6 +904,113 @@ const taskSwagger = {
       },
     },
   },
+  "/tasks/{taskId}/update-type": {
+     post: {
+      summary: "Thêm người dùng vào vấn đề",
+      description: "Thêm người dùng vào vấn đề",
+      tags: ["Task"],
+      security: [
+        {
+          BearerAuth: [],
+        },
+      ],
+      parameters: [
+        {
+          in: "path",
+          name: "taskId",
+          required: true,
+          description: "ID task",
+          schema: {
+            type: "string",
+            example: "67d8e401835b109d2e16bd8d",
+          },
+        },
+      ],
+      requestBody: {
+        required: true,
+        content: {
+          "application/json": {
+            schema: {
+              type: "object",
+              properties: {
+                type: {
+                    type: "string",
+                    example: "bug",
+                  },
+              },
+            },
+          },
+        },
+      },
+      responses: {
+        200: {
+          description: "Thêm người dùng vào vấn đề",
+          content: {
+            "application/json": {
+              schema: {
+                type: "object",
+                properties: {
+                  message: {
+                    type: "string",
+                    example: "Thêm người dùng vào vấn đề thành công",
+                  },
+                },
+              },
+            },
+          },
+        },
+        403: {
+          description: "Không đủ quyền",
+          content: {
+            "application/json": {
+              schema: {
+                type: "object",
+                properties: {
+                  message: {
+                    type: "string",
+                    example: "Người dùng không đủ thẩm quyền",
+                  },
+                },
+              },
+            },
+          },
+        },
+        404: {
+          description: "Task not found",
+
+          content: {
+            "application/json": {
+              schema: {
+                type: "object",
+                properties: {
+                  message: {
+                    type: "string",
+                    example: "Task không tìm thấy",
+                  },
+                },
+              },
+            },
+          },
+        },
+        500: {
+          description: "Lỗi phía server",
+          content: {
+            "application/json": {
+              schema: {
+                type: "object",
+                properties: {
+                  message: {
+                    type: "string",
+                    example: "Internal server error",
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+  }
 };
 
 module.exports = taskSwagger;

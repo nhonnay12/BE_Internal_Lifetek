@@ -78,3 +78,17 @@ exports.sendTestNotification = (req, res) => {
     });
 };
 
+exports.updateIsRead = async (req, res,next) => {
+  try {
+    const { id } = req.params;
+    const notifi = await notifiService.updateIsRead(id);
+    if (!notifi) next(new Error("Thông báo không tìm thấy"));
+    
+    return new SuccessResponse(notifi).send(res);
+  }
+  catch (err) {
+    return next(err)
+  }
+
+}
+
