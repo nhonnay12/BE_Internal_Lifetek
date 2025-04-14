@@ -233,6 +233,7 @@ exports.searchTaskByTitle = async (req, res, next) => {
     const projectId = req.params.projectId;
     const title = req.query.search;
     const assigneeIds = req.user._id;
+    console.log(assigneeIds)
     if (!title || title.length === 0) {
       return next(new Error("Tiêu đề không được để trống"));
     }
