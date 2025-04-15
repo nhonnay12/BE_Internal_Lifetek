@@ -1,5 +1,6 @@
 const Task = require("./task.model.js");
 const User = require("../users/user.model.js");
+const Project = require("../projects/project.model.js")
 const Notification = require('../notifications/notification.model.js');
 const mongoose = require("mongoose");
 const removeAccents = require("remove-accents");
@@ -157,7 +158,25 @@ exports.getTaskByProject = async (projectId) => {
   return await Task.find({ projectId });
 };
 exports.addTask = async (data) => {
-  return await Task.create(data);
+  const task = await Task.create(data);
+  const project = await Project.findById(task.projectId).populate("managerId userName");
+     const message = `${project.managerId.userName} đã thêm  bạn  vào việc: ${task.title}`;
+     task.assigneeId.forEach(async (userId) => {
+      // Lưu thông báo vào MongoDB
+      const notification = new Notification({
+        userId,
+        projectId: project._id,
+        taskId: task._id,
+        type: "task_assigned",
+        message,
+        
+      });
+      await notification.save();
+
+      // Gửi thông báo qua WebSockets
+      sendNotification(userId, message);
+    });
+  return task;
 };
 exports.editTask = async (id, data) => {
   return await Task.findByIdAndUpdate(id, data, { new: true });
