@@ -159,8 +159,11 @@ exports.getTaskByProject = async (projectId) => {
 };
 exports.addTask = async (data) => {
   const task = await Task.create(data);
-  const project = await Project.findById(task.projectId).populate("managerId userName");
-     const message = `${project.managerId.userName} đã thêm  bạn  vào việc: ${task.title}`;
+  const project = await Project.findById(task.projectId).populate({
+    path: "managerId",
+    select: "userName",
+  });
+     const message = `${project.managerId?.userName|| "Quản lý"} đã thêm  bạn  vào việc: ${task.title}`;
      task.assigneeId.forEach(async (userId) => {
       // Lưu thông báo vào MongoDB
       const notification = new Notification({
