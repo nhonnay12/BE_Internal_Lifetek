@@ -235,9 +235,9 @@ exports.searchTaskByTitle = async (req, res, next) => {
     const title = req.query.search;
     const assigneeIds = req.user._id;
     const roleUser = req.user.role;
+    console.log("title:",title)
     console.log(roleUser)
-    // Kiểm tra quyền
-    console.log(assigneeIds)
+
     if (!title || title.length === 0) {
       return next(new Error("Tiêu đề không được để trống"));
     }

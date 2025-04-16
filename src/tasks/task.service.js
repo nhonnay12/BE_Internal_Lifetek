@@ -252,13 +252,14 @@ exports.getTaskById = async (id) => {
   return await Task.findById(id);
 };
 
-exports.FindTaskByTitle = async (roleUser,skip, limit, title, assigneeIds, projectId) => {
-  const cleanName = title.trim();
-  const slugNames = removeAccents.remove(cleanName.toLowerCase());
+exports.FindTaskByTitle = async (roleUser, skip, limit, title, assigneeIds, projectId) => {
+  const words = title.trim().split(/\s+/); // tách các từ
+ const pattern = words.join('|'); // nối thành "hello|world"
+  console.log("clenan:",pattern)
   if (roleUser == 0) {
         return await Task.find({
         // assigneeId: { $in: [assigneeIds] }, // Sửa lỗi: Truyền đúng biến danh sách assigneeId
-        slugName: { $regex: slugNames, $options: "i" },
+        slugName: { $regex: pattern, $options: "i" },
         projectId: projectId,
       })
         .skip(skip)
@@ -269,7 +270,7 @@ exports.FindTaskByTitle = async (roleUser,skip, limit, title, assigneeIds, proje
   else {
      return await Task.find({
     assigneeId: { $in: [assigneeIds] }, // Sửa lỗi: Truyền đúng biến danh sách assigneeId
-    slugName: { $regex: slugNames, $options: "i" },
+    slugName: { $regex: pattern, $options: "i" },
     projectId: projectId,
   })
     .skip(skip)
