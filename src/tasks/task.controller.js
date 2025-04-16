@@ -169,14 +169,15 @@ exports.addUserToTaskController = async (req, res, next) => {
 };
 
 // lấy tất cả task theo project
-exports.getAlTaskByProject = async (req, res, next) => {
+exports.getAllTaskByProject = async (req, res, next) => {
   try {
     const { projectId } = req.params;
     const page = parseInt(req.query.page) || PAGINATE.PAGE;
     const limit = parseInt(req.query.limit) || PAGINATE.LIMIT;
     const skip = (page - 1) * limit;
     const userId = req.user._id;
-    const tasks = await taskService.getAlTaskByProject(projectId, skip, limit, userId);
+    const roleUser = req.user.role;
+    const tasks = await taskService.getAllTaskByProject(roleUser,projectId, skip, limit, userId);
     const total = await taskService.countTaskByProject(projectId, userId);
 
     return new SuccessResponse(tasks, 200, "success", total, page, limit).sends(

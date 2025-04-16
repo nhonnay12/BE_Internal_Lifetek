@@ -154,9 +154,6 @@ exports.getAllTasks = async (skip, limit) => {
       }
     });
 };
-exports.getTaskByProject = async (projectId) => {
-  return await Task.find({ projectId });
-};
 exports.addTask = async (data) => {
   const task = await Task.create(data);
   const project = await Project.findById(task.projectId).populate({
@@ -198,11 +195,20 @@ exports.deleteMoreTasks = async (ids) => {
   return await Task.deleteMany({ _id: { $in: objectIds } });
 };
 
-exports.getAlTaskByProject = async (projectId, skip, limit, userId) => {
+exports.getAllTaskByProject = async (role,projectId, skip, limit, userId) => {
   const pid = new mongoose.Types.ObjectId(projectId);
   const uid = new mongoose.Types.ObjectId(userId);
-
-  return await Task.find({
+  if (role == 0){
+     return await Task.find({projectId: pid})
+    .skip(skip)
+    .limit(limit)
+    .populate({
+      path: "assigneeId",
+      select: "userName email avatar",
+    });
+  }
+  else {
+    return await Task.find({
     projectId: pid,
     $or: [
       { assigneeId: uid },
@@ -215,6 +221,7 @@ exports.getAlTaskByProject = async (projectId, skip, limit, userId) => {
       path: "assigneeId",
       select: "userName email avatar",
     });
+  }
 };
 
 exports.countTaskByProject = async (projectId, userId) => {
