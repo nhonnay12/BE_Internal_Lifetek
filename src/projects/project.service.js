@@ -144,7 +144,7 @@ exports.updateProject = async (id, data) => {
   if (!mongoose.Types.ObjectId.isValid(id)) {
     throw new Error("ID không hợp lệ!");
   }
-
+  console.log(data)
   const updateData = {}; // Chứa các trường hợp lệ để cập nhật
 
   // Kiểm tra và cập nhật `managerId`
@@ -168,12 +168,19 @@ exports.updateProject = async (id, data) => {
   // Cập nhật các trường khác (nếu có)
   ["name", "code", "description", "status", "priority","startDate","endDate"].forEach((field) => {
     if (data[field] !== undefined) {
+      
       updateData[field] = data[field];
     }
   });
-
+  console.log(id)
   // Cập nhật vào MongoDB với `$set`
-  return await Project.findByIdAndUpdate(id, { $set: updateData }, { new: true });
+  return await Project.findByIdAndUpdate( id,
+  { $set: updateData },
+  {
+    new: true,
+    runValidators: true,
+    context: 'query',
+  });
 };
 
 exports.deleteProject = async (id) => {
