@@ -166,7 +166,7 @@ exports.updateProject = async (id, data) => {
 
 
   // Cập nhật các trường khác (nếu có)
-  ["name", "code", "description", "status", "priority"].forEach((field) => {
+  ["name", "code", "description", "status", "priority","startDate","endDate"].forEach((field) => {
     if (data[field] !== undefined) {
       updateData[field] = data[field];
     }
