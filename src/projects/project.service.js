@@ -165,29 +165,11 @@ exports.updateProject = async (id, data) => {
   let memberIds = project.members.map((m) => m.toString());
 
   // Nếu muốn **thêm** thành viên mới
-  if (Array.isArray(data.addMembers) && data.addMembers.length > 0) {
-    for (let member of data.addMembers) {
-      if (!member._id) continue;
-      const isMemberValid = await isUserExist(member._id);
-      if (!isMemberValid) {
-        throw new Error(`Thành viên với id ${member._id} không tồn tại!`);
-      }
-      // Chỉ thêm nếu chưa tồn tại
-      if (!memberIds.includes(member._id)) {
-        memberIds.push(member._id);
-      }
-    }
-  }
-
- // ✅ Nếu muốn **xóa** thành viên
-  if (Array.isArray(data.removeMembers) && data.removeMembers.length > 0) {
-    const removeIds = data.removeMembers.map(member => member._id);
-    memberIds = memberIds.filter(id => !removeIds.includes(id));
-  }
+  
   updateData.members = memberIds; // Cập nhật danh sách members
-
+  
   // Cập nhật các trường khác (nếu có)
-  ["name", "code", "description", "status", "priority"].forEach((field) => {
+  ["name", "code", "description", "status", "priority","startDate","endDate"].forEach((field) => {
     if (data[field] !== undefined) {
       updateData[field] = data[field];
     }
