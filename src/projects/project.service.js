@@ -159,7 +159,7 @@ exports.updateProject = async (id, data) => {
   // Lấy danh sách `members` hiện tại
   const project = await Project.findById(id);
   if (!project) {
-    throw new Error("Dự án không tồn tại!");
+    throw new Error("Dự án không tồn tại!")
   }
 
   updateData.members = data.members .map((id) => new mongoose.Types.ObjectId(id));
