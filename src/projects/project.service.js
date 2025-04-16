@@ -162,14 +162,11 @@ exports.updateProject = async (id, data) => {
     throw new Error("Dự án không tồn tại!");
   }
 
-  let memberIds = project.members.map((m) => m.toString());
+  updateData.members = data.members .map((id) => new mongoose.Types.ObjectId(id));
 
-  // Nếu muốn **thêm** thành viên mới
-  
-  updateData.members = memberIds; // Cập nhật danh sách members
-  
+
   // Cập nhật các trường khác (nếu có)
-  ["name", "code", "description", "status", "priority","startDate","endDate"].forEach((field) => {
+  ["name", "code", "description", "status", "priority"].forEach((field) => {
     if (data[field] !== undefined) {
       updateData[field] = data[field];
     }
